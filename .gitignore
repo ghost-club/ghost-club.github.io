@@ -1,0 +1,10 @@
+.DS_Store
+packages/
+paket-files/
+paket.local
+node_modules/
+obj/
+bin/
+.fake/
+temp/
+.ionide/symbolCache.db
