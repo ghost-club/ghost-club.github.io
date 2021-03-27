@@ -20,6 +20,11 @@ resizeCallback.push((w,h)=>{
   canvas.height = h;
   gl.viewport(0,0,w,h);
 });
+document.addEventListener("touchstart", function(e){
+  if (e.touches.length > 1) {
+    e.preventDefault();
+  }
+}, true);
 
 // Mesh and Material
 
@@ -84,7 +89,9 @@ function buildMaterial(vs,fs,mesh,params) {
     task.forEach(t=>{t();});
     task = [];
     setting("resolution",[canvas.width,canvas.height]);
-    setting("time", [(curTime - startTime) / 1000]);
+    const t = (curTime - startTime) / 1000;
+    const pr = Math.PI * 2 * 4;
+    setting("time", [(t + pr/2) % pr - pr/2]);
     gl.bindAttribLocation(p,0,"vertex");
     gl.bindAttribLocation(p,1,"normal");
     mesh();
@@ -97,8 +104,25 @@ function buildMaterial(vs,fs,mesh,params) {
   return o;
 }
 
+const ImageTexture = img=>{
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+  return {
+    use: _=>{
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      return { texture: 0 };
+    }
+  };
+};
+
 const ModelTexture = img=>{
-  const textureIndex = 0;
   let w = 16, h = 96;
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -110,9 +134,9 @@ const ModelTexture = img=>{
 
   return {
     use: _=>{
-      gl.activeTexture(gl.TEXTURE0 + textureIndex);
+      gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, tex);
-      return { texture: textureIndex };
+      return { texture: 1 };
     }
   };
 };
@@ -130,13 +154,14 @@ void main() {
 `,`
 varying vec2 coord;
 uniform sampler2D model;
+uniform sampler2D bg;
 uniform float time;
+uniform vec2 roundTime;
 uniform vec2 resolution;
-uniform vec3 accel;
 
 #define ratio 0.4
 
-vec3 unpack(ivec2 iuv) {
+vec3 pick(ivec2 iuv) {
   iuv.y = 95 - iuv.y;
   return texture2D(model, (vec2(iuv)+0.5)/vec2(16,96)).xyz;
 }
@@ -149,7 +174,7 @@ vec2 flow(vec2 uv, ivec2 offset, ivec2 scale) {
     uv /= vec2(ratio, -1);
     uv = uv*0.5 + 0.5;
     vec2 coord = uv*vec2(scale-1);
-    ivec2 i = ivec2(coord);
+    ivec2 i = ivec2(floor(coord));
     vec2 f = coord - vec2(i);
     mat4 m = mat4(
         0, 2, 0, 0,
@@ -160,13 +185,14 @@ vec2 flow(vec2 uv, ivec2 offset, ivec2 scale) {
     vec4 mx = m * powers(f.x);
     vec4 my = m * powers(f.y);
     vec2 s = vec2(0);
-    // TODO: reduce costs
     for(int j=0;j<4;j++) {
         for(int k=0;k<4;k++) {
             ivec2 u = i + ivec2(j-1,k-1);
-            if(u.x >= 0 && u.y >= 0 && u.x < scale.x && u.y < scale.y) {
-                s += unpack(u + offset).xy * mx[j] * my[k];
-            }
+            u.x = u.x < 0 ? 0 : u.x;
+            u.x = u.x >= scale.x ? scale.x - 1 : u.x;
+            u.y = u.y < 0 ? 0 : u.y;
+            u.y = u.y >= scale.y ? scale.y - 1 : u.y;
+            s += pick(u + offset).xy * mx[j] * my[k];
         }
     }
     return s;
@@ -183,8 +209,8 @@ vec2 flow1(vec2 x) {
 }
 
 float activation(vec2 x) {
-    vec2 v = vec2(-24.063580, 23.359764);
-    float b = 8.072939;
+    vec2 v = vec2(-10.846223, 11.471219);
+    float b = 8.681054;
     float r = dot(x,v) + b;
     return r * 0.04;
 }
@@ -206,7 +232,12 @@ float eye(vec2 p) {
     p.x -= 0.107;
     float e = length(p)-r;
     float eps = 0.005;
-    return smoothstep(-eps, eps, min(m,e));
+    return min(m,e); // smoothstep(-eps, eps, min(m,e));
+}
+
+vec3 sampleBg(vec2 p) {
+    p *= vec2(0.9/1.6,1.0);
+    return texture2D(bg, p*0.5+0.5).xyz;
 }
 
 vec3 logoSample(vec2 uv) {
@@ -214,15 +245,21 @@ vec3 logoSample(vec2 uv) {
     p *= vec2(ratio, -1);
     float e = eye(p);
 
+    float eh = 1. - pow(sin(time*2. - p.y*4.)*0.5+0.5, 10.0);
     vec2 x = p;
-    x += flow3(x) / 4.;
+    x += flow3(x) / 4. * mix(1., pow(sin(time*0.5 + x.y*9.)*0.5+0.5, 0.8), eh);
     x += flow2(x) / 2.;
-    x += flow3(x) / 2.;
+    x += flow3(x) / 2. * mix(1., pow(sin(time*2. + dot(x,vec2(9,-7)))*0.5+0.5, 2.0), eh);
     x += flow2(x) / 1.;
-    x = flow1(-x);
+    float rt = roundTime.x + p.y*0.04;
+    float a = roundTime.y * sin(rt) * 2.;
+    vec2 rx = mat2(cos(a),-sin(a),sin(a),cos(a)) * x;
+    x = mix(flow1(x), flow1(rx), pow(cos(rt)*0.5+0.5,30.));
+    x += vec2(-0.4,0.4) * eh;
+    vec3 col = sampleBg(x*0.4 + uv*0.05);
     float v = activation(x);
     v = mix(v, -v, e);
-    return vec3(v + 0.5);
+    return mix(vec3(1.), col, smoothstep(-0.002,0.002,e));
 }
 
 void main() {
@@ -230,34 +267,21 @@ void main() {
     vec3 col = logoSample(uv + 0.5);
     gl_FragColor = vec4(col,1);
 }
-`,rect,["model","accel"]);
+`,rect,["model","bg","roundTime"]);
 
-let model = null;
-let accelX = 0, accelY = 0, accelZ = 0;
-/* 
-if(window.DeviceMotionEvent && DeviceMotionEvent.requestPermission) {
-  container.addEventListener("click",_=>{
-    DeviceMotionEvent.requestPermission().then(_=>{
-      window.addEventListener("devicemotion", e=>{
-        accelX = e.accelerationIncludingGravity.x;
-        accelY = e.accelerationIncludingGravity.y;
-        accelZ = e.accelerationIncludingGravity.z;
-      });
-    });
-  });
-} else {
-  window.addEventListener("devicemotion", e=>{
-    accelX = e.accelerationIncludingGravity.x;
-    accelY = e.accelerationIncludingGravity.y;
-    accelZ = e.accelerationIncludingGravity.z;
-  });
-}
-*/
+let model = null, bg = null;
+let lastIx = -1, lastRandom = 0;
 function render() {
   curTime = new Date();
-  if(model) present.model(model.use());
-  present.accel(accelX, - accelY, accelZ);
-  present();
+  if(model && bg) {
+    present.model(model.use());
+    present.bg(bg.use());
+    const t = (curTime - startTime) / 1000 / 20;
+    const i = Math.floor(t);
+    if(i != lastIx) lastRandom = Math.random() - 0.5, lastIx = i;
+    present.roundTime((t-i-0.5)*3.1415926535, lastRandom);
+    present();
+  }
   requestAnimationFrame(render);
 }
 render();
@@ -291,6 +315,12 @@ async function load() {
     model = ModelTexture(mem);
   };
   img.src = URL.createObjectURL(blob);
+
+  const bgImg = new Image();
+  bgImg.onload = _=>{
+    bg = ImageTexture(bgImg);
+  };
+  bgImg.src = "/background.png";
 }
 load();
 
