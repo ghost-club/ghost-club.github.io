@@ -283,10 +283,26 @@ const bgs = {
   }
 };
 let ix = localStorage.getItem("index") | 0;
-const bgNames = Object.keys(bgs);
-if(ix >= bgNames.length) ix = 0;
-localStorage.setItem("index", ix+1);
-const bgName = bgNames[ix];
+const bgBases = ["1","2","3","5","306","nm","u"];
+let seed = Math.floor((startTime / 1000 / 60 - startTime.getTimezoneOffset()) / 60 / 24) | 0;
+const xorShift = _=>{
+  seed = seed ^ (seed << 13);
+  seed = seed ^ (seed >> 17);
+  seed = seed ^ (seed << 5);
+  return seed;
+};
+for(let i=0;i<2;i++) xorShift();
+const bgNames = [];
+for(let i=0;i<3;i++) {
+  const l = bgBases.length;
+  let k = xorShift() % l;
+  if(k < 0) k += l;
+  bgNames.push(bgBases[k]);
+  bgBases.splice(k,1);
+}
+ix %= bgNames.length;
+localStorage.setItem("index", ix+(Math.random() < 0.5 ? 1 : 2));
+const bgName = Math.random() < 0.01 ? "tv" : bgNames[ix];
 const bgData = bgs[bgName];
 
 const present = buildMaterial(`
