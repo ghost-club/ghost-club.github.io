@@ -141,8 +141,153 @@ const ModelTexture = img=>{
   };
 };
 
-// Main Program
 resize();
+
+const bgs = {
+  "1": {
+    scaling: true, eyeDist: false,
+    code: `
+      vec2 x = p;
+      x += flow3(x) / 4.;
+      x += flow2(x) / 2.;
+      x += flow3(x) / 2.;
+      x += flow2(x) / 1.;
+      x.x = tanh(x.x*3.)/3.;
+      x = mix(flow1(x), flow1(-x), cos(time*1.+p.y*16.)*0.5+0.5);
+      float v = activation(x);
+      vec3 col = sampleBg(p+x*vec2(sin(time+p.y*4.),0)*0.5);
+      return mix(vec3(1.), mix(vec3(0.), col, smoothstep(10.,-0.05,v)), e);`
+  },
+  "2": {
+    scaling: false, eyeDist: true,
+    code: `
+      vec2 x = p;
+      float u = sin(time + p.x*1. + p.y*cos(roundTime.x*2.+p.x*3.))*4.;
+      x.x = sin(x.x*u)/u;
+      x += flow3(x) / 4. * (sin(time*1.+p.x*5.)*0.5+0.5);
+      x += flow2(x) / 2. * (sin(time*2.+p.y*5.)*0.5+0.5);
+      x += flow3(x) / 2. * (cos(time*0.5)*0.5+0.5);
+      x += flow2(x) / 1. * (cos(time*1.)*0.5+0.5);
+      x = flow1(x);
+      float a = 2.5 + sin(time-p.x*5.)*0.2 + 3.1415926535;
+      x *= mat2(cos(a),-sin(a),sin(a),cos(a));
+      x += smoothstep(0.015,-0.005,e)*vec2(3.,-4.);
+      vec3 col = sampleBg(p*0.2+x*0.3+vec2(0.3,-0.4));
+      return col;`
+  },
+  "3": {
+    scaling: false, eyeDist: false,
+    code: `
+      vec2 x = p;
+      x += flow3(x) / 4. * (cos(time)+1.);
+      x += flow2(x) / 2. * (cos(time*0.5+roundTime.x*2.)+1.);
+      x += flow3(x) / 2.;
+      x += flow2(x) / 1. * (sin(time)+1.);
+      x = flow1(x);
+      vec3 col = sampleBg(vec2(x.y*0.1+sin(time+p.x*p.y*2.)*0.05,sin(p.x*5.)));
+      return mix(vec3(0.1,0,0), col, e);`
+  },
+  "5": {
+    scaling: false, eyeDist: false,
+    code: `
+      vec2 x = p;
+      float r = cos(time+0.5);
+      x += flow3(x) / 4. * r;
+      x += flow2(x) / 2. * r;
+      x += flow3(x) / 2. * r;
+      x += flow2(x) / 1. * r;
+      x.x += time*0.5/3.1415926535 + cos(time+1.8)*0.2;
+      x = mix(flow1(-vec2(fract(x.x)-0.5,x.y)), flow1(vec2(fract(x.x+0.5)-0.5,x.y)), tanh(cos(x.x*3.1415926535*2.)*5.)*0.5+0.5);
+      x *= abs(p.x);
+      float v = activation(x);
+      v -= pow(abs(p.x),2.) * 10.;
+      vec3 col = sampleBg(p.x*0.5+x+vec2(sin(time+1.5),cos(time+1.5)));
+      col *= smoothstep(-0.01,0.01,v);
+      return mix(vec3(0.9,1.0,1.0), col, e);`
+  },
+  "306": {
+    scaling: false, eyeDist: true,
+    code: `
+      float eh = 1. - pow(sin(time*2. - p.y*4.)*0.5+0.5, 10.0);
+      vec2 x = p;
+      x += flow3(x) / 4. * mix(1., pow(sin(time*0.5 + x.y*9.)*0.5+0.5, 0.8), eh);
+      x += flow2(x) / 2.;
+      x += flow3(x) / 2. * mix(1., pow(sin(time*2. + dot(x,vec2(9,-7)))*0.5+0.5, 2.0), eh);
+      x += flow2(x) / 1.;
+      float rt = roundTime.x + p.y*0.04;
+      float a = roundTime.y * sin(rt) * 2.;
+      vec2 rx = mat2(cos(a),-sin(a),sin(a),cos(a)) * x;
+      x = mix(flow1(x), flow1(rx), pow(cos(rt)*0.5+0.5,30.));
+      x += vec2(-0.4,0.4) * eh;
+      vec3 col = sampleBg(x*0.4 + uv*0.05);
+      return mix(vec3(1.), col, smoothstep(-0.002,0.002,e));`
+  },
+  "nm": {
+    scaling: false, eyeDist: false,
+    code: `
+      vec2 x = p;
+      x += flow3(x) / 4. * (cos(time*0.5)*(p.y+1.)*1.+1.);
+      x += flow2(x) / 2.;
+      x += flow3(x) / 2. * (sin(time*0.5)*(p.y-1.)*1.+1.);
+      x += flow2(x) / 1.;
+      x = flow1(x);
+      x.x += sin(time*0.5+p.y*5.)*1.;
+      float v = activation(x);
+      x = mix(x, p, 1.-exp(-max(0.,dot(p,p*vec2(1,0.2))-0.3))*0.4);
+      vec2 u = p*0.5 + x*0.5;
+      u = floor(u*5.)/5.;
+      vec3 col = sampleBg(u + vec2(1.0,0)) * 2.;
+      col += sampleBg(x + vec2(1.0,0)) * 2.;
+      col *= smoothstep(-0.01,0.01,v);
+      return mix(vec3(0.7,0.9,1)-col, col, e);`
+  },
+  "tv": {
+    scaling: true, eyeDist: true,
+    code: `
+      float eh = 1. - pow(sin(time*2.)*0.5+0.5, 20.0) - pow(-sin(time*2.)*0.5+0.5, 10.0);
+      vec2 x = p;
+      x += flow3(x) / 4. * mix(1., cos(time*2.+p.x*10.)*2.+2., eh);
+      x += flow2(x) / 2. * mix(1., sin(time*2.+p.y*4.)+1., eh);
+      x += flow3(x) / 2. * mix(1., 0., eh);
+      x += flow2(x) / 1. * mix(1., 0., eh);
+      vec3 col1 = sampleBg(x);
+      float a = time * 0.5;
+      vec3 col2 = sampleBg(mat2(cos(a),-sin(a),sin(a),cos(a))*p) * 2.;
+      x = flow1(x);
+      float v = activation(x);
+      v *= smoothstep(-0.05,0.05,e)*2.-1.;
+      return mix(col1, col2, smoothstep(0.05,-0.05,v)) * max(smoothstep(-0.1,0.1,dot(p,p*vec2(1,0.2))-0.3), 1.-exp(-abs(v)*0.1));`
+  },
+  "u": {
+    scaling: false, eyeDist: false,
+    code: `
+      vec2 x = p;
+      float eh = abs(sin(roundTime.x*2.+roundTime.y*4.)) > 0.99 ? 0.0 : 1.0;
+      float a = 1.0;
+      x += flow3(x) / 4. * (sin(time*0.5)*0.5+1.0) * eh;
+      x += flow2(x) / 2. * eh * (1. + pow(abs(sin(roundTime.x*2.+roundTime.y*4.)), 40.)*8.);
+      x += flow3(x) / 2. * (cos(time*1.0)*0.5+1.0) * eh;
+      x += flow2(x) / 1. * eh;
+      vec2 u = x;
+      u /= vec2(ratio, -1);
+      u = u*0.5 + 0.5;
+      vec2 coord = u*vec2(ivec2(8,32)-1);
+      coord = floor(coord) + 0.5;
+      coord += p.x;
+      coord /= vec2(ivec2(8,32)-1);
+      coord = coord*2.-1.;
+      coord *= vec2(ratio, -1);
+      x = flow1(coord);
+      vec3 col = sampleBg(x*0.2 + vec2(cos(time),sin(time)) * 0.5);
+      return mix(vec3(1.), col, e);`
+  }
+};
+let ix = localStorage.getItem("index") | 0;
+const bgNames = Object.keys(bgs);
+if(ix >= bgNames.length) ix = 0;
+localStorage.setItem("index", ix+1);
+const bgName = bgNames[ix];
+const bgData = bgs[bgName];
 
 const present = buildMaterial(`
 attribute vec2 vertex;
@@ -212,7 +357,7 @@ float activation(vec2 x) {
     vec2 v = vec2(-10.846223, 11.471219);
     float b = 8.681054;
     float r = dot(x,v) + b;
-    return r * 0.04;
+    return r;
 }
 
 float smax(float a, float b) {
@@ -231,12 +376,19 @@ float eye(vec2 p) {
     m = smax(m, - mp.y - 0.0025);
     p.x -= 0.107;
     float e = length(p)-r;
-    float eps = 0.005;
-    return min(m,e); // smoothstep(-eps, eps, min(m,e));
+    e = min(m,e);
+    float eps = 0.002;
+    return ${bgData.eyeDist ? "e" : "smoothstep(-eps, eps, e)"};
+}
+
+float tanh(float v) {
+  return (exp(v) - exp(-v)) / (exp(v) + exp(-v));
 }
 
 vec3 sampleBg(vec2 p) {
     p *= vec2(0.9/1.6,1.0);
+    float r = resolution.x/resolution.y*0.9/1.6;
+    ${bgData.scaling ? "if(r > 1.0) p /= r;" : ""};
     return texture2D(bg, p*0.5+0.5).xyz;
 }
 
@@ -244,22 +396,7 @@ vec3 logoSample(vec2 uv) {
     vec2 p = uv*2.-1.;
     p *= vec2(ratio, -1);
     float e = eye(p);
-
-    float eh = 1. - pow(sin(time*2. - p.y*4.)*0.5+0.5, 10.0);
-    vec2 x = p;
-    x += flow3(x) / 4. * mix(1., pow(sin(time*0.5 + x.y*9.)*0.5+0.5, 0.8), eh);
-    x += flow2(x) / 2.;
-    x += flow3(x) / 2. * mix(1., pow(sin(time*2. + dot(x,vec2(9,-7)))*0.5+0.5, 2.0), eh);
-    x += flow2(x) / 1.;
-    float rt = roundTime.x + p.y*0.04;
-    float a = roundTime.y * sin(rt) * 2.;
-    vec2 rx = mat2(cos(a),-sin(a),sin(a),cos(a)) * x;
-    x = mix(flow1(x), flow1(rx), pow(cos(rt)*0.5+0.5,30.));
-    x += vec2(-0.4,0.4) * eh;
-    vec3 col = sampleBg(x*0.4 + uv*0.05);
-    float v = activation(x);
-    v = mix(v, -v, e);
-    return mix(vec3(1.), col, smoothstep(-0.002,0.002,e));
+    ${bgData.code}
 }
 
 void main() {
@@ -320,7 +457,7 @@ async function load() {
   bgImg.onload = _=>{
     bg = ImageTexture(bgImg);
   };
-  bgImg.src = "/background.png";
+  bgImg.src = "/background/" + bgName + ".png";
 }
 load();
 
