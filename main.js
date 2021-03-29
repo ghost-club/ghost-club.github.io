@@ -439,42 +439,36 @@ function render() {
 }
 render();
 
-async function load() {
-  const res = await fetch("/model.png");
-  const blob = await res.blob();
-  const img = new Image();
-  img.onload = _=>{
-    const cvs = document.createElement("canvas");
-    const ctx = cvs.getContext("2d");
-    cvs.width = img.width;
-    cvs.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    const data = ctx.getImageData(0, 0, img.width, img.height).data;
-    const mem = new Float32Array(16*96*4);
-    const buf = new ArrayBuffer(4);
-    const u = new DataView(buf);
-    for(let j=0;j<96;j++) {
-      for(let i=0;i<16;i++) {
-        for(let k=0;k<3;k++) {
-          u.setUint8(0, data[(j*64+i*4)*4+0+k]);
-          u.setUint8(1, data[(j*64+i*4)*4+4+k]);
-          u.setUint8(2, data[(j*64+i*4)*4+8+k]);
-          u.setUint8(3, data[(j*64+i*4)*4+12+k]);
-          mem[(j*16+i)*4+k] = new DataView(buf).getFloat32(0);
-        }
-        mem[(j*16+i)*4+3] = 1.0;
+const img = new Image();
+img.onload = _=>{
+  const cvs = document.createElement("canvas");
+  const ctx = cvs.getContext("2d");
+  cvs.width = img.width;
+  cvs.height = img.height;
+  ctx.drawImage(img, 0, 0);
+  const data = ctx.getImageData(0, 0, img.width, img.height).data;
+  const mem = new Float32Array(16*96*4);
+  const buf = new ArrayBuffer(4);
+  const u = new DataView(buf);
+  for(let j=0;j<96;j++) {
+    for(let i=0;i<16;i++) {
+      for(let k=0;k<3;k++) {
+        u.setUint8(0, data[(j*64+i*4)*4+0+k]);
+        u.setUint8(1, data[(j*64+i*4)*4+4+k]);
+        u.setUint8(2, data[(j*64+i*4)*4+8+k]);
+        u.setUint8(3, data[(j*64+i*4)*4+12+k]);
+        mem[(j*16+i)*4+k] = new DataView(buf).getFloat32(0);
       }
+      mem[(j*16+i)*4+3] = 1.0;
     }
-    model = ModelTexture(mem);
-  };
-  img.src = URL.createObjectURL(blob);
-
-  const bgImg = new Image();
-  bgImg.onload = _=>{
-    bg = ImageTexture(bgImg);
-  };
-  bgImg.src = "/background/" + bgName + ".png";
-}
-load();
+  }
+  model = ModelTexture(mem);
+};
+img.src = "/model.png";
+const bgImg = new Image();
+bgImg.onload = _=>{
+  bg = ImageTexture(bgImg);
+};
+bgImg.src = "/background/" + bgName + ".png";
 
 };
