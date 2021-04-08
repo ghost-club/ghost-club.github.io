@@ -284,6 +284,7 @@ const bgs = {
 };
 let ix = localStorage.getItem("index") | 0;
 const bgBases = ["1","2","3","5","306","nm","u"];
+const bgImageName = bgBases[Math.floor(Math.random()*bgBases.length)];
 let seed = Math.floor((startTime / 1000 / 60 - startTime.getTimezoneOffset()) / 60 / 24) | 0;
 const xorShift = _=>{
   seed = seed ^ (seed << 13);
@@ -469,6 +470,6 @@ const bgImg = new Image();
 bgImg.onload = _=>{
   bg = ImageTexture(bgImg);
 };
-bgImg.src = "/background/" + bgName + ".png";
+bgImg.src = "/background/" + bgImageName + ".png";
 
 };
