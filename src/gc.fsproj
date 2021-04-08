@@ -3,20 +3,27 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Wrappers/ReactExtra.fs" />
+    <Compile Include="Wrappers/I18next.fs" />
+    <Compile Include="Wrappers/ReactI18next.fs" />
+    <Compile Include="Wrappers/ReactI18nextBrowserLanguageDetector.fs" />
+    <Compile Include="Wrappers/ReactGoogleFontLoader.fs" />
+    <Compile Include="Wrappers/Masonry.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.7.1" />
-    <PackageReference Include="Fable.Core" Version="3.1.5" />
-    <PackageReference Include="Fable.Browser.Dom" Version="1.1.0" />
-    <PackageReference Include="Fable.Elmish" Version="3.0.6" />
+    <PackageReference Update="FSharp.Core" Version="5.0.0" />
+    <PackageReference Include="Fable.Core" Version="3.2.5" />
+    <PackageReference Include="Fable.Browser.Dom" Version="2.3.0" />
+    <PackageReference Include="Fable.Elmish" Version="3.1.0" />
     <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
     <PackageReference Include="Fable.Elmish.Browser" Version="3.0.4" />
-    <PackageReference Include="Fable.Elmish.Debugger" Version="3.2" />
+    <PackageReference Include="Fable.Elmish.Debugger" Version="3.2.0" />
     <PackageReference Include="Fable.Elmish.HMR" Version="4.0.1" />
-    <PackageReference Include="Fable.React" Version="5.3.6" />
+    <PackageReference Include="Fable.Fetch" Version="2.2.0" />
+    <PackageReference Include="Fable.React" Version="7.3.0" />
     <PackageReference Include="Fable.FontAwesome" Version="2.0" />
     <PackageReference Include="Fable.FontAwesome.Free" Version="2.1" />
-    <PackageReference Include="Fulma" Version="2.8.1" />
+    <PackageReference Include="Fulma" Version="2.10.0" />
   </ItemGroup>
 </Project>

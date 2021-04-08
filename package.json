@@ -10,16 +10,23 @@
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "animate.css": "^4.1.1",
     "bulma": "0.8.0",
     "core-js": "^3.6.5",
+    "i18next": "^20.2.1",
+    "i18next-browser-languagedetector": "^6.1.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-google-font-loader": "^1.1.0",
+    "react-i18next": "^11.8.12",
+    "react-masonry-component": "^6.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-external-helpers": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
+    "@types/masonry-layout": "^4.2.2",
     "autoprefixer": "^9.7.6",
     "babel-loader": "^8.1.0",
     "copy-webpack-plugin": "^5.1.1",
