@@ -1,0 +1,21 @@
+{
+  // IntelliSense を使用して利用可能な属性を学べます。
+  // 既存の属性の説明をホバーして表示します。
+  // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch localhost",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "url": "http://localhost:8080/index.html",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Attach",
+      "type": "firefox",
+      "request": "attach"
+    }
+  ]
+}

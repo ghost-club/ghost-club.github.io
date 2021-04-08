@@ -21,7 +21,6 @@ This template setup a minimal application using [Fable](http://fable.io/), [Elmi
 In development mode, we activate:
 
 - [Hot Module Replacement](https://fable-elmish.github.io/hmr/), modify your code and see the change on the fly
-- [Redux debugger](https://fable-elmish.github.io/debugger/), allow you to debug each message in your application using [Redux dev tool](https://github.com/reduxjs/redux-devtools)
 
 ### Build for production
 

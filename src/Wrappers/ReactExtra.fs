@@ -2,7 +2,8 @@ namespace Fable.React
 
 type FunctionComponent'<'Props> = 'Props -> Fable.React.ReactElement
 
-type ComponentType<'Props> = Fable.React.ReactElementType<'Props>
+type ComponentType<'Props> =
+    inherit Fable.React.ReactElementType<'Props>
 
 type [<AllowNullLiteral>] HTMLProps<'T> = interface end
 
