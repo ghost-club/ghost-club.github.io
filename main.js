@@ -280,10 +280,55 @@ const bgs = {
       x = flow1(coord);
       vec3 col = sampleBg(x*0.2 + vec2(cos(time),sin(time)) * 0.5);
       return mix(vec3(1.), col, e);`
-  }
+  },
+  "s": {
+    scaling: false, eyeDist: false,
+    code: `
+      vec2 x = p;
+      x += flow3(x) / 4.;
+      x += flow2(x) / 2.;
+      x += flow3(x) / 2.;
+      x += flow2(x) / 1.;
+      p = x + vec2(0,0.6);
+      float t = atan(p.x,p.y) / 3.1415926535 / 2.;
+      t += cos(length(p)*1.) * 0.3;
+      t = abs(fract(t*5.)-0.5)/5.;
+      t *= 3.1415926535 * 2.;
+      p = vec2(cos(t),sin(t)) * length(p);
+      p.x += time * 1. / 3.1415926535;
+      p.y += time * 2. / 3.1415926535;
+      p += activation(flow1(x)) * 0.001;
+      vec3 col = sampleBg(fract(p));
+      return mix(vec3(1,1,1), col, e);`
+  },
+  "3v": null /* {
+    scaling: false, eyeDist: false,
+    code: `
+      p.x += 0.022;
+      p.y += 0.6;
+      p = vec2(p.x+p.y,p.x-p.y);
+      p = vec2(p.x+p.y,p.x-p.y);
+      vec2 x = p * 0.5;
+      x += flow3(x) / 4.;
+      x += flow2(x) / 2.;
+      x += flow3(x) / 2.;
+      x += flow2(x) / 1.;
+      float t = atan(p.x,p.y) / 3.1415926535 / 2.;
+      t = abs(fract(t*4.)-0.5)/4.;
+      t *= 3.1415926535 * 2.;
+      vec2 o = vec2(cos(t),sin(t)) * length(p) * 0.5;
+      o.x += floor(time*2.)+pow(fract(time*2.),4.) + time;
+      o.y += time / 3.1415926535;
+      vec3 col = sampleBg(fract(o));
+      return mix(1.-col, col, e);`
+  } */,
+  "m": null,
+  "r": null,
+  "u2": null,
+  "u4": null
 };
 let ix = localStorage.getItem("index") | 0;
-const bgBases = ["1","2","3","5","306","nm","u"];
+const bgBases = ["1","2","3","5","306","nm","u","s"];
 const bgImageName = bgBases[Math.floor(Math.random()*bgBases.length)];
 let seed = Math.floor((startTime / 1000 / 60 - startTime.getTimezoneOffset()) / 60 / 24) | 0;
 const xorShift = _=>{
