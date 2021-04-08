@@ -7,7 +7,7 @@ nuget Fake.Core.String
 nuget Fake.Core.ReleaseNotes
 nuget Fake.IO.FileSystem
 nuget Fake.Tools.Git
-nuget Fake.JavaScript.Yarn 
+nuget Fake.JavaScript.Yarn
 //"
 #load ".fake/build.fsx/intellisense.fsx"
 
@@ -24,7 +24,12 @@ Target.create "Clean" (fun _ ->
     !! "src/bin"
     ++ "src/obj"
     ++ "output"
+    ++ "src/.fable"
     |> Seq.iter Shell.cleanDir
+
+    !! "src/**/*fs.js"
+    ++ "src/**/*fs.js.map"
+    |> Seq.iter Shell.rm
 )
 
 Target.create "Install" (fun _ ->
@@ -38,19 +43,11 @@ Target.create "YarnInstall" (fun _ ->
 )
 
 Target.create "Build" (fun _ ->
-    Yarn.exec
-        "webpack --mode production"
-        (fun o ->
-            { o with WorkingDirectory = __SOURCE_DIRECTORY__ }
-        )
+    DotNet.exec id "fable" "src --run webpack" |> ignore
 )
 
 Target.create "Watch" (fun _ ->
-    Yarn.exec
-        "webpack-dev-server --mode development"
-        (fun o ->
-            { o with WorkingDirectory = __SOURCE_DIRECTORY__ }
-        )
+    DotNet.exec id "fable" "watch src -s --run webpack serve" |> ignore
 )
 
 // Build order
