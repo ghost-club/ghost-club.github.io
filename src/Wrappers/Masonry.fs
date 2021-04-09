@@ -7,7 +7,7 @@ open Fable.Core.JS
 open Browser.Types
 
 type ComponentClass<'T> = React.ComponentClass<'T>
-let [<Import("Masonry","react-masonry-component")>] Masonry: ComponentClass<MasonryPropTypes> = jsNative
+let [<Import("MasonryComponent","react-masonry-component")>] Masonry: ComponentClass<MasonryPropTypes> = jsNative
 
 type [<AllowNullLiteral>] MasonryOptions =
     abstract columnWidth: U3<float, string, HTMLElement> option with get, set

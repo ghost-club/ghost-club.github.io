@@ -5,3 +5,7 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts/";
 @import "~@fortawesome/fontawesome-free/scss/brands.scss";
 
 @import '~bulma/bulma.sass';
+
+html {
+	scroll-behavior: smooth;
+}

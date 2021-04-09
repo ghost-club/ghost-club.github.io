@@ -15,7 +15,13 @@
     {
       "name": "Attach",
       "type": "firefox",
-      "request": "attach"
+      "request": "attach",
+      "pathMappings": [
+        {
+          "url": "webpack-internal:///mnt/d/Documents/codes/ghost-club.github.io/src",
+          "path": "${workspaceFolder}/src"
+        }
+      ]
     }
   ]
 }

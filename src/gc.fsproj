@@ -9,6 +9,7 @@
     <Compile Include="Wrappers/ReactI18nextBrowserLanguageDetector.fs" />
     <Compile Include="Wrappers/ReactGoogleFontLoader.fs" />
     <Compile Include="Wrappers/Masonry.fs" />
+    <Compile Include="Album.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
@@ -20,10 +21,10 @@
     <PackageReference Include="Fable.Elmish.Browser" Version="3.0.4" />
     <PackageReference Include="Fable.Elmish.Debugger" Version="3.2.0" />
     <PackageReference Include="Fable.Elmish.HMR" Version="4.0.1" />
-    <PackageReference Include="Fable.Fetch" Version="2.2.0" />
     <PackageReference Include="Fable.React" Version="7.3.0" />
     <PackageReference Include="Fable.FontAwesome" Version="2.0" />
     <PackageReference Include="Fable.FontAwesome.Free" Version="2.1" />
     <PackageReference Include="Fulma" Version="2.10.0" />
+    <PackageReference Include="Thoth.Fetch" Version="2.0.0" />
   </ItemGroup>
 </Project>
