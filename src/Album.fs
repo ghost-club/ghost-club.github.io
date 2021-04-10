@@ -7,7 +7,7 @@ open Thoth.Fetch
 open Fetch.Types
 
 [<Literal>]
-let private googleAppUrl = "https://script.google.com/macros/s/AKfycbwjFhMb6D76FNfvTClDQ6zgMBWQ4p0WdUJxVXzYq8F1OVszjGz0cY6FJ7Kto1WDPi_J/exec"
+let private googleAppUrl = "https://script.google.com/macros/s/AKfycbzOYeQNp9VywlN-3m-s_WqYchpJxVUQ5Xp5-Zd_vl0IUdGxZQCxdcElrE2h8x7iQjtk/exec"
 
 type MediaInfo = {
   baseUrl: string

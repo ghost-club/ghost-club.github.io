@@ -21,7 +21,7 @@ var CONFIG = {
         plugins: [
             ["i18next-extract", {
                 "locales": ["ja", "en"],
-                "outputPath": ((locale, _namespace) => `./src/locales/${locale}.json`),
+                "outputPath": ((locale, namespace) => `./src/locales/${locale}/${namespace}.json`),
                 "keyAsDefaultValue": true,
                 "discardOldKeys": true
             }]
