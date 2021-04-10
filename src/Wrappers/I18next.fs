@@ -8,7 +8,7 @@ type Array<'T> = System.Collections.Generic.IList<'T>
 type Error = System.Exception
 type TemplateStringsArray = System.Collections.Generic.IReadOnlyList<string>
 
-let [<Import("*","i18next")>] i18next: i18n = jsNative
+let [<Import("default","i18next")>] i18next: i18n = jsNative
 
 type [<AllowNullLiteral>] IExports =
     abstract ResourceStore: ResourceStoreStatic
@@ -267,7 +267,6 @@ type TFunctionKeys =
     U2<string, TemplateStringsArray>
 
 type [<AllowNullLiteral>] TFunction =
-    [<Emit "$0($1...)">] abstract Invoke: key: U2<'TKeys, ResizeArray<'TKeys>> * ?options: U2<TOptions<'TInterpolationMap>, string> -> 'TResult
     [<Emit "$0($1...)">] abstract Invoke: key: U2<'TKeys, ResizeArray<'TKeys>> * ?defaultValue: string * ?options: U2<TOptions<'TInterpolationMap>, string> -> 'TResult
 
 type [<AllowNullLiteral>] Resource =

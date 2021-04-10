@@ -13,13 +13,19 @@ var CONFIG = {
     babel: {
         presets: [
             ["@babel/preset-env", {
-                "modules": false,
                 "useBuiltIns": "usage",
                 "corejs": 3,
-                // This saves around 4KB in minified bundle (not gzipped)
-                // "loose": true,
+                "loose": true,
             }]
         ],
+        plugins: [
+            ["i18next-extract", {
+                "locales": ["ja", "en"],
+                "outputPath": ((locale, _namespace) => `./src/locales/${locale}.json`),
+                "keyAsDefaultValue": true,
+                "discardOldKeys": true
+            }]
+        ]
     }
 }
 

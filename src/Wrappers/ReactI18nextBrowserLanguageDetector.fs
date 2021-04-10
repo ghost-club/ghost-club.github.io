@@ -7,9 +7,7 @@ open Browser.Types
 
 type Array<'T> = System.Collections.Generic.IList<'T>
 
-
-type [<AllowNullLiteral>] IExports =
-    abstract I18nextBrowserLanguageDetector: I18nextBrowserLanguageDetectorStatic
+let [<Import("default","i18next-browser-languagedetector")>] languageDetector : I18nextBrowserLanguageDetectorStatic = jsNative
 
 type [<AllowNullLiteral>] DetectorOptions =
     /// order and from where user language should be detected

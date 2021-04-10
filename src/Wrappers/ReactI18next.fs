@@ -1,7 +1,6 @@
 // ts2fable 0.7.1
 module rec ReactI18next
 open System
-open Fable
 open Fable.Core
 open Fable.Core.JS
 
@@ -13,8 +12,10 @@ type TFunction = I18next.TFunction
 type Resource = I18next.Resource
 
 let [<Import("initReactI18next","react-i18next")>] initReactI18next: ThirdPartyModule = jsNative
-let [<Import("I18nextProvider","react-i18next")>] I18nextProvider: React.FunctionComponent'<I18nextProviderProps> = jsNative
-let [<Import("I18nContext","react-i18next")>] I18nContext: React.IContext<I18nContextReactContext> = jsNative
+let [<Import("I18nextProvider","react-i18next")>] I18nextProvider: React.FunctionComponent<I18nextProviderProps> = jsNative
+let [<Import("I18nContext","react-i18next")>] I18nContext: React.Context<I18nContextReactContext> = jsNative
+
+let [<Import("*","react-i18next")>] reactI18next : IExports = jsNative
 
 type [<AllowNullLiteral>] IExports =
     abstract setDefaults: options: ReactOptions -> unit

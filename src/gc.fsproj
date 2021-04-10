@@ -3,13 +3,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Wrappers/ReactExtra.fs" />
+    <Compile Include="Properties.fs" />
+    <Compile Include="Wrappers/React.fs" />
     <Compile Include="Wrappers/I18next.fs" />
     <Compile Include="Wrappers/ReactI18next.fs" />
     <Compile Include="Wrappers/ReactI18nextBrowserLanguageDetector.fs" />
+    <Compile Include="Wrappers/ReactGridLayout.fs" />
     <Compile Include="Wrappers/ReactGoogleFontLoader.fs" />
-    <Compile Include="Wrappers/Masonry.fs" />
+    <Compile Include="Wrappers/Rewrap.fs" />
     <Compile Include="Album.fs" />
+    <Compile Include="Model.fs" />
+    <Compile Include="View/Misc.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
