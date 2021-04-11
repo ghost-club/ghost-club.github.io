@@ -23,3 +23,4 @@ let viewGoogleFontLoader (model: Model) (dispatch: Msg -> unit) =
         font "Roboto" [ !^400.0; !^"400i" ]
       |])
     ))
+

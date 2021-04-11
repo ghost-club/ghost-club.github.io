@@ -25,6 +25,10 @@ let private MediaInfoDecoder =
     height = get.Required.Field "height" (Decode.string |> Decode.map int64)
   })
 
+module MediaInfo =
+  let getOrigUrl (x: MediaInfo) = sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
+
+
 type Response = Result<MediaInfo [], string>
 let private ResponseDecoder =
   Decode.object (fun get ->

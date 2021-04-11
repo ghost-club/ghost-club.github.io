@@ -10,10 +10,13 @@
     <Compile Include="Wrappers/ReactI18nextBrowserLanguageDetector.fs" />
     <Compile Include="Wrappers/ReactGridLayout.fs" />
     <Compile Include="Wrappers/ReactGoogleFontLoader.fs" />
+    <Compile Include="Wrappers/ReactSlick.fs" />
     <Compile Include="Wrappers/Rewrap.fs" />
+    <Compile Include="Extensions.fs" />
     <Compile Include="Album.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="View/Misc.fs" />
+    <Compile Include="View/PhotoGallery.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>

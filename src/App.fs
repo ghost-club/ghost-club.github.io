@@ -92,35 +92,38 @@ let private viewLoading model dispatch =
   ]
 
 let private viewMain model dispatch =
-  Hero.hero [ Hero.IsFullHeight ] [
-    Hero.body [] [
-      Container.container [] [
-        Columns.columns [ Columns.CustomClass "has-text-centered" ] [
-          Column.column [ Column.Width(Screen.All, Column.IsHalf); Column.Offset(Screen.All, Column.IsOneQuarter) ] [
+  Section.section [] [
+    Container.container [] [
+      Columns.columns [ Columns.CustomClass "has-text-centered" ] [
+        Column.column [ Column.Width(Screen.All, Column.Is8); Column.Offset(Screen.All, Column.Is2) ] [
+          yield
+            Block.block [] [
+              p [Key "hello-world"] [str !~"Hello, world!"]
+              p [Key "state"] [str (sprintf "state: %s" model.state.AsString)]
+            ]
+          match model.state with
+          | Init | AlbumLoadFailed _ ->
             yield
-              Content.content [] [
-                p [Key "hello-world"] [str !~"Hello, world!"]
-                p [Key "state"] [str (sprintf "state: %s" model.state.AsString)]
+              Button.button [ Button.OnClick (fun _ -> dispatch LoadAlbum) ] [
+                str !~"load"
               ]
-            match model.state with
-            | Init | AlbumLoadFailed _ ->
-              yield
-                Button.button [ Button.OnClick (fun _ -> dispatch LoadAlbum) ] [
-                  str !~"load"
-                ]
-            | AlbumLoading -> ()
-            | AlbumLoaded album -> ()
+          | _ -> ()
 
-            let langSwitchText =
-              match model.lang with
-              | Unspecified
-              | En -> !~UITexts.ChangeToAnotherLanguage
-              | Ja -> !~UITexts.ChangeToAnotherLanguage
-            yield
+          let langSwitchText =
+            match model.lang with
+            | Unspecified
+            | En -> !~UITexts.ChangeToAnotherLanguage
+            | Ja -> !~UITexts.ChangeToAnotherLanguage
+          yield
+            Block.block [] [
               Button.button [ Button.OnClick (fun _ -> dispatch (SwitchLanguage (Language.Flip model.lang))) ] [
-                str langSwitchText
+                  str langSwitchText
               ]
-          ]
+            ]
+          yield
+            Block.block [] [
+              yield! PhotoGallery.viewPhotoGallery model dispatch
+            ]
         ]
       ]
     ]
