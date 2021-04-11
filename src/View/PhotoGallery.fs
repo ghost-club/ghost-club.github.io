@@ -10,8 +10,11 @@ open Wrappers.Rewrapped
 
 open Model
 
+let imgDelayed =
+  FunctionComponent.Of
+
 let viewPhotoGallery (model: Model) (dispatch: Msg -> unit) =
-  let render (album: Album.MediaInfo[]) =
+  let render (album: Album.IMediaInfo[]) =
     ReactSlick.slider
       (fun it ->
         it.className <- Some "center"
@@ -27,7 +30,7 @@ let viewPhotoGallery (model: Model) (dispatch: Msg -> unit) =
         for i, mi in Seq.indexed album do
           yield
             div [Key (sprintf "gallery-img%d" i)] [
-              img [Src (Album.MediaInfo.getOrigUrl mi)]
+              img [Src (Album.IMediaInfo.getOrigUrl mi); OnLoad (fun e -> ())]
             ]
       ]
 

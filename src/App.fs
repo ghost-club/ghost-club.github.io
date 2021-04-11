@@ -79,10 +79,10 @@ let internal update msg model =
     { model with state = AlbumLoading },
     Cmd.OfPromise.perform Album.get () LoadAlbumResponse
   | LoadAlbum, _ -> model, Cmd.none
-  | LoadAlbumResponse (Ok album), _ ->
-    { model with state = AlbumLoaded album }, Cmd.none
-  | LoadAlbumResponse (Error msg), _ ->
-    { model with state = AlbumLoadFailed msg }, Cmd.none
+  | LoadAlbumResponse (Album.IResult.Ok x), _ ->
+    { model with state = AlbumLoaded x.value }, Cmd.none
+  | LoadAlbumResponse (Album.IResult.Error x), _ ->
+    { model with state = AlbumLoadFailed x.message }, Cmd.none
 
 let private viewLoading model dispatch =
   Hero.hero [ Hero.IsFullHeight ] [

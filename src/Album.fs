@@ -2,51 +2,57 @@ module Album
 
 open System
 open Fable.Core
-open Thoth.Json
-open Thoth.Fetch
 open Fetch.Types
 
 [<Literal>]
-let private googleAppUrl = "https://script.google.com/macros/s/AKfycbzOYeQNp9VywlN-3m-s_WqYchpJxVUQ5Xp5-Zd_vl0IUdGxZQCxdcElrE2h8x7iQjtk/exec"
+let private googleAppUrl = "https://script.google.com/macros/s/AKfycbwc04XnKjP8Yq-yCgw34WXxcEd06BO4Y3n2B9P65rVRcXN1qQjaXfNHXcsaXjhOd0fa/exec"
 
-type MediaInfo = {
-  baseUrl: string
-  mimeType: string
-  created: DateTimeOffset
-  width: int64
-  height: int64
-}
-let private MediaInfoDecoder =
-  Decode.object (fun get -> {
-    baseUrl = get.Required.Field "baseUrl" Decode.string
-    mimeType = get.Required.Field "mimeType" Decode.string
-    created = get.Required.Field "created" Decode.datetimeOffset
-    width = get.Required.Field "width" (Decode.string |> Decode.map int64)
-    height = get.Required.Field "height" (Decode.string |> Decode.map int64)
-  })
+type [<AllowNullLiteral>] IMediaInfo =
+  abstract baseUrl: string with get, set
+  abstract mimeType: string with get, set
+  abstract created: DateTimeOffset with get, set
+  abstract width: int with get, set
+  abstract height: int with get, set
 
-module MediaInfo =
-  let getOrigUrl (x: MediaInfo) = sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
+module IMediaInfo =
+  let getOrigUrl (x: IMediaInfo) = sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
 
+type [<AllowNullLiteral>] IResult =
+  abstract status: string with get, set
 
-type Response = Result<MediaInfo [], string>
-let private ResponseDecoder =
-  Decode.object (fun get ->
-    let status = get.Required.Field "status" Decode.string
-    match status with
-    | "ok" -> Ok (get.Required.Field "value" (Decode.array MediaInfoDecoder))
-    | "error" -> Error (get.Required.Field "message" Decode.string)
-    | _ -> Error "invalid response from API server"
-  )
+type [<AllowNullLiteral>] IResultOK =
+  inherit IResult
+  abstract value: IMediaInfo[] with get, set
 
-let get () : JS.Promise<Response> =
+type [<AllowNullLiteral>] IResultError =
+  inherit IResult
+  abstract message: string with get, set
+
+let private err msg =
+  JsInterop.jsOptions<IResultError>(fun it ->
+    it.status <- "error"
+    it.message <- msg
+  ) :> IResult
+
+let get () : JS.Promise<IResult> =
   promise {
-    let! response =
-      Fetch.tryGet(
-        googleAppUrl + "?action=images",
-        decoder = ResponseDecoder,
-        properties = [Method HttpMethod.GET; Mode RequestMode.Cors])
-    match response with
-    | Ok resp -> return resp
-    | Error err -> return Error (Helper.message err)
+    let! resp =
+      Fetch.fetch
+        (googleAppUrl + "?action=images")
+        [Method HttpMethod.GET; Mode RequestMode.Cors]
+    let! txt = resp.text()
+    return
+      JS.JSON.parse(txt, (fun key value ->
+        if (key :?> string) = "created" then
+          JS.Constructors.Date.Create(value :?> string) |> box
+        else value
+      )) :?> IResult
   }
+
+[<RequireQualifiedAccess>]
+module IResult =
+  let inline (|Ok|Error|) (x: IResult) =
+    if x.status = "ok" then
+      Ok (x :?> IResultOK)
+    else
+      Error (x :?> IResultError)

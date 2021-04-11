@@ -9,3 +9,4 @@ module Fulma =
   module Block =
     let block (options: GenericOption list) children =
       GenericOptions.Parse(options, parseOptions, "block").ToReactElement(div, children)
+

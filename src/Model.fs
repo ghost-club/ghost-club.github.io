@@ -6,7 +6,7 @@ open Properties
 type State =
   | Init
   | AlbumLoading
-  | AlbumLoaded of Album.MediaInfo[]
+  | AlbumLoaded of Album.IMediaInfo[]
   | AlbumLoadFailed of string
   member this.AsString =
     match this with
@@ -27,5 +27,5 @@ type Msg =
   | InitCompleted
   | InitFailed of exn
   | LoadAlbum
-  | LoadAlbumResponse of Album.Response
+  | LoadAlbumResponse of Album.IResult
   | SwitchLanguage of Language
