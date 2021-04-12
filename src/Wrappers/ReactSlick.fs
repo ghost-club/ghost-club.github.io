@@ -87,7 +87,7 @@ type [<AllowNullLiteral>] Settings =
     abstract verticalSwiping: bool option with get, set
     abstract waitForAnimate: bool option with get, set
 
-type [<AbstractClass>] Slider =
+type [<AbstractClass; Erase>] Slider =
     inherit React.Component<Settings, obj>
     abstract slickNext: unit -> unit
     abstract slickPause: unit -> unit

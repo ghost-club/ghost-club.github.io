@@ -10,7 +10,7 @@ let [<Import("*","react-grid-layout")>] reactGridLayout: ReactGridLayout.IExport
 type [<AllowNullLiteral>] IExports =
     abstract ReactGridLayout: ReactGridLayoutStatic
 
-type [<AbstractClass>] ReactGridLayout =
+type [<AbstractClass; Erase>] ReactGridLayout =
     inherit React.Component<ReactGridLayout.ReactGridLayoutProps>
 
 type [<AllowNullLiteral>] ReactGridLayoutStatic =
@@ -199,7 +199,7 @@ module ReactGridLayout =
         /// Callback when the width changes, so you can modify the layout as needed.
         abstract onWidthChange: containerWidth: float * margin: float * float * cols: float * containerPadding: float * float -> unit
 
-    type [<AbstractClass>] Responsive =
+    type [<AbstractClass; Erase>] Responsive =
         inherit React.Component<ResponsiveProps>
 
     type [<AllowNullLiteral>] ResponsiveStatic =

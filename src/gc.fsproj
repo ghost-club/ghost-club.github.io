@@ -5,12 +5,14 @@
   <ItemGroup>
     <Compile Include="Properties.fs" />
     <Compile Include="Wrappers/React.fs" />
+    <Compile Include="Wrappers/IntersectionObserver.fs" />
     <Compile Include="Wrappers/I18next.fs" />
     <Compile Include="Wrappers/ReactI18next.fs" />
     <Compile Include="Wrappers/ReactI18nextBrowserLanguageDetector.fs" />
     <Compile Include="Wrappers/ReactGridLayout.fs" />
     <Compile Include="Wrappers/ReactGoogleFontLoader.fs" />
     <Compile Include="Wrappers/ReactSlick.fs" />
+    <Compile Include="Wrappers/ReactIntersectionObserver.fs" />
     <Compile Include="Wrappers/Rewrap.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Album.fs" />

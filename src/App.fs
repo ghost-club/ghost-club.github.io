@@ -124,6 +124,20 @@ let private viewMain model dispatch =
             Block.block [] [
               yield! PhotoGallery.viewPhotoGallery model dispatch
             ]
+
+          yield
+            Block.block [Props [Style [Height "2000px"]]] [
+            ]
+
+          yield
+            ReactIntersectionObserver.inViewPlain
+              (fun it ->
+                it.onChange <- (fun inView entry ->
+                  printfn "inview: %b" inView
+                  printfn "%A" entry.target
+                )) [
+              p [Key "hidden-str"] [str "find me!"]
+            ]
         ]
       ]
     ]

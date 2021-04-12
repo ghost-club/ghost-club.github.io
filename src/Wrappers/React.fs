@@ -14,8 +14,9 @@ type PureComponent<'P> = PureComponent<'P, obj>
 type FunctionComponent<'Props> = 'Props -> Fable.React.ReactElement
 type StatelessComponent<'P> = FunctionComponent<'P>
 
-type ComponentType<'Props> =
-    inherit Fable.React.ReactElementType<'Props>
+type ReactType<'T> = Fable.React.ReactElementType<'T>
+
+type ComponentType<'Props> = Fable.React.ReactElementType<'Props>
 
 type [<AllowNullLiteral>] HTMLProps<'T> = interface end
 
@@ -26,11 +27,9 @@ type [<AllowNullLiteral>] ReactPortal =
     inherit Fable.React.ReactElement
     abstract children: Fable.React.ReactElement with get
 
-type [<AllowNullLiteral>] ReactNode =
-    inherit Fable.React.ReactElement
+type ReactNode = Fable.React.ReactElement
 
-type ComponentClass<'T> =
-    inherit ComponentType<'T>
+type ComponentClass<'T> = ComponentType<'T>
 
 type CSSProperties = interface end
 module CSSProperties =
@@ -102,3 +101,5 @@ module EventHandler =
 type ReactEventHandler<'T when 'T :> EventTarget> = EventHandler<SyntheticEvent<'T>>
 type MouseEventHandler<'T when 'T :> EventTarget> = EventHandler<MouseEvent<'T>>
 type TouchEventHandler<'T when 'T :> EventTarget> = EventHandler<TouchEvent<'T>>
+
+type RefObject<'T> = IRefValue<'T>
