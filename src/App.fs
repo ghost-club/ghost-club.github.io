@@ -91,6 +91,24 @@ let private viewLoading model dispatch =
     ]
   ]
 
+let private viewVideo model dispatch =
+  ReactIntersectionObserver.inView (fun it ->
+    it.onChange <-
+      (fun inView entry ->
+        printfn "inview: %b" inView
+        printfn "%A" entry.target)
+    ()) (fun prop -> [
+    Section.section [Section.CustomClass "background"; Section.Props [Ref prop.ref]] [
+      video [ HTMLAttr.Custom("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg" ] [
+        source [Src "assets/video/bg.webm"; Type "video/webm"]
+        source [Src "assets/video/bg.mp4";  Type "video/mp4"]
+        img    [Src "assets/video/bg.jpg";  Title "HTML5 not supported"]
+      ]
+
+    ]
+  ])
+
+
 let private viewMain model dispatch =
   Section.section [] [
     Container.container [] [
@@ -145,6 +163,7 @@ let private viewMain model dispatch =
 
 let private view model dispatch =
   div [Key "div-main"] [
+    yield viewVideo model dispatch
     yield Misc.viewGoogleFontLoader model dispatch
     if model.initCompleted then
       yield viewMain model dispatch
