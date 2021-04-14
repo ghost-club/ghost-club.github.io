@@ -95,28 +95,26 @@ let private viewLoading model dispatch =
   ]
 
 let private viewVideo model dispatch =
-  div [Key.Src(__FILE__,__LINE__)] [
-    Section.section [CustomClass "background"; Props [Key.Src(__FILE__,__LINE__)]] [
-      video [ Key "background-video"; HTMLAttr.Custom("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg" ] [
-        source [Src "assets/video/bg.webm"; Type "video/webm"]
-        source [Src "assets/video/bg.mp4";  Type "video/mp4"]
-        img    [Src "assets/video/bg.jpg";  Title "HTML5 not supported"]
-      ]
+  div [Class "background"; Key.Src(__FILE__,__LINE__)] [
+    video [Key "background-video"; HTMLAttr.Custom ("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg"] [
+      source [Src "assets/video/bg.webm"; Type "video/webm"]
+      source [Src "assets/video/bg.mp4";  Type "video/mp4"]
+      img    [Src "assets/video/bg.jpg";  Title "HTML5 not supported"]
     ]
   ]
 
-let private viewMain' (model: Model) dispatch =
+let private viewMain (model: Model) dispatch =
   let langSwitchText =
     match model.lang with
     | Unspecified
-    | En -> !~UITexts.ChangeToAnotherLanguage
-      | Ja -> !~UITexts.ChangeToAnotherLanguage
+    | En -> !@UITexts.ChangeToAnotherLanguage
+    | Ja -> !@UITexts.ChangeToAnotherLanguage
 
   Columns.columns [CustomClass "has-text-centered"; Props [Key.Src(__FILE__,__LINE__)]] [
     Column.column [Column.Width(Screen.All, Column.Is2); Props [Key "desktop-sidebar"]] [
       Block.block [CustomClass "sticky menu full-height"; Props [Key.Src(__FILE__,__LINE__); Style [MarginBottom 0]]] [
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-          p [Key "hello-world"] [str !~"Hello, world!"]
+          p [Key "hello-world"] [str !@"Hello, world!"]
           p [Key "album-state"] [str (sprintf "album: %s" model.albumState.AsString)]
         ]
         Block.block [Props [Key.Src(__FILE__, __LINE__)]] [
@@ -126,7 +124,7 @@ let private viewMain' (model: Model) dispatch =
               Button.button [
                 Props [Key.Src(__FILE__,__LINE__)]
                 Button.OnClick (fun _ -> dispatch LoadAlbum) ] [
-                str !~"load"
+                str !@"load"
               ] |> Some
             | _ -> None
           )
@@ -163,12 +161,9 @@ let private viewMain' (model: Model) dispatch =
 
 let private view model dispatch =
   div [Key.Src (__FILE__, __LINE__)] [
-    yield viewVideo model dispatch
-    yield Misc.viewGoogleFontLoader model dispatch
-    if model.initCompleted then
-      yield viewMain' model dispatch
-    else
-      yield viewLoading model dispatch
+    viewVideo model dispatch
+    Misc.viewGoogleFontLoader model dispatch
+    if model.initCompleted then viewMain model dispatch else viewLoading model dispatch
   ]
 
 open Elmish.Debug

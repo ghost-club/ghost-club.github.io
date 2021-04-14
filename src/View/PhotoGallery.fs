@@ -27,12 +27,11 @@ let viewPhotoGallery (model: Model) (dispatch: Msg -> unit) =
           ()) [
         for i, mi in Seq.indexed album do
           yield
-            div [Key (sprintf "gallery-img%d" i)] [
+            div [Key (sprintf "photo-gallery-img%d" i)] [
               img [Src (Album.IMediaInfo.getOrigUrl mi)]
             ]
       ]
     ]
-
 
   match model.albumState with
   | AlbumState.Loaded album -> [render album]
