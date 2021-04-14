@@ -12,7 +12,7 @@ html {
 	scroll-behavior: smooth;
 }
 
-body {
+.column.content {
 	overflow: hidden;
 }
 
@@ -26,6 +26,7 @@ body {
 	height: 100%;
 	padding: 1%;
 	overflow: visible;
+	z-index: -1;
 }
 
 .section.background {
@@ -34,7 +35,6 @@ body {
   position: relative;
   overflow: hidden;
 	padding: 0%;
-	background-color:rgba($color: #FFFFFF, $alpha: 0.3)
 }
 
 video {
@@ -45,5 +45,34 @@ video {
 	overflow: hidden;
 	object-fit: cover;
 	object-position: 50% 50%;
-  z-index: -1;
+  z-index: -2;
+}
+
+.sticky {
+	position: sticky;
+	top: 0;
+}
+
+.columns {
+	margin: 0;
+}
+
+.column {
+	padding: 0;
+}
+
+.column.content {
+	background: linear-gradient(0deg, #000000 0%, #000000 33%, transparent 100%);
+	color: #FFFFFF;
+}
+
+.block.menu {
+	color: #FFFFFF;
+  border: 2px solid;
+	border-color: #FFFFFF;
+	background-color: #000000;
+}
+
+.block.full-height {
+	min-height: 100vh;
 }

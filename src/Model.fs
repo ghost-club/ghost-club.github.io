@@ -3,22 +3,22 @@ module Model
 open Fable.Core
 open Properties
 
-type State =
+[<RequireQualifiedAccess>]
+type AlbumState =
   | Init
-  | AlbumLoading
-  | AlbumLoaded of Album.IMediaInfo[]
-  | AlbumLoadFailed of string
+  | Loading
+  | Loaded of Album.IMediaInfo[]
+  | LoadFailed of string
   member this.AsString =
     match this with
     | Init -> "Init"
-    | AlbumLoading -> "Album Loading"
-    | AlbumLoaded _ -> "Album Loaded"
-    | AlbumLoadFailed msg -> sprintf "Album Load Failed (%s)" msg
-
+    | Loading -> "Album Loading"
+    | Loaded _ -> "Album Loaded"
+    | LoadFailed msg -> sprintf "Album Load Failed (%s)" msg
 
 type Model = {
-  state: State
   initCompleted: bool
+  albumState: AlbumState
   lang: Language
 }
 
@@ -29,3 +29,9 @@ type Msg =
   | LoadAlbum
   | LoadAlbumResponse of Album.IResult
   | SwitchLanguage of Language
+
+let initModel arg = {
+  initCompleted = false
+  albumState = AlbumState.Init
+  lang = Unspecified
+}

@@ -14,7 +14,10 @@ let inline private font (font: string) (weights: U2<string, float> list) : Font 
   )
 
 let inline private googleFontLoader props =
-  React.FunctionComponent.Of(GoogleFontLoader) props
+  React.FunctionComponent.Of(
+    GoogleFontLoader,
+    withKey=(fun _ -> "google-font-loader")
+  ) props
 
 let viewGoogleFontLoader (model: Model) (dispatch: Msg -> unit) =
   googleFontLoader
@@ -23,4 +26,3 @@ let viewGoogleFontLoader (model: Model) (dispatch: Msg -> unit) =
         font "Roboto" [ !^400.0; !^"400i" ]
       |])
     ))
-
