@@ -114,6 +114,7 @@ let private viewError model (exns: exn list) dispatch =
 let private viewHeader model dispatch =
   div [Class "fullscreen-header"; Key.Src(__FILE__,__LINE__)] [
     video [
+      Class "background-video"
       Key "background-video";
       HTMLAttr.Custom ("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg"
       OnLoadedData (fun _ -> dispatch BackgroundVideoLoaded)] [
@@ -121,9 +122,9 @@ let private viewHeader model dispatch =
       source [Src "assets/video/bg.mp4";  Type "video/mp4"]
       img    [Src "assets/video/bg.jpg";  Title "HTML5 not supported"]
     ]
-    Block.block [
-      CustomClass (if model.state = ModelState.Loaded then "loading-screen fadeout-1s" else "loading-screen ")
-      Props [Key.Src(__FILE__, __LINE__)]] [
+    div [
+      Class (if model.state = ModelState.Loaded then "loading-screen fadeout-1s" else "loading-screen")
+      Key.Src(__FILE__, __LINE__)] [
       Hero.hero [Hero.IsFullHeight; Props [Key.Src(__FILE__, __LINE__)]] [
         Hero.body [] [
           Container.container [Container.IsFluid; Modifiers [Modifier.TextAlignment (Screen.All, TextAlignment.Centered)]] [
@@ -143,7 +144,7 @@ let private viewMain (model: Model) dispatch =
 
   Columns.columns [CustomClass "has-text-centered"; Props [Key.Src(__FILE__,__LINE__)]] [
     Column.column [Column.Width(Screen.All, Column.Is2); Props [Key "desktop-sidebar"]] [
-      Block.block [CustomClass "sticky menu full-height"; Props [Key.Src(__FILE__,__LINE__); Style [MarginBottom 0]]] [
+      div [Class "menu full-height"; Key.Src(__FILE__,__LINE__); Style [MarginBottom 0]] [
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
           p [Key "hello-world"] [str !@"Hello, world!"]
           p [Key "album-state"] [str (sprintf "album: %s" model.albumState.AsString)]
@@ -159,7 +160,7 @@ let private viewMain (model: Model) dispatch =
       div [Key.Src(__FILE__,__LINE__)] []
     ]
 
-    Column.column [Column.Width(Screen.All, Column.Is10); CustomClass "content"; Props [Key "content"]] [
+    Column.column [Column.Width(Screen.All, Column.Is10); CustomClass "main"; Props [Key "main"]] [
       Block.block [Props [Key.Src(__FILE__, __LINE__)]] [
         Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
           p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]

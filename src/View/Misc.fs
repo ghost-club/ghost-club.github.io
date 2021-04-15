@@ -7,13 +7,13 @@ open Fable.Core.JsInterop
 
 open ReactGoogleFontLoader
 
-let inline private font (font: string) (weights: U2<string, float> list) : Font =
+let inline font (font: string) (weights: U2<string, float> list) : Font =
   jsOptions (fun (it: Font) ->
     it.font <- font
     it.weights <- Some (ResizeArray(weights))
   )
 
-let inline private googleFontLoader props =
+let inline googleFontLoader props =
   React.FunctionComponent.Of(
     GoogleFontLoader,
     withKey=(fun _ -> "google-font-loader")

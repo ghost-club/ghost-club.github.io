@@ -6,15 +6,34 @@
 
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
-@import '~bulma/bulma.sass';
+//@import '~bulma/bulma.sass';
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/helpers/_all.sass";
+@import "~bulma/sass/base/_all.sass";
+@import "~bulma/sass/layout/_all.sass";
+@import "~bulma/sass/grid/_all.sass";
 
 html {
 	scroll-behavior: smooth;
 }
 
-.column.content {
-	overflow: hidden;
+// block
+
+.block:not(:last-child) {
+  margin-bottom: 1.5rem;
 }
+
+// columns
+
+.columns {
+	margin: 0;
+}
+
+.column {
+	padding: 0;
+}
+
+// slick slide
 
 .slick-list {
 	overflow: visible;
@@ -27,7 +46,22 @@ html {
 	padding: 1%;
 	overflow: visible;
 	z-index: -1;
+	outline: 1px solid transparent;
 }
+
+.slick-dots li button:before
+{
+	color: white;
+}
+
+.slick-dots li.slick-active button:before
+{
+	opacity: .75;
+	color: white;
+}
+
+
+// specifics
 
 .fullscreen-header {
   width: 100%;
@@ -37,7 +71,32 @@ html {
 	padding: 0%;
 }
 
-video {
+.loading-screen {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	padding: 0%;
+	background-color: #000000;
+	z-index: -1;
+}
+
+.menu {
+	color: #FFFFFF;
+  border: 2px solid;
+	border-color: #FFFFFF;
+	background-color: #000000;
+	position: sticky;
+	top: 0;
+}
+
+.main {
+	background: linear-gradient(0deg, #000000 0%, #000000 33%, transparent 100%);
+	color: #FFFFFF;
+	overflow: hidden;
+	padding: 0% 5%;
+}
+
+video.background-video {
 	height: 100%;
   width:  100%;
 	position: fixed;
@@ -48,14 +107,8 @@ video {
   z-index: -2;
 }
 
-.block.loading-screen {
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	padding: 0%;
-	background-color: #000000;
-	z-index: -1;
-}
+
+// utils
 
 .fadeout-1s {
 	animation: animation-fadeout 1s ease 0s 1 forwards;
@@ -71,31 +124,6 @@ video {
 	}
 }
 
-.sticky {
-	position: sticky;
-	top: 0;
-}
-
-.columns {
-	margin: 0;
-}
-
-.column {
-	padding: 0;
-}
-
-.column.content {
-	background: linear-gradient(0deg, #000000 0%, #000000 33%, transparent 100%);
-	color: #FFFFFF;
-}
-
-.block.menu {
-	color: #FFFFFF;
-  border: 2px solid;
-	border-color: #FFFFFF;
-	background-color: #000000;
-}
-
-.block.full-height {
+.full-height {
 	min-height: 100vh;
 }

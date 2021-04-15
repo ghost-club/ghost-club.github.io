@@ -12,11 +12,7 @@ var CONFIG = {
     // More info at https://github.com/babel/babel/blob/master/packages/babel-preset-env/README.md
     babel: {
         presets: [
-            ["@babel/preset-env", {
-                "useBuiltIns": "usage",
-                "corejs": 3,
-                "loose": true,
-            }]
+            "@babel/preset-react",
         ],
         plugins: [
             ["i18next-extract", {

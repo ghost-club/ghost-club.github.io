@@ -18,7 +18,7 @@ let viewPhotoGallery (model: Model) (dispatch: Msg -> unit) =
           it.className <- Some "center"
           it.centerMode <- Some true
           it.infinite <- Some true
-          it.centerPadding <- Some "50px"
+          it.centerPadding <- Some "0"
           it.slidesToShow <- Some 1.0
           it.dots <- Some true
           it.autoplay <- Some true

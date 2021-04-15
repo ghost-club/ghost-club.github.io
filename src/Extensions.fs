@@ -8,7 +8,7 @@ module Fulma =
 
   [<RequireQualifiedAccess>]
   module Block =
-    let block (options: GenericOption list) children =
+    let inline block (options: GenericOption list) children =
       GenericOptions.Parse(options, parseOptions, "block").ToReactElement(div, children)
 
   type Option =
