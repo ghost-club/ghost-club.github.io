@@ -17,7 +17,7 @@ let [<ImportDefault("./locales/en/ui.json")>] enUi : obj = jsNative
 let [<ImportDefault("./locales/ja/translation.json")>] jaTranslation : obj = jsNative
 let [<ImportDefault("./locales/ja/ui.json")>] jaUi : obj = jsNative
 
-let initI18n =
+let initI18nTask =
   let options =
     jsOptions<I18next.InitOptions>(fun it ->
       it.supportedLngs <- Some (ResizeArray ["ja"; "en"])
@@ -39,67 +39,98 @@ let initI18n =
       it.debug <- Some true
       #endif
     )
-  I18next.i18next
-    .``use``(!^ReactI18nextBrowserLanguageDetector.languageDetector)
-    .init(options)
-  |> Promise.map ignore
+  promise {
+    let! _ =
+      I18next.i18next
+        .``use``(!^ReactI18nextBrowserLanguageDetector.languageDetector)
+        .init(options)
+    let lang =
+      match I18next.i18next.language with
+      | "ja" -> Ja
+      | _ -> En
+    return SwitchLanguage lang
+  }
 
-let initTasks = [
-  initI18n
-]
+let initAlbumTask =
+  Album.get () |> Promise.map LoadAlbumResponse
 
-let initCmd : Cmd<Msg> =
-  initTasks
-  |> Promise.all
-  |> Promise.map (fun _ -> InitCompleted)
-  |> Promise.catch InitFailed
-  |> Cmd.OfPromise.result
+let initCmd =
+  Cmd.batch [
+    Cmd.OfPromise.result (initI18nTask  |> Promise.catch InitError)
+    Cmd.OfPromise.result (initAlbumTask |> Promise.catch InitError)
+  ]
 
 let init arg = initModel arg, initCmd
 
 let internal update msg model =
   match msg with
   | Ignore -> model, Cmd.none
-  | InitCompleted ->
-    let lang =
-      match I18next.i18next.language with
-      | "ja" -> Ja
-      | _ -> En
-    { model with initCompleted = true; lang = lang }, Cmd.none
-  | InitFailed e ->
-    eprintfn "failed to initialize: %s" e.Message
+  | InitError e ->
+    eprintfn "error on initialization:\n%s" (e.ToString())
+    let state =
+      match model.state with
+      | ModelState.Error es -> ModelState.Error (e :: es)
+      | _ -> ModelState.Error [e]
+    { model with state = state }, Cmd.none
+  | InitTaskCompleted ->
+    let model =
+      match model.state with
+      | ModelState.Loading ->
+        match model.lang, model.albumState, model.backgroundVideoIsLoaded with
+        | Unspecified, _, _
+        | _, AlbumState.Loading, _
+        | _, _, false -> model
+        | _ -> { model with state = ModelState.Loaded }
+      | _ -> model
     model, Cmd.none
+  | BackgroundVideoLoaded ->
+    { model with backgroundVideoIsLoaded = true }, Cmd.ofMsg InitTaskCompleted
   | SwitchLanguage lang ->
-    let task () =
+    let cmd =
       match lang with
-      | Unspecified
-      | En -> I18next.i18next.changeLanguage("en")
-      | Ja -> I18next.i18next.changeLanguage("ja")
-    { model with lang = lang }, Cmd.OfPromise.perform task () (fun _ -> Ignore)
-  | LoadAlbum ->
-    match model.albumState with
-    | AlbumState.Loaded _ | AlbumState.Loading -> model, Cmd.none
-    | _ ->
-      { model with albumState = AlbumState.Loading },
-      Cmd.OfPromise.perform Album.get () LoadAlbumResponse
+      | Unspecified -> Cmd.none
+      | En -> Cmd.OfPromise.perform (fun lang -> I18next.i18next.changeLanguage(lang)) "en" (fun _ -> Ignore)
+      | Ja -> Cmd.OfPromise.perform (fun lang -> I18next.i18next.changeLanguage(lang)) "ja" (fun _ -> Ignore)
+    { model with lang = lang }, Cmd.batch [cmd; Cmd.ofMsg InitTaskCompleted]
   | LoadAlbumResponse (Album.IResult.Ok x) ->
-    { model with albumState = AlbumState.Loaded x.value }, Cmd.none
+    { model with albumState = AlbumState.Loaded x.value }, Cmd.ofMsg InitTaskCompleted
   | LoadAlbumResponse (Album.IResult.Error x) ->
-    { model with albumState = AlbumState.LoadFailed x.message }, Cmd.none
+    { model with albumState = AlbumState.LoadFailed x.message }, Cmd.ofMsg InitTaskCompleted
 
-let private viewLoading model dispatch =
+let private viewError model (exns: exn list) dispatch =
   Hero.hero [ Props [Key.Src(__FILE__, __LINE__)]; Hero.IsFullHeight ] [
     Hero.body [ Props [Key.Src(__FILE__,__LINE__)] ] [
-      p [Key.Src(__FILE__,__LINE__)] [str "Loading..."]
+      p [Key.Src(__FILE__,__LINE__)] [str "Failed to initialize the web application."]
+      p [Key.Src(__FILE__,__LINE__)] [str "Errors:"]
+      ofList [
+        for i, e in List.indexed exns do
+          code [Key (sprintf "error-%d" i)] [
+            str (e.ToString())
+          ]
+      ]
     ]
   ]
 
-let private viewVideo model dispatch =
-  div [Class "background"; Key.Src(__FILE__,__LINE__)] [
-    video [Key "background-video"; HTMLAttr.Custom ("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg"] [
+let private viewHeader model dispatch =
+  div [Class "fullscreen-header"; Key.Src(__FILE__,__LINE__)] [
+    video [
+      Key "background-video";
+      HTMLAttr.Custom ("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg"
+      OnLoadedData (fun _ -> dispatch BackgroundVideoLoaded)] [
       source [Src "assets/video/bg.webm"; Type "video/webm"]
       source [Src "assets/video/bg.mp4";  Type "video/mp4"]
       img    [Src "assets/video/bg.jpg";  Title "HTML5 not supported"]
+    ]
+    Block.block [
+      CustomClass (if model.state = ModelState.Loaded then "loading-screen fadeout-1s" else "loading-screen ")
+      Props [Key.Src(__FILE__, __LINE__)]] [
+      Hero.hero [Hero.IsFullHeight; Props [Key.Src(__FILE__, __LINE__)]] [
+        Hero.body [] [
+          Container.container [Container.IsFluid; Modifiers [Modifier.TextAlignment (Screen.All, TextAlignment.Centered)]] [
+            Heading.h1 [Props [Style [Color "#FFFFFF"]]] [str "Loading..."]
+          ]
+        ]
+      ]
     ]
   ]
 
@@ -116,18 +147,6 @@ let private viewMain (model: Model) dispatch =
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
           p [Key "hello-world"] [str !@"Hello, world!"]
           p [Key "album-state"] [str (sprintf "album: %s" model.albumState.AsString)]
-        ]
-        Block.block [Props [Key.Src(__FILE__, __LINE__)]] [
-          ofOption (
-            match model.albumState with
-            | AlbumState.Init | AlbumState.LoadFailed _ ->
-              Button.button [
-                Props [Key.Src(__FILE__,__LINE__)]
-                Button.OnClick (fun _ -> dispatch LoadAlbum) ] [
-                str !@"load"
-              ] |> Some
-            | _ -> None
-          )
         ]
         Block.block [Props [Key.Src(__FILE__, __LINE__)]] [
           Button.button [
@@ -161,9 +180,12 @@ let private viewMain (model: Model) dispatch =
 
 let private view model dispatch =
   div [Key.Src (__FILE__, __LINE__)] [
-    viewVideo model dispatch
+    viewHeader model dispatch
     Misc.viewGoogleFontLoader model dispatch
-    if model.initCompleted then viewMain model dispatch else viewLoading model dispatch
+    ofOption <|
+      match model.state with
+      | ModelState.Loaded -> Some (viewMain model dispatch)
+      | _ -> None
   ]
 
 open Elmish.Debug

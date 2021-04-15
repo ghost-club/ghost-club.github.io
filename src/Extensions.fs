@@ -33,6 +33,9 @@ module Fulma =
     static member inline CustomClass (x, [<Optional>]__: Button.Option) = Button.CustomClass x
     static member inline Props (x, [<Optional>]__: Button.Option) = Button.Props x
     static member inline Modifiers (x, [<Optional>]__: Button.Option) = Button.Modifiers x
+    static member inline CustomClass (x, [<Optional>]__: Heading.Option) = Heading.CustomClass x
+    static member inline Props (x, [<Optional>]__: Heading.Option) = Heading.Props x
+    static member inline Modifiers (x, [<Optional>]__: Heading.Option) = Heading.Modifiers x
 
   let inline CustomClass (str: string) : ^Option =
     let inline call_2 (x: ^X, _: ^Y, arg) = ((^X or ^Y): (static member CustomClass: string * ^X -> ^X) arg,x)

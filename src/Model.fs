@@ -5,33 +5,39 @@ open Properties
 
 [<RequireQualifiedAccess>]
 type AlbumState =
-  | Init
   | Loading
   | Loaded of Album.IMediaInfo[]
   | LoadFailed of string
   member this.AsString =
     match this with
-    | Init -> "Init"
     | Loading -> "Album Loading"
     | Loaded _ -> "Album Loaded"
     | LoadFailed msg -> sprintf "Album Load Failed (%s)" msg
 
+[<RequireQualifiedAccess>]
+type ModelState =
+  | Loading
+  | Loaded
+  | Error of exn list
+
 type Model = {
-  initCompleted: bool
+  state: ModelState
   albumState: AlbumState
+  backgroundVideoIsLoaded: bool
   lang: Language
 }
 
 type Msg =
   | Ignore
-  | InitCompleted
-  | InitFailed of exn
-  | LoadAlbum
+  | InitTaskCompleted
+  | InitError of exn
+  | BackgroundVideoLoaded
   | LoadAlbumResponse of Album.IResult
   | SwitchLanguage of Language
 
 let initModel arg = {
-  initCompleted = false
-  albumState = AlbumState.Init
+  state = ModelState.Loading
+  albumState = AlbumState.Loading
+  backgroundVideoIsLoaded = false
   lang = Unspecified
 }
