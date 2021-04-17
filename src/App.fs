@@ -76,15 +76,13 @@ let internal update msg model =
     let model =
       match model.state with
       | ModelState.Loading ->
-        match model.lang, model.albumState, model.backgroundVideoIsLoaded with
-        | Unspecified, _, _
-        | _, AlbumState.Loading, _
-        | _, _, false -> model
-        | _ -> { model with state = ModelState.Loaded }
+        if model.lang = Unspecified then model
+        else if model.albumState = AlbumState.Loading then model
+        else if not model.backgroundVideoIsLoaded then model
+        else { model with state = ModelState.Loaded }
       | _ -> model
     model, Cmd.none
-  | BackgroundVideoLoaded ->
-    { model with backgroundVideoIsLoaded = true }, Cmd.ofMsg InitTaskCompleted
+  | BackgroundVideoLoaded -> { model with backgroundVideoIsLoaded = true }, Cmd.ofMsg InitTaskCompleted
   | SwitchLanguage lang ->
     let cmd =
       match lang with
@@ -111,82 +109,130 @@ let private viewError model (exns: exn list) dispatch =
     ]
   ]
 
-let private viewHeader model dispatch =
-  div [Class "fullscreen-header"; Key.Src(__FILE__,__LINE__)] [
-    video [
-      Class "background-video"
-      Key "background-video";
-      HTMLAttr.Custom ("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg"
-      OnLoadedData (fun _ -> dispatch BackgroundVideoLoaded)] [
-      source [Src "assets/video/bg.webm"; Type "video/webm"]
-      source [Src "assets/video/bg.mp4";  Type "video/mp4"]
-      img    [Src "assets/video/bg.jpg";  Title "HTML5 not supported"]
-    ]
-    div [
-      Class (if model.state = ModelState.Loaded then "loading-screen fadeout-1s" else "loading-screen")
-      Key.Src(__FILE__, __LINE__)] [
-      Hero.hero [Hero.IsFullHeight; Props [Key.Src(__FILE__, __LINE__)]] [
-        Hero.body [] [
-          Container.container [Container.IsFluid; Modifiers [Modifier.TextAlignment (Screen.All, TextAlignment.Centered)]] [
-            Heading.h1 [Props [Style [Color "#FFFFFF"]]] [str "Loading..."]
+let private viewHeaderMemo : {| state: ModelState; dispatch: (Msg -> unit) |} -> ReactElement =
+  FunctionComponent.Of ((fun props ->
+    div [Class "fullscreen-header"; Key.Src(__FILE__,__LINE__)] [
+      video [
+        Class "background-video"
+        Key "background-video";
+        HTMLAttr.Custom ("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg"
+        OnLoadedData (fun _ -> props.dispatch BackgroundVideoLoaded)] [
+        source [Src "assets/video/bg.webm"; Type "video/webm"]
+        source [Src "assets/video/bg.mp4";  Type "video/mp4"]
+        img    [Src "assets/video/bg.jpg";  Title "HTML5 not supported"]
+      ]
+      ReactTransitionGroup.cssTransition
+        (fun it ->
+          it.classNames <- !^"fade"
+          it.unmountOnExit <- Some true
+          it.``in`` <- Some (props.state = ModelState.Loading)
+          it.timeout <- Some (!^1000.0)
+          ()) [
+        div [
+          Class "loading-screen"
+          Key.Src(__FILE__, __LINE__)] [
+          Hero.hero [Hero.IsFullHeight; Props [Key.Src(__FILE__, __LINE__)]] [
+            Hero.body [] [
+              Container.container [Container.IsFluid; Modifiers [Modifier.TextAlignment (Screen.All, TextAlignment.Centered)]] [
+                Heading.h1 [Props [Style [Color "#FFFFFF"]]] [str "Loading..."]
+              ]
+            ]
           ]
         ]
       ]
     ]
-  ]
+  ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> sprintf "%s-%s" __FILE__ __LINE__))
 
-let private viewMain (model: Model) dispatch =
+let private viewMenu (model: Model) dispatch =
   let langSwitchText =
     match model.lang with
     | Unspecified
     | En -> !@UITexts.ChangeToAnotherLanguage
     | Ja -> !@UITexts.ChangeToAnotherLanguage
-
-  Columns.columns [CustomClass "has-text-centered"; Props [Key.Src(__FILE__,__LINE__)]] [
-    Column.column [Column.Width(Screen.All, Column.Is2); Props [Key "desktop-sidebar"]] [
-      div [Class "menu full-height"; Key.Src(__FILE__,__LINE__); Style [MarginBottom 0]] [
-        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-          p [Key "hello-world"] [str !@"Hello, world!"]
-          p [Key "album-state"] [str (sprintf "album: %s" model.albumState.AsString)]
-        ]
-        Block.block [Props [Key.Src(__FILE__, __LINE__)]] [
-          Button.button [
-            Props [Key.Src(__FILE__, __LINE__)]
-            Button.OnClick (fun _ -> dispatch (SwitchLanguage (Language.Flip model.lang))) ] [
-              str langSwitchText
-          ]
-        ]
+  div [
+    Class "menu"
+    Key.Src(__FILE__,__LINE__)
+    Style [Width "100%"; Height "100vh"]] [
+    Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
+      p [Key "hello-world"] [str !@"Hello, world!"]
+      p [Key "album-state"] [str (sprintf "album: %s" model.albumState.AsString)]
+    ]
+    Block.block [Props [Key.Src(__FILE__, __LINE__)]] [
+      Button.button [
+        Props [Key.Src(__FILE__, __LINE__)]
+        Button.OnClick (fun _ -> dispatch (SwitchLanguage (Language.Flip model.lang))) ] [
+          str langSwitchText
       ]
-      div [Key.Src(__FILE__,__LINE__)] []
+    ]
+  ]
+
+let private viewContent (model: Model) dispatch =
+  div [Key.Src(__FILE__, __LINE__)] [
+    Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+      p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]
+    ]
+    div [Key.Src(__FILE__,__LINE__)] (PhotoGallery.viewPhotoGallery model dispatch)
+    Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+      p [Key.Src(__FILE__,__LINE__)] [str LoremIpsumJp]
+    ]
+    Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+      Block.block [] [Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]]
+      MixCloud.mixCloudList
+        {
+          options = [MixCloud.HideCover true]
+          onLoad  = None
+          items = [
+            { user = "cannorin"; mixName = "20210402-gc-birthday-mix" }
+            { user = "cannorin"; mixName = "20210402-gc-birthday-mix" }
+            { user = "cannorin"; mixName = "20210402-gc-birthday-mix" }
+          ]
+        }
+    ]
+    ofList [
+      for i = 1 to 10 do
+        Section.section [Props [Key (sprintf "lorem-ipsum-%d" i)]] [
+          p [Key.Src(__FILE__,__LINE__)] [str (if i % 2 = 0 then LoremIpsum else LoremIpsumJp)]
+        ]
+    ]
+  ]
+
+let private viewMain (model: Model) dispatch =
+  Columns.columns [
+    CustomClass "has-text-centered"
+    Props [Key.Src(__FILE__,__LINE__)]] [
+    Column.column [
+      Modifiers [Modifier.IsHidden(Screen.Mobile, true)]
+      Column.Width(Screen.Tablet, Column.Is2)
+      Column.Width(Screen.Desktop, Column.Is2)
+      Column.Width(Screen.WideScreen, Column.Is2)
+      Column.Width(Screen.FullHD, Column.Is2)
+    ] [
+      viewMenu model dispatch
     ]
 
-    Column.column [Column.Width(Screen.All, Column.Is10); CustomClass "main"; Props [Key "main"]] [
-      Block.block [Props [Key.Src(__FILE__, __LINE__)]] [
-        Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-          p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]
-        ]
-        div [Key.Src(__FILE__,__LINE__)] (PhotoGallery.viewPhotoGallery model dispatch)
-        Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-          p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]
-        ]
-        ofList [
-          for i = 1 to 10 do
-            Section.section [Props [Key (sprintf "lorem-ipsum-%d" i)]] [
-              p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]
-            ]
-        ]
-      ]
+    Column.column [
+      Column.Width(Screen.Mobile, Column.IsFull)
+      Column.Width(Screen.Tablet, Column.Is10)
+      Column.Width(Screen.Desktop, Column.Is10)
+      Column.Width(Screen.WideScreen, Column.Is10)
+      Column.Width(Screen.FullHD, Column.Is10)
+      CustomClass "main"; Props [Key "main"]] [
+
+      viewContent model dispatch
     ]
   ]
 
 let private view model dispatch =
   div [Key.Src (__FILE__, __LINE__)] [
-    viewHeader model dispatch
-    Misc.viewGoogleFontLoader model dispatch
-    ofOption <|
-      match model.state with
-      | ModelState.Loaded -> Some (viewMain model dispatch)
-      | _ -> None
+    //viewHeader model dispatch
+    viewHeaderMemo {| state = model.state; dispatch = dispatch |}
+    //Misc.viewGoogleFontLoader model dispatch
+    div [Key.Src(__FILE__, __LINE__)] [
+      ofOption <|
+        match model.state with
+        | ModelState.Loaded -> Some (viewMain model dispatch)
+        | _ -> None
+    ]
   ]
 
 open Elmish.Debug

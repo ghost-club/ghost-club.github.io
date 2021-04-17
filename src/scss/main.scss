@@ -12,9 +12,15 @@
 @import "~bulma/sass/base/_all.sass";
 @import "~bulma/sass/layout/_all.sass";
 @import "~bulma/sass/grid/_all.sass";
+@import "~bulma/sass/elements/title.sass";
+@import "~animate.css/animate.css";
 
 html {
 	scroll-behavior: smooth;
+}
+
+body {
+	font-family: 'IBM Plex Serif', 'Noto Serif JP', serif;
 }
 
 // block
@@ -69,6 +75,7 @@ html {
   position: relative;
   overflow: hidden;
 	padding: 0%;
+	//background-color: rgba($color: #FFFFFF, $alpha: 0.2);
 }
 
 .loading-screen {
@@ -90,7 +97,7 @@ html {
 }
 
 .main {
-	background: linear-gradient(0deg, #000000 0%, #000000 33%, transparent 100%);
+	background: linear-gradient(0deg, #000000 0%, #000000 75%, transparent 100%);
 	color: #FFFFFF;
 	overflow: hidden;
 	padding: 0% 5%;
@@ -105,6 +112,22 @@ video.background-video {
 	object-fit: cover;
 	object-position: 50% 50%;
   z-index: -2;
+}
+
+.mobile-menu-button {
+	width: vmin;
+	height: vmin;
+	position: fixed;
+	bottom: 5%;
+	right: 5%;
+	z-index: 2;
+}
+
+.mobile-menu-container {
+	width:  100vh;
+	height: 100vh;
+	position: fixed;
+	z-index: 1;
 }
 
 
@@ -124,6 +147,17 @@ video.background-video {
 	}
 }
 
-.full-height {
-	min-height: 100vh;
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
 }

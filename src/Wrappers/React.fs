@@ -103,3 +103,7 @@ type MouseEventHandler<'T when 'T :> EventTarget> = EventHandler<MouseEvent<'T>>
 type TouchEventHandler<'T when 'T :> EventTarget> = EventHandler<TouchEvent<'T>>
 
 type RefObject<'T> = IRefValue<'T>
+
+type RefCallback<'T> = 'T option -> unit
+
+type Ref<'T> = U2<RefCallback<'T>, RefObject<'T>> option

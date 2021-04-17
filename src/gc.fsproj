@@ -13,6 +13,7 @@
     <Compile Include="Wrappers/ReactGoogleFontLoader.fs" />
     <Compile Include="Wrappers/ReactSlick.fs" />
     <Compile Include="Wrappers/ReactIntersectionObserver.fs" />
+    <Compile Include="Wrappers/ReactTransitionGroup.fs" />
     <Compile Include="Wrappers/Rewrap.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Album.fs" />

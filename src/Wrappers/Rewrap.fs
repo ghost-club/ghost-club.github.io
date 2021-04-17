@@ -35,7 +35,33 @@ module ReactIntersectionObserver =
     options.children <- !^(fun props -> ofList (children props))
     ofImport "InView" "react-intersection-observer" options []
 
-  let inViewPlain (optionsSet: Props -> unit) (children: ReactElement list) =
+  let inViewPlain (optionsSet: Props -> unit) children =
     let options = jsOptions optionsSet |> box :?> InViewProps
-    options.children <- !^(ofList children)
-    ofImport "InView" "react-intersection-observer" options []
+    ofImport "InView" "react-intersection-observer" options children
+
+module ReactTransitionGroup =
+  open Fable.Core
+  open ReactTransitionGroup
+
+  let transition (optionsSet: TransitionProps<'RefElement> -> unit) children =
+    ofImport "Transition" "react-transition-group" (jsOptions optionsSet) children
+
+  let cssTransition (optionsSet: CSSTransitionProps<'RefElement> -> unit) children =
+    ofImport "CSSTransition" "react-transition-group" (jsOptions optionsSet) children
+
+  type TransitionGroupProp<'T> =
+    | Component of 'T
+    | ChildFactory of (ReactElement -> ReactElement)
+
+  let transitionGroup (props: U2<Props.IHTMLProp, TransitionGroupProp<'T>> list) children =
+    let option = keyValueList CaseRules.LowerFirst props :?> TransitionGroupProps<'T>
+    ofImport "TransitionGroup" "react-transition-group" option children
+
+  let switchTransition (mode: SwitchTransitionPropsMode option) children =
+    let options =
+      jsOptions<SwitchTransitionProps>(fun it ->
+        match mode with
+        | None -> ()
+        | Some m -> it.mode <- Some m
+      )
+    ofImport "SwitchTransition" "react-transition-group" options children
