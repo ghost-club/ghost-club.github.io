@@ -56,15 +56,23 @@ let initAlbumTask =
 
 let initCmd =
   Cmd.batch [
-    Cmd.OfPromise.result (initI18nTask  |> Promise.catch InitError)
+    Cmd.OfPromise.result (initI18nTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initAlbumTask |> Promise.catch InitError)
   ]
+
+let delayCmd ms msg : Cmd<Msg> =
+  Cmd.OfPromise.result <|
+    promise {
+      let! _ = Promise.sleep ms
+      return msg
+    }
 
 let init arg = initModel arg, initCmd
 
 let internal update msg model =
   match msg with
   | Ignore -> model, Cmd.none
+  | TriggerAfter (ms, msg) -> model, delayCmd ms msg
   | InitError e ->
     eprintfn "error on initialization:\n%s" (e.ToString())
     let state =
@@ -73,16 +81,18 @@ let internal update msg model =
       | _ -> ModelState.Error [e]
     { model with state = state }, Cmd.none
   | InitTaskCompleted ->
-    let model =
+    let model, cmd =
       match model.state with
       | ModelState.Loading ->
-        if model.lang = Unspecified then model
-        else if model.albumState = AlbumState.Loading then model
-        else if not model.backgroundVideoIsLoaded then model
-        else { model with state = ModelState.Loaded }
-      | _ -> model
-    model, Cmd.none
-  | BackgroundVideoLoaded -> { model with backgroundVideoIsLoaded = true }, Cmd.ofMsg InitTaskCompleted
+        if   model.lang = Unspecified
+          || model.albumState = AlbumState.Loading
+          || model.completed |> Set.contains BackgroundVideoLoaded |> not
+          || model.completed |> Set.contains LogoShown |> not
+        then model, Cmd.none
+        else { model with state = ModelState.Loaded }, Cmd.ofMsg (TriggerAfter (1000, Completed FirstViewShown))
+      | _ -> model, Cmd.none
+    model, cmd
+  | Completed x -> { model with completed = Set.add x model.completed }, Cmd.ofMsg InitTaskCompleted
   | SwitchLanguage lang ->
     let cmd =
       match lang with
@@ -111,36 +121,68 @@ let private viewError model (exns: exn list) dispatch =
     ]
   ]
 
-let private viewMain (model: Model) dispatch =
-  Columns.columns [
-    CustomClass "main has-text-centered"
-    Props [Key.Src(__FILE__,__LINE__)]] [
-    Column.column [
-      Modifiers [Modifier.IsHidden(Screen.Mobile, true)]
-      Column.Width(Screen.Tablet, Column.Is2)
-      Column.Width(Screen.Desktop, Column.Is2)
-      Column.Width(Screen.WideScreen, Column.Is2)
-      Column.Width(Screen.FullHD, Column.Is2)
-    ] [
-      Menu.viewPC model dispatch
+let private viewTransitionChecker (props: {| dispatch: Msg -> unit |}) =
+  FunctionComponent.Of((fun (props: {| dispatch: Msg -> unit |}) ->
+    let isTransitionShown = Hooks.useState false
+    let isContentShown = Hooks.useState false
+    Hooks.useEffect((fun () ->
+      if isContentShown.current && not isTransitionShown.current then
+        props.dispatch (SetMenuIsSticky true)
+      else if isContentShown.current && isTransitionShown.current then
+        props.dispatch (SetMenuIsSticky false)
+    ), [| isTransitionShown; isContentShown |])
+    ofList [
+      ReactIntersectionObserver.inViewPlain
+        (fun it ->
+          it.onChange <- (fun inView _ ->
+            printfn "transition: %b" inView
+            isTransitionShown.update inView)) [
+          div [Key.Src(__FILE__,__LINE__); Class "gradient-background"; Style [Height "200vh"]] []
+        ]
+      ReactIntersectionObserver.inViewPlain
+        (fun it ->
+          it.onChange <- (fun inView _ ->
+            printfn "content: %b" inView
+            isContentShown.update inView)) [
+          div [Key.Src(__FILE__,__LINE__); Style [Height "0"]] []
+        ]
     ]
+  ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__)) props
 
-    Column.column [
-      Column.Width(Screen.Mobile, Column.IsFull)
-      Column.Width(Screen.Tablet, Column.Is10)
-      Column.Width(Screen.Desktop, Column.Is10)
-      Column.Width(Screen.WideScreen, Column.Is10)
-      Column.Width(Screen.FullHD, Column.Is10)
-      CustomClass "content"
-      Props [Key "content"]] [
+let private viewMain (model: Model) dispatch =
+  div [Class "main has-text-centered"; Key.Src(__FILE__,__LINE__)] [
+    viewTransitionChecker {| dispatch = dispatch |}
+    Columns.columns [
+      CustomClass "dark-background"
+      Props [Key.Src(__FILE__,__LINE__)]] [
+      Column.column [
+        Modifiers [Modifier.IsHidden(Screen.Mobile, true)]
+        Column.Width(Screen.Tablet, Column.Is2)
+        Column.Width(Screen.Desktop, Column.Is2)
+        Column.Width(Screen.WideScreen, Column.Is2)
+        Column.Width(Screen.FullHD, Column.Is2)
+      ] [
+        Menu.viewPC model dispatch
+      ]
 
-      Content.view model dispatch
+      Column.column [
+        Column.Width(Screen.Mobile, Column.IsFull)
+        Column.Width(Screen.Tablet, Column.Is10)
+        Column.Width(Screen.Desktop, Column.Is10)
+        Column.Width(Screen.WideScreen, Column.Is10)
+        Column.Width(Screen.FullHD, Column.Is10)
+        CustomClass "content"
+        Props [Key "content"]] [
+
+        Content.view model dispatch
+      ]
     ]
   ]
 
+
 let private view model dispatch =
   ofList [
-    Header.view {| state = model.state; dispatch = dispatch |}
+    Header.view {| state = model.state; completed = model.completed; dispatch = dispatch |}
     ofOption <|
       match model.state with
       | ModelState.Loaded -> Some (viewMain model dispatch)

@@ -20,27 +20,34 @@ type ModelState =
   | Loaded
   | Error of exn list
 
+[<StringEnum>]
+type Completed =
+  | BackgroundVideoLoaded
+  | LogoShown
+  | FirstViewShown
+
 type Model = {
   state: ModelState
   albumState: AlbumState
-  backgroundVideoIsLoaded: bool
   lang: Language
   menuIsSticky: bool
+  completed: Set<Completed>
 }
 
 type Msg =
   | Ignore
   | InitTaskCompleted
   | InitError of exn
-  | BackgroundVideoLoaded
   | LoadAlbumResponse of Album.IResult
   | SwitchLanguage of Language
   | SetMenuIsSticky of bool
+  | Completed of Completed
+  | TriggerAfter of ms:int * Msg
 
 let initModel arg = {
   state = ModelState.Loading
   albumState = AlbumState.Loading
-  backgroundVideoIsLoaded = false
   lang = Unspecified
   menuIsSticky = false
+  completed = Set.empty
 }
