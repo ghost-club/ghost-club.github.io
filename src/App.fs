@@ -139,7 +139,7 @@ let private viewMain (model: Model) dispatch =
   ]
 
 let private view model dispatch =
-  div [Key.Src (__FILE__, __LINE__)] [
+  ofList [
     Header.view {| state = model.state; dispatch = dispatch |}
     ofOption <|
       match model.state with

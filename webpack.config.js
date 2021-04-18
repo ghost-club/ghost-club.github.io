@@ -103,7 +103,8 @@ module.exports = {
         proxy: CONFIG.devServerProxy,
         hot: true,
         host: 'localhost',
-        inline: true
+        inline: true,
+        disableHostCheck: true
     },
     // - babel-loader: transforms JS to old syntax (compatible with old browsers)
     // - sass-loaders: transforms SASS/SCSS into JS
