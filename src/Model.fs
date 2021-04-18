@@ -25,6 +25,7 @@ type Model = {
   albumState: AlbumState
   backgroundVideoIsLoaded: bool
   lang: Language
+  menuIsSticky: bool
 }
 
 type Msg =
@@ -34,10 +35,12 @@ type Msg =
   | BackgroundVideoLoaded
   | LoadAlbumResponse of Album.IResult
   | SwitchLanguage of Language
+  | SetMenuIsSticky of bool
 
 let initModel arg = {
   state = ModelState.Loading
   albumState = AlbumState.Loading
   backgroundVideoIsLoaded = false
   lang = Unspecified
+  menuIsSticky = false
 }

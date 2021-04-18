@@ -1,5 +1,6 @@
 module Wrappers.Rewrapped
 
+open Fable.Core
 open Fable.Core.JsInterop
 open Properties
 
@@ -40,7 +41,6 @@ module ReactIntersectionObserver =
     ofImport "InView" "react-intersection-observer" options children
 
 module ReactTransitionGroup =
-  open Fable.Core
   open ReactTransitionGroup
 
   let transition (optionsSet: TransitionProps<'RefElement> -> unit) children =

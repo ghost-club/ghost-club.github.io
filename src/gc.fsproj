@@ -9,7 +9,7 @@
     <Compile Include="Wrappers/I18next.fs" />
     <Compile Include="Wrappers/ReactI18next.fs" />
     <Compile Include="Wrappers/ReactI18nextBrowserLanguageDetector.fs" />
-    <Compile Include="Wrappers/ReactGridLayout.fs" />
+    <Compile Include="Wrappers/ReactGridSystem.fs" />
     <Compile Include="Wrappers/ReactGoogleFontLoader.fs" />
     <Compile Include="Wrappers/ReactSlick.fs" />
     <Compile Include="Wrappers/ReactIntersectionObserver.fs" />
@@ -19,7 +19,10 @@
     <Compile Include="Album.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="View/Misc.fs" />
+    <Compile Include="View/Menu.fs" />
+    <Compile Include="View/Header.fs" />
     <Compile Include="View/PhotoGallery.fs" />
+    <Compile Include="View/Content.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,137 @@
+@import "~slick-carousel/slick/slick.css";
+//@import "~slick-carousel/slick/slick-theme.css";
+
+.slick-list {
+    overflow: visible;
+}
+
+.slick-slide img {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    padding: 1%;
+    overflow: visible;
+    z-index: -1;
+    outline: 1px solid transparent;
+}
+
+// prev/next
+
+.slick-prev,
+.slick-next
+{
+    font-size: 0;
+    line-height: 0;
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 18.7%;
+    height: 18.7%;
+    padding: 0;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    cursor: pointer;
+    color: transparent;
+    border: none;
+    outline: none;
+    background: transparent;
+    z-index: 2;
+}
+.slick-prev
+{
+    left: 0;
+}
+.slick-next
+{
+    right: 0;
+}
+
+.slick-prev svg, .slick-next svg {
+    object-fit: contain;
+    overflow: visible;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%)
+}
+.slick-prev svg {
+    left: -25%;
+}
+.slick-next svg {
+    right: -25%;
+}
+
+.slick-prev svg .circle, .slick-next svg .circle {
+    stroke: transparent
+}
+
+.slick-prev:active svg .arrow, .slick-next:active svg .arrow {
+    stroke: black;
+}
+.slick-prev:active svg .circle, .slick-next:active svg .circle {
+    stroke: white;
+    fill: white;
+}
+
+
+
+
+// dots
+
+.slick-dotted.slick-slider
+{
+    margin-bottom: 30px;
+}
+
+.slick-dots
+{
+    position: absolute;
+    bottom: -25px;
+
+    display: block;
+
+    width: 100%;
+    padding: 0;
+    margin: 0;
+
+    list-style: none;
+
+    text-align: center;
+}
+
+.slick-dots li
+{
+    position: relative;
+
+    display: inline-block;
+
+    width: 10px;
+    height: 10px;
+    margin: 0 10px;
+    padding: 0;
+
+    cursor: pointer;
+}
+
+.slick-dots li button
+{
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    cursor: pointer;
+    color: transparent;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    outline: none;
+    background: transparent;
+}
+
+.slick-dots li.slick-active button
+{
+    background: #FFFFFF;
+}

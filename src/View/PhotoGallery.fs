@@ -10,7 +10,27 @@ open Wrappers.Rewrapped
 
 open Model
 
-let viewPhotoGallery (model: Model) (dispatch: Msg -> unit) =
+let private prevArrow =
+  FunctionComponent.Of((fun (props: ReactSlick.CustomArrowProps) ->
+    div [
+      Class (props.className |> Option.defaultValue "")
+      OnClick (props.onClick |> Option.map (box >> unbox) |> Option.defaultValue ignore)
+      HTMLAttr.Custom ("style", props.style |> Option.map box |> Option.defaultValue (box ""))
+      DangerouslySetInnerHTML { __html = Properties.Assets.InlineSVG.LeftButton }
+    ] []
+  ), withKey=(fun _ -> __SOURCE_FILE__ + ":" + __LINE__))
+
+let private nextArrow =
+  FunctionComponent.Of((fun (props: ReactSlick.CustomArrowProps) ->
+    div [
+      Class (props.className |> Option.defaultValue "")
+      OnClick (props.onClick |> Option.map (box >> unbox) |> Option.defaultValue ignore)
+      HTMLAttr.Custom ("style", props.style |> Option.map box |> Option.defaultValue (box ""))
+      DangerouslySetInnerHTML { __html = Properties.Assets.InlineSVG.RightButton }
+    ] []
+  ), withKey=(fun _ -> __SOURCE_FILE__ + ":" + __LINE__))
+
+let view (model: Model) (dispatch: Msg -> unit) =
   let render (album: Album.IMediaInfo[]) =
     div [Key "photo-gallery"] [
       ReactSlick.slider
@@ -21,9 +41,11 @@ let viewPhotoGallery (model: Model) (dispatch: Msg -> unit) =
           it.centerPadding <- Some "0"
           it.slidesToShow <- Some 1.0
           it.dots <- Some true
+          it.dotsClass <- Some "slick-dots is-hidden-mobile"
           it.autoplay <- Some true
-          it.arrows <- Some false
           it.lazyLoad <- Some ReactSlick.LazyLoadTypes.Progressive
+          it.prevArrow <- Some (prevArrow !!{||})
+          it.nextArrow <- Some (nextArrow !!{||})
           ()) [
         for i, mi in Seq.indexed album do
           yield

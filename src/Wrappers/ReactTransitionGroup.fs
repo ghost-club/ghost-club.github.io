@@ -153,6 +153,7 @@ type [<AllowNullLiteral>] TransitionActions =
     abstract exit: bool option with get, set
 
 type [<AllowNullLiteral>] BaseTransitionProps<'RefElement> =
+    inherit TransitionActions
     /// Show the component; triggers the enter or exit states
     abstract ``in``: bool option with get, set
     /// By default the child component is mounted immediately along with the
