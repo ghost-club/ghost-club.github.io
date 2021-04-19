@@ -35,6 +35,13 @@ module Assets =
 <path class="play" d="M28.0996 44.8L44.8996 33.4L28.0996 22V44.8Z" fill="white"/>
 </svg>"""
 
+    let MenuBox =
+      """<svg width="220" height="830" viewBox="0 0 220 830" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect vector-effect="non-scaling-stroke" width="220" height="830" fill="black"/>
+<rect vector-effect="non-scaling-stroke" x="1" y="1" width="218" height="828" stroke="white" stroke-width="2"/>
+<rect vector-effect="non-scaling-stroke" x="1" y="1" width="208" height="818" stroke="white" stroke-width="2"/>
+<line vector-effect="non-scaling-stroke" y1="29" x2="210" y2="29" stroke="white" stroke-width="2"/>
+</svg>"""
 
 [<StringEnum>]
 type Language = Unspecified | En | Ja with

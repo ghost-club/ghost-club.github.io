@@ -9,7 +9,6 @@ open Fable.Core.JsInterop
 open Properties
 open Model
 open View
-open Wrappers.Rewrapped
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 let [<ImportDefault("./locales/en/translation.json")>] enTranslation : obj = jsNative
@@ -121,6 +120,8 @@ let private viewError model (exns: exn list) dispatch =
     ]
   ]
 
+open ReactIntersectionObserver
+
 let private viewTransitionChecker (props: {| dispatch: Msg -> unit |}) =
   FunctionComponent.Of((fun (props: {| dispatch: Msg -> unit |}) ->
     let isTransitionShown = Hooks.useState false
@@ -132,20 +133,16 @@ let private viewTransitionChecker (props: {| dispatch: Msg -> unit |}) =
         props.dispatch (SetMenuIsSticky false)
     ), [| isTransitionShown; isContentShown |])
     ofList [
-      ReactIntersectionObserver.inViewPlain
-        (fun it ->
-          it.onChange <- (fun inView _ ->
-            printfn "transition: %b" inView
-            isTransitionShown.update inView)) [
-          div [Key.Src(__FILE__,__LINE__); Class "gradient-background"; Style [Height "200vh"]] []
-        ]
-      ReactIntersectionObserver.inViewPlain
-        (fun it ->
-          it.onChange <- (fun inView _ ->
-            printfn "content: %b" inView
-            isContentShown.update inView)) [
-          div [Key.Src(__FILE__,__LINE__); Style [Height "0"]] []
-        ]
+      inViewPlain [
+        OnChange (fun inView _ -> isTransitionShown.update inView)
+        !^Key.Src(__FILE__,__LINE__)] (
+        div [Key.Src(__FILE__,__LINE__); Class "gradient-background"; Style [Height "200vh"]] []
+      )
+      inViewPlain [
+        OnChange (fun inView _ -> isContentShown.update inView)
+        !^Key.Src(__FILE__,__LINE__)] (
+        div [Key.Src(__FILE__,__LINE__); Style [Height "0"]] []
+      )
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__)) props
 
@@ -178,7 +175,6 @@ let private viewMain (model: Model) dispatch =
       ]
     ]
   ]
-
 
 let private view model dispatch =
   ofList [
