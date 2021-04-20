@@ -34,7 +34,6 @@ type [<RequireQualifiedAccess>] MotionProp<'Style, 'PlainStyle> =
 
 let motion (props: MotionProp<'Style, 'PlainStyle> list) (children: 'PlainStyle -> ReactElement) : ReactElement =
   let props = keyValueList CaseRules.LowerFirst (!!("children", children) :: (box props :?> obj list))
-  printfn "%A" props
   ofImport "Motion" "react-motion" props []
 
 type [<RequireQualifiedAccess>] TransitionStyle<'Data, 'PlainStyle> =

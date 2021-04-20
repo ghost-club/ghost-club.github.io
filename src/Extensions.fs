@@ -1,6 +1,9 @@
 [<AutoOpen>]
 module Extensions
+
 open System.Runtime.InteropServices
+open Fable.Core
+open Fable.Core.JsInterop
 
 module Fulma =
   open Fable.React
@@ -54,8 +57,13 @@ module Fulma =
 
 module Fable =
   module React =
+    open Fable.React
     open Fable.React.Props
 
     module Props =
       module Key =
         let inline Src (__source_file__: string, __line__: string) : Prop = Key (__source_file__ + ":" + __line__)
+
+    let video' (props: IHTMLProp seq) (children: ReactElement list) =
+      let propsObj = keyValueList CaseRules.LowerFirst props
+      failwith "TODO"

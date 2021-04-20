@@ -12,6 +12,21 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
   FunctionComponent.Of ((fun props ->
     let logoLoaded = Hooks.useState false
     let firstViewShown = Hooks.useState false
+    let videoRef : IRefValue<option<Browser.Types.Element>> = Hooks.useRef(None)
+
+    // workaround for React bug: https://github.com/facebook/react/issues/10389
+    Hooks.useEffect(
+      (fun () ->
+        match videoRef.current with
+        | None -> ()
+        | Some video ->
+          let video = video :?> Browser.Types.HTMLVideoElement
+          video.volume <- 0.0
+          video.defaultMuted <- true
+          video.muted <- true
+          video.setAttribute("muted", "")
+          Fable.Core.JS.setTimeout (fun () -> video.play()) 1 |> ignore
+      ), [| videoRef |])
 
     Hooks.useEffect(
       (fun () ->
@@ -25,7 +40,8 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
       video [
         Class "background-video"
         Key "background-video";
-        HTMLAttr.Custom ("playsInline", true); AutoPlay true; Muted true; Loop true; Poster "assets/video/bg.jpg"
+        RefValue videoRef;
+        HTMLAttr.Custom ("playsInline", true); Muted true; AutoPlay true; Loop true; Poster "assets/video/bg.jpg"
         OnLoadedData (fun _ -> props.dispatch (Completed BackgroundVideoLoaded))] [
         source [Src "assets/video/bg.webm"; Type "video/webm"]
         source [Src "assets/video/bg.mp4";  Type "video/mp4"]

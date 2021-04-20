@@ -1,0 +1,1 @@
+SetEnvIfNoCase Request_URI . (?:mp4|ogv|webm)$ no-gzip dont-vary
