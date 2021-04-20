@@ -6,10 +6,16 @@ open Fable.Core
 let DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
 
 module Assets =
-  module Image =
+  module SVG =
     let [<Literal>] Logo  = "assets/image/logo.svg"
     let [<Literal>] Obake = "assets/image/obake.svg"
     let [<Literal>] WatchMovie = "assets/image/watch_movie.svg"
+  module PNG =
+    let [<Literal>] GCPhoto1 = "assets/image/gc_sp_1.png"
+    let [<Literal>] GCPhoto2 = "assets/image/gc_sp_2.png"
+    let [<Literal>] GCPhoto3 = "assets/image/gc_sp_3.png"
+    let [<Literal>] GCBuilding1 = "assets/image/building_1.png"
+    let [<Literal>] GCBuilding2 = "assets/image/building_2.png"
 
   module InlineSVG =
     let LeftButton =

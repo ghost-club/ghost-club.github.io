@@ -14,9 +14,11 @@
     <Compile Include="Wrappers/ReactSlick.fs" />
     <Compile Include="Wrappers/ReactIntersectionObserver.fs" />
     <Compile Include="Wrappers/ReactTransitionGroup.fs" />
+    <Compile Include="Wrappers/ReactMotion.fs" />
     <Compile Include="Wrappers/Rewrap.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Component/MixCloud.fs" />
+    <Compile Include="Component/AnimatedText.fs" />
     <Compile Include="Album.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="View/Misc.fs" />

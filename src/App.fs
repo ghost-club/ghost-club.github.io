@@ -88,7 +88,7 @@ let internal update msg model =
           || model.completed |> Set.contains BackgroundVideoLoaded |> not
           || model.completed |> Set.contains LogoShown |> not
         then model, Cmd.none
-        else { model with state = ModelState.Loaded }, Cmd.ofMsg (TriggerAfter (1000, Completed FirstViewShown))
+        else { model with state = ModelState.Loaded }, Cmd.none
       | _ -> model, Cmd.none
     model, cmd
   | Completed x -> { model with completed = Set.add x model.completed }, Cmd.ofMsg InitTaskCompleted

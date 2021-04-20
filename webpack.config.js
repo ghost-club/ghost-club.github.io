@@ -29,11 +29,12 @@ var CONFIG = {
 var isProduction = !process.argv.find(v => v.indexOf('serve') !== -1);
 console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
 
-var path = require("path");
-var webpack = require("webpack");
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ImageminWebpWebpackPlugin= require("imagemin-webp-webpack-plugin");
 
 // The HtmlWebpackPlugin allows us to use a template for the index.html page
 // and automatically injects <script> or <link> tags for generated bundles.
@@ -86,6 +87,15 @@ module.exports = {
                 patterns: [
                     { from: CONFIG.assetsDir }
                 ]
+            }),
+            new ImageminWebpWebpackPlugin({
+                config: [{
+                    test: /\.(png)$/i,
+                    options: {
+                        quality: 75
+                    },
+                }],
+                detailedLogs: true
             }),
         ])
         : commonPlugins.concat([

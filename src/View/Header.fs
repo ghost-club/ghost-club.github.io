@@ -12,14 +12,17 @@ let view : {| state: ModelState; completed: Set<Completed>; dispatch: (Msg -> un
   FunctionComponent.Of ((fun props ->
     let logoLoaded = Hooks.useState false
     let firstViewShown = Hooks.useState false
+    let playButtonOnHover = Hooks.useState false
 
     Hooks.useEffect(
       (fun () ->
         if Set.contains FirstViewShown props.completed then
-          firstViewShown.update true),
+          firstViewShown.update true
+        else if Set.contains LogoShown props.completed then
+          props.dispatch (TriggerAfter (1000, Completed FirstViewShown))),
       [|props.completed|])
 
-    div [Class "header"; Key.Src(__FILE__,__LINE__)] [
+    div [Class (if props.state = ModelState.Loaded then "header header-loaded" else "header"); Key.Src(__FILE__,__LINE__)] [
       video [
         Class "background-video"
         Key "background-video";
@@ -33,19 +36,32 @@ let view : {| state: ModelState; completed: Set<Completed>; dispatch: (Msg -> un
         cssTransition [
             CSSTransitionProp.ClassNamesForAll "fade"
             UnmountOnExit true
-            In (props.state = ModelState.Loading)
+            In (props.completed |> Set.contains LogoShown |> not)
             TimeoutForAll 1000.0] <|
           div [Class "header-loading-screen"; Key.Src(__FILE__, __LINE__)] []
 
         div [Class "header-top"; Key.Src(__FILE__, __LINE__)] [
-          cssTransition [
-              CSSTransitionProp.ClassNamesForAll "slide"
-              TimeoutForAll 2000.0
-              In firstViewShown.current] <|
-            div [Key.Src(__FILE__,__LINE__); Class "slide-container slide-container-init-hidden"] [
-              p [Class "header-top-text slide-child"; Key.Src(__FILE__, __LINE__)] [str "“Just a whisper..."]
-              p [Class "header-top-text slide-child"; Key.Src(__FILE__, __LINE__)] [str "I hear it in my ghost.”"]
+          div [Key.Src(__FILE__,__LINE__); Class "slide-parent"] [
+            p [Class "header-top-text"; Key.Src(__FILE__, __LINE__)] [
+              if firstViewShown.current then str "“" else str ""
+              AnimatedText.slot
+                {| targetText = "Just a whisper...\nI hear it in my ghost"
+                   period = "."
+                   visible = firstViewShown.current |}
+              if firstViewShown.current then str "”" else str ""
             ]
+            (*
+            cssTransition [
+                CSSTransitionProp.ClassNamesForAll "slide"
+                TimeoutForAll 2000.0
+                In firstViewShown.current] <|
+              div [Key.Src(__FILE__,__LINE__); Class "slide-init"] [
+                p [Class "header-top-text"; Key.Src(__FILE__, __LINE__)] [
+                  str "“Just a whisper...\nI hear it in my ghost.”"
+                ]
+              ]
+            *)
+          ]
         ]
         div [Class "header-logo-container"; Key.Src(__FILE__, __LINE__)] [
           cssTransition [
@@ -54,8 +70,8 @@ let view : {| state: ModelState; completed: Set<Completed>; dispatch: (Msg -> un
               Timeout {| appear=1000; enter=1000; exit=0 |}
               In logoLoaded.current] <|
             img [
-              Class "header-logo fade"
-              Src Assets.Image.Logo
+              Class "header-logo fade-init-hidden"
+              Src Assets.SVG.Logo
               OnLoad (fun _ ->
                 logoLoaded.update true
                 props.dispatch (TriggerAfter(1000, Completed LogoShown)))

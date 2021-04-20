@@ -1,0 +1,11 @@
+*::-webkit-scrollbar {
+  background: #000000;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: lightgrey;
+}
+
+* {
+  scrollbar-color: lightgrey black;
+}
