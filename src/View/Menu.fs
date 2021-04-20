@@ -18,7 +18,10 @@ let viewPC (model: Model) dispatch =
   div [
     Class "menu"
     Style [
-      Position (if model.menuIsSticky then PositionOptions.Fixed else PositionOptions.Relative)
+      Position (
+        if model.flags |> Set.contains MenuIsSticky then PositionOptions.Fixed
+        else PositionOptions.Absolute
+      )
     ]
     Key.Src(__FILE__,__LINE__)] [
     Block.block [Props [Key.Src(__FILE__,__LINE__)]] [

@@ -26,28 +26,33 @@ type Completed =
   | LogoShown
   | FirstViewShown
 
+[<StringEnum>]
+type Flag =
+  | MenuIsSticky
+  | PlayButtonIsShown
+
 type Model = {
   state: ModelState
   albumState: AlbumState
   lang: Language
-  menuIsSticky: bool
   completed: Set<Completed>
+  flags: Set<Flag>
 }
 
 type Msg =
   | Ignore
-  | InitTaskCompleted
+  | CheckInitTaskDone
   | InitError of exn
   | LoadAlbumResponse of Album.IResult
   | SwitchLanguage of Language
-  | SetMenuIsSticky of bool
   | Completed of Completed
+  | SetFlag of Flag * bool
   | TriggerAfter of ms:int * Msg
 
 let initModel arg = {
   state = ModelState.Loading
   albumState = AlbumState.Loading
   lang = Unspecified
-  menuIsSticky = false
   completed = Set.empty
+  flags = Set.ofList [PlayButtonIsShown]
 }

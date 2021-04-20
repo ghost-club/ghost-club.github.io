@@ -25,6 +25,7 @@
     <Compile Include="View/Menu.fs" />
     <Compile Include="View/Header.fs" />
     <Compile Include="View/PhotoGallery.fs" />
+    <Compile Include="View/Transition.fs" />
     <Compile Include="View/Content.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>

@@ -8,11 +8,10 @@ open Properties
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
-let view : {| state: ModelState; completed: Set<Completed>; dispatch: (Msg -> unit) |} -> ReactElement =
+let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; dispatch: (Msg -> unit) |} -> ReactElement =
   FunctionComponent.Of ((fun props ->
     let logoLoaded = Hooks.useState false
     let firstViewShown = Hooks.useState false
-    let playButtonOnHover = Hooks.useState false
 
     Hooks.useEffect(
       (fun () ->
@@ -50,17 +49,6 @@ let view : {| state: ModelState; completed: Set<Completed>; dispatch: (Msg -> un
                    visible = firstViewShown.current |}
               if firstViewShown.current then str "”" else str ""
             ]
-            (*
-            cssTransition [
-                CSSTransitionProp.ClassNamesForAll "slide"
-                TimeoutForAll 2000.0
-                In firstViewShown.current] <|
-              div [Key.Src(__FILE__,__LINE__); Class "slide-init"] [
-                p [Class "header-top-text"; Key.Src(__FILE__, __LINE__)] [
-                  str "“Just a whisper...\nI hear it in my ghost.”"
-                ]
-              ]
-            *)
           ]
         ]
         div [Class "header-logo-container"; Key.Src(__FILE__, __LINE__)] [
@@ -80,7 +68,10 @@ let view : {| state: ModelState; completed: Set<Completed>; dispatch: (Msg -> un
         div [Class "header-bottom"; Key.Src(__FILE__, __LINE__)] [
           div [Class "header-bottom-playbutton-container"] [
             div [
-              Class "header-bottom-playbutton"
+              Class (
+                if props.flags |> Set.contains PlayButtonIsShown then "header-bottom-playbutton"
+                else "header-bottom-playbutton hidden"
+              )
               DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovie }
               OnClick (fun _ -> printfn "play!")
             ] []

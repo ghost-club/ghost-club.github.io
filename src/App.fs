@@ -79,7 +79,7 @@ let internal update msg model =
       | ModelState.Error es -> ModelState.Error (e :: es)
       | _ -> ModelState.Error [e]
     { model with state = state }, Cmd.none
-  | InitTaskCompleted ->
+  | CheckInitTaskDone ->
     let model, cmd =
       match model.state with
       | ModelState.Loading ->
@@ -91,20 +91,20 @@ let internal update msg model =
         else { model with state = ModelState.Loaded }, Cmd.none
       | _ -> model, Cmd.none
     model, cmd
-  | Completed x -> { model with completed = Set.add x model.completed }, Cmd.ofMsg InitTaskCompleted
+  | Completed x -> { model with completed = Set.add x model.completed }, Cmd.ofMsg CheckInitTaskDone
   | SwitchLanguage lang ->
     let cmd =
       match lang with
       | Unspecified -> Cmd.none
       | En -> Cmd.OfPromise.perform (fun lang -> I18next.i18next.changeLanguage(lang)) "en" (fun _ -> Ignore)
       | Ja -> Cmd.OfPromise.perform (fun lang -> I18next.i18next.changeLanguage(lang)) "ja" (fun _ -> Ignore)
-    { model with lang = lang }, Cmd.batch [cmd; Cmd.ofMsg InitTaskCompleted]
+    { model with lang = lang }, Cmd.batch [cmd; Cmd.ofMsg CheckInitTaskDone]
   | LoadAlbumResponse (Album.IResult.Ok x) ->
-    { model with albumState = AlbumState.Loaded x.value }, Cmd.ofMsg InitTaskCompleted
+    { model with albumState = AlbumState.Loaded x.value }, Cmd.ofMsg CheckInitTaskDone
   | LoadAlbumResponse (Album.IResult.Error x) ->
-    { model with albumState = AlbumState.LoadFailed x.message }, Cmd.ofMsg InitTaskCompleted
-  | SetMenuIsSticky flag ->
-    { model with menuIsSticky = flag }, Cmd.none
+    { model with albumState = AlbumState.LoadFailed x.message }, Cmd.ofMsg CheckInitTaskDone
+  | SetFlag (flag, true)  -> { model with flags = Set.add flag model.flags }, Cmd.none
+  | SetFlag (flag, false) -> { model with flags = Set.remove flag model.flags }, Cmd.none
 
 let private viewError model (exns: exn list) dispatch =
   Hero.hero [ Props [Key.Src(__FILE__, __LINE__)]; Hero.IsFullHeight ] [
@@ -120,37 +120,9 @@ let private viewError model (exns: exn list) dispatch =
     ]
   ]
 
-open ReactIntersectionObserver
-
-let private viewTransitionChecker (props: {| dispatch: Msg -> unit |}) =
-  FunctionComponent.Of((fun (props: {| dispatch: Msg -> unit |}) ->
-    let isTransitionShown = Hooks.useState false
-    let isContentShown = Hooks.useState false
-    Hooks.useEffect((fun () ->
-      if isContentShown.current && not isTransitionShown.current then
-        props.dispatch (SetMenuIsSticky true)
-      else if isContentShown.current && isTransitionShown.current then
-        props.dispatch (SetMenuIsSticky false)
-    ), [| isTransitionShown; isContentShown |])
-    ofList [
-      inViewPlain [
-        OnChange (fun inView _ -> isTransitionShown.update inView)
-        !^Key.Src(__FILE__,__LINE__)] (
-        div [Key.Src(__FILE__,__LINE__); Class "gradient-background"; Style [Height "200vh"]] []
-      )
-      inViewPlain [
-        OnChange (fun inView _ -> isContentShown.update inView)
-        !^Key.Src(__FILE__,__LINE__)] (
-        div [Key.Src(__FILE__,__LINE__); Style [Height "0"]] []
-      )
-    ]
-  ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__)) props
-
 let private viewMain (model: Model) dispatch =
   div [Class "main has-text-centered"; Key.Src(__FILE__,__LINE__)] [
-    viewTransitionChecker {| dispatch = dispatch |}
     Columns.columns [
-      CustomClass "dark-background"
       Props [Key.Src(__FILE__,__LINE__)]] [
       Column.column [
         Modifiers [Modifier.IsHidden(Screen.Mobile, true)]
@@ -178,11 +150,13 @@ let private viewMain (model: Model) dispatch =
 
 let private view model dispatch =
   ofList [
-    Header.view {| state = model.state; completed = model.completed; dispatch = dispatch |}
-    ofOption <|
+    Header.view {| state = model.state; completed = model.completed; flags = model.flags; dispatch = dispatch |}
+    ofList <|
       match model.state with
-      | ModelState.Loaded -> Some (viewMain model dispatch)
-      | _ -> None
+      | ModelState.Loaded ->
+        [ Transition.viewTransition {| dispatch = dispatch |}
+          viewMain model dispatch ]
+      | _ -> []
   ]
 
 open Elmish.Debug
