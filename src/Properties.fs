@@ -10,12 +10,20 @@ module Assets =
     let [<Literal>] Logo  = "assets/image/logo.svg"
     let [<Literal>] Obake = "assets/image/obake.svg"
     let [<Literal>] WatchMovie = "assets/image/watch_movie.svg"
-  module PNG =
+
+  module WebPAlt =
     let [<Literal>] GCPhoto1 = "assets/image/gc_sp_1.png"
     let [<Literal>] GCPhoto2 = "assets/image/gc_sp_2.png"
     let [<Literal>] GCPhoto3 = "assets/image/gc_sp_3.png"
-    let [<Literal>] GCBuilding1 = "assets/image/building_1.png"
-    let [<Literal>] GCBuilding2 = "assets/image/building_2.png"
+    let [<Literal>] GCBuilding1 = "assets/image/gc_mansion_1.png"
+    let [<Literal>] GCBuilding2 = "assets/image/gc_mansion_2.jpg"
+
+  module WebP =
+    let [<Literal>] GCPhoto1 = "assets/image/gc_sp_1.webp"
+    let [<Literal>] GCPhoto2 = "assets/image/gc_sp_2.webp"
+    let [<Literal>] GCPhoto3 = "assets/image/gc_sp_3.webp"
+    let [<Literal>] GCBuilding1 = "assets/image/gc_mansion_1.webp"
+    let [<Literal>] GCBuilding2 = "assets/image/gc_mansion_2.webp"
 
   module InlineSVG =
     let LeftButton =
