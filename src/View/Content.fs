@@ -24,6 +24,13 @@ let view (model: Model) dispatch =
     ]
     Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
       Block.block [] [Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]]
+      MixCloud.mixCloudList {
+        options = [MixCloud.HideCover true]
+        onLoad = None
+        items = [
+          { user = "cannorin"; mixName = "20210402-gc-birthday-mix" }
+        ]
+      }
     ]
     ofList [
       for i = 1 to 10 do

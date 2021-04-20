@@ -41,7 +41,7 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
       inViewPlain [
         !^Class("transition-scroll")
         !^Key.Src(__FILE__,__LINE__)
-        Thresholds [| for i = 0 to 5 do yield 0.2 * float i |]
+        Thresholds [| for i = 0 to 10 do yield 0.1 * float i |]
         OnChange (fun _ entry ->
           if not transitionCompleted.current then
             scrollAmount.update (entry.intersectionRatio * 2.1))] nothing
