@@ -85,7 +85,6 @@ let internal update msg model =
       | ModelState.Loading ->
         if   model.lang = Unspecified
           || model.albumState = AlbumState.Loading
-         // || model.completed |> Set.contains BackgroundVideoLoaded |> not
           || model.completed |> Set.contains LogoShown |> not
         then model, Cmd.none
         else { model with state = ModelState.Loaded }, Cmd.none
@@ -130,6 +129,8 @@ let private viewMain (model: Model) dispatch =
         Column.Width(Screen.Desktop, Column.Is2)
         Column.Width(Screen.WideScreen, Column.Is2)
         Column.Width(Screen.FullHD, Column.Is2)
+        CustomClass "menu-desktop-container"
+        Props [Key "desktop-menu"]
       ] [
         Menu.viewPC model dispatch
       ]

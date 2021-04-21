@@ -51,11 +51,10 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
         OnChange (fun inView _ ->
           transitionInProgress.update inView
           props.dispatch (SetFlag (PlayButtonIsShown, not inView)))] <|
-        picture [] [
-          source [SrcSet Assets.WebP.GCBuilding1; Type "image/webp"; Class "transition-building"]
-          source [SrcSet Assets.WebPAlt.GCBuilding1; Type "image/png"; Class "transition-building"]
-          img [Src Assets.WebPAlt.GCBuilding1; Alt ""; Class "transition-building"]
-        ]
-
+          picture [] [
+            source [SrcSet Assets.WebP.GCBuilding1; Type "image/webp"; Class "transition-building"]
+            source [SrcSet Assets.WebPAlt.GCBuilding1; Type "image/png"; Class "transition-building"]
+            img [Src Assets.WebPAlt.GCBuilding1; Alt ""; Class "transition-building"]
+          ]
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__)) props

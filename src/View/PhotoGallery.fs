@@ -32,7 +32,7 @@ let private nextArrow =
 
 let view (model: Model) (dispatch: Msg -> unit) =
   let render (album: Album.IMediaInfo[]) =
-    div [Key "photo-gallery"] [
+    div [Key.Src(__SOURCE_FILE__, __LINE__)] [
       ReactSlick.slider
         (fun it ->
           it.className <- Some "center"
@@ -54,6 +54,7 @@ let view (model: Model) (dispatch: Msg -> unit) =
             ]
       ]
     ]
+
 
   match model.albumState with
   | AlbumState.Loaded album -> [render album]

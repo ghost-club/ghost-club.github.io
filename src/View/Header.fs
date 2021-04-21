@@ -82,7 +82,7 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
             ]
         ]
         div [Class "header-bottom"; Key.Src(__FILE__, __LINE__)] [
-          div [Class "header-bottom-playbutton-container"] [
+          div [Class "header-bottom-playbutton-container"; Key.Src(__FILE__,__LINE__)] [
             div [
               Class (
                 if props.flags |> Set.contains PlayButtonIsShown then "header-bottom-playbutton"
@@ -91,6 +91,12 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
               DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovie }
               OnClick (fun _ -> printfn "play!")
             ] []
+          ]
+          div [Class "header-bottom-scroll-indicator is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
+            p [Class "header-bottom-scroll-indicator-text"; Key.Src(__FILE__,__LINE__)] [
+              span [Style [MarginRight "1em"]] [str "Scroll Down"]
+              span [Style [FontSize "1.75vh"]] [str "━━━━━━━━"]
+            ]
           ]
         ]
       ]

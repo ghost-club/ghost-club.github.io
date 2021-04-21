@@ -27,13 +27,11 @@ body {
   background-color: #000;
 }
 
-// block
+// bulma
 
 .block:not(:last-child) {
   margin-bottom: 1.5rem;
 }
-
-// columns
 
 .columns {
   margin: 0;
@@ -43,7 +41,9 @@ body {
   padding: 0;
 }
 
-// specifics
+.section {
+  padding: 5vw 1rem;
+}
 
 // header
 
@@ -140,6 +140,22 @@ body {
   fill: #000000;
 }
 
+.header-bottom-scroll-indicator {
+  position: absolute;
+  bottom: 3.5vmin;
+  right: 3.5vw;
+  transform: translate(40%, -100%) rotate(90deg);
+}
+
+.header-bottom-scroll-indicator-text {
+  font-size: 3vh;
+  font-weight: 500;
+  font-style: normal;
+  color: #FFFFFF;
+  line-height: 132%;
+  white-space: pre-line;
+}
+
 .header-logo-container {
   position: relative;
   height: 66%;
@@ -203,16 +219,13 @@ body {
   position: absolute;
   right: 0;
   bottom: 0;
-  transform: translate(0, 10%);
+  transform: translate(0, 20%);
 }
 
 // menu
 
-.menu-columns {
-  position: sticky;
-  overflow: visible;
-  width: 100vw;
-  height: 100vh;
+.menu-desktop-container {
+  z-index: 2;
 }
 
 .menu {
@@ -222,7 +235,6 @@ body {
   background-color: #000000;
   position: absolute;
   top: 0;
-  z-index: 1;
 }
 
 
@@ -236,4 +248,18 @@ body {
 
 .content {
   padding: 0% 5%;
+}
+
+.content-foreground {
+  position: relative;
+  z-index: 1;
+}
+
+.content-building {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  transform: translate(0, 10%);
+  z-index: 0;
 }

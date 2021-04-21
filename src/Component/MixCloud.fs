@@ -51,7 +51,7 @@ let mixCloudList : MixCloudListProps -> ReactElement =
         loadedPropsCount.update(-1)
         match props.onLoad with None -> () | Some f -> f ()
     )
-    div [] [
+    ofList [
       for i, item in Seq.indexed props.items do
         Block.block [
           Props [

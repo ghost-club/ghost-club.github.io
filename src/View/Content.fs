@@ -14,28 +14,42 @@ open Wrappers.Rewrapped
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
 let view (model: Model) dispatch =
-  div [Key.Src(__FILE__, __LINE__)] [
-    Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-      p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]
+  ofList [
+    picture [Class "content-building"] [
+      source [SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
+      source [SrcSet Assets.WebPAlt.GCBuilding2; Type "image/png"]
+      img [Src Assets.WebPAlt.GCBuilding2; Alt ""]
     ]
-    div [Key.Src(__FILE__,__LINE__)] (PhotoGallery.view model dispatch)
-    Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-      p [Key.Src(__FILE__,__LINE__)] [str LoremIpsumJp]
-    ]
-    Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-      Block.block [] [Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]]
-      MixCloud.mixCloudList {
-        options = [MixCloud.HideCover true]
-        onLoad = None
-        items = [
-          { user = "cannorin"; mixName = "20210402-gc-birthday-mix" }
+
+    div [Class "content-foreground"; Key.Src(__FILE__,__LINE__)] [
+      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+        p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]
+      ]
+
+      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
+          Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]
         ]
-      }
-    ]
-    ofList [
-      for i = 1 to 10 do
-        Section.section [Props [Key (sprintf "lorem-ipsum-%d" i)]] [
-          p [Key.Src(__FILE__,__LINE__)] [str (if i % 2 = 0 then LoremIpsum else LoremIpsumJp)]
+        MixCloud.mixCloudList {
+          options = [MixCloud.HideCover true]
+          onLoad = None
+          items = [
+            { user = "cannorin"; mixName = "20210402-gc-birthday-mix" }
+          ]
+        }
+      ]
+
+      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
+          Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
         ]
+        ofList (PhotoGallery.view model dispatch)
+      ]
+
+      Section.section [Props [Key.Src(__FILE__,__LINE__); Style [Height "50vmax"]]] [
+        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
+          Heading.h2 [Props [Style [Color "white"]]] [str "Contact"]
+        ]
+      ]
     ]
   ]
