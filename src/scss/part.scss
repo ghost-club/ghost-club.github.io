@@ -1,0 +1,32 @@
+.shadowed {
+  border: 2px solid white;
+  background-color: black;
+  width: -moz-calc(100% - 10px);
+  width: -webkit-calc(100% - 10px);
+  width: -o-calc(100% - 10px);
+  width: calc(100% - 10px);
+  height: -moz-calc(100% - 10px);
+  height: -webkit-calc(100% - 10px);
+  height: -o-calc(100% - 10px);
+  height: calc(100% - 10px);
+  margin: 0px 10px 10px 0px;
+  box-shadow: 10px 10px 0px 0 white;
+}
+
+button.shadowed-inner {
+  color: white;
+  border: 2px solid white;
+  background-color: black;
+  height: -moz-calc(100% - 5px);
+  height: -webkit-calc(100% - 5px);
+  height: -o-calc(100% - 5px);
+  height: calc(100% - 5px);
+  margin: 0px 5px 5px 0px;
+  transition: color,background-color 250ms ease-in-out;
+}
+
+button.shadowed-inner:hover {
+  color: black;
+  background-color: white;
+  transition: color,background-color 250ms ease-in-out;
+}

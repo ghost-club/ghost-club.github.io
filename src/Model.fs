@@ -28,7 +28,7 @@ type Completed =
 
 [<StringEnum>]
 type Flag =
-  | MenuIsSticky
+  | MenuIsVisible
   | PlayButtonIsShown
 
 type Model = {

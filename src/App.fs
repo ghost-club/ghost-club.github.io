@@ -119,45 +119,21 @@ let private viewError model (exns: exn list) dispatch =
     ]
   ]
 
-let private viewMain (model: Model) dispatch =
-  div [Class "main has-text-centered"; Key.Src(__FILE__,__LINE__)] [
-    Columns.columns [
-      Props [Key.Src(__FILE__,__LINE__)]] [
-      Column.column [
-        Modifiers [Modifier.IsHidden(Screen.Mobile, true)]
-        Column.Width(Screen.Tablet, Column.Is2)
-        Column.Width(Screen.Desktop, Column.Is2)
-        Column.Width(Screen.WideScreen, Column.Is2)
-        Column.Width(Screen.FullHD, Column.Is2)
-        CustomClass "menu-desktop-container"
-        Props [Key "desktop-menu"]
-      ] [
-        Menu.viewPC model dispatch
-      ]
-
-      Column.column [
-        Column.Width(Screen.Mobile, Column.IsFull)
-        Column.Width(Screen.Tablet, Column.Is10)
-        Column.Width(Screen.Desktop, Column.Is10)
-        Column.Width(Screen.WideScreen, Column.Is10)
-        Column.Width(Screen.FullHD, Column.Is10)
-        CustomClass "content"
-        Props [Key "content"]] [
-
-        Content.view model dispatch
-      ]
+let private viewMain model dispatch =
+  ofList [
+    Transition.viewTransition {| dispatch = dispatch |}
+    Menu.viewMenu model dispatch
+    div [Class "content has-text-centered"; Key "content"] [
+      Content.view model dispatch
     ]
   ]
 
 let private view model dispatch =
   ofList [
     Header.view {| state = model.state; completed = model.completed; flags = model.flags; dispatch = dispatch |}
-    ofList <|
-      match model.state with
-      | ModelState.Loaded ->
-        [ Transition.viewTransition {| dispatch = dispatch |}
-          viewMain model dispatch ]
-      | _ -> []
+    match model.state with
+    | ModelState.Loaded -> viewMain model dispatch
+    | _ -> null
   ]
 
 open Elmish.Debug

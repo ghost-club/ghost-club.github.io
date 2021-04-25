@@ -25,9 +25,9 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
         Key.Src(__FILE__, __LINE__)
         Style (
           let opacity, display =
-            if transitionInProgress.current then
+            if transitionCompleted.current then 1.0, DisplayOptions.Inherit
+            else if transitionInProgress.current then
               min 1.0 scrollAmount.current, DisplayOptions.Inherit
-            else if transitionCompleted.current then 1.0, DisplayOptions.Inherit
             else 0.0, DisplayOptions.None
           [Opacity opacity; Display display]
         )] []
@@ -35,7 +35,7 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
         !^Class("transition-checker")
         !^Key.Src(__FILE__, __LINE__)
         OnChange (fun inView _ ->
-          props.dispatch (SetFlag (MenuIsSticky, not inView))
+          props.dispatch (SetFlag (MenuIsVisible, not inView))
           transitionCompleted.update (not inView))
         ] nothing
       inViewPlain [
