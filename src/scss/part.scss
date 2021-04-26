@@ -52,3 +52,11 @@ button .shadowed-inner:hover {
   background-color: white;
   transition: color,background-color 250ms ease-in-out;
 }
+
+.menu-mobile-modal .shadowed .shadowed-inner {
+  position: absolute;
+  border-top: 2px solid white;
+  width: calc(100% - 10px);
+  height: calc(100% - 49px);
+  bottom: 0px;
+}

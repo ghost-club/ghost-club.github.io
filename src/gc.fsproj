@@ -15,6 +15,7 @@
     <Compile Include="Wrappers/ReactIntersectionObserver.fs" />
     <Compile Include="Wrappers/ReactTransitionGroup.fs" />
     <Compile Include="Wrappers/ReactMotion.fs" />
+    <Compile Include="Wrappers/ReactModal.fs" />
     <Compile Include="Wrappers/Rewrap.fs" />
     <Compile Include="Extensions.fs" />
     <Compile Include="Component/MixCloud.fs" />

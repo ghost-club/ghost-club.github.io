@@ -57,6 +57,7 @@ type [<AllowNullLiteral>] SyntheticEvent<'T, 'E when 'E :> Event and 'T :> Event
     abstract timeStamp: float with get, set
     abstract ``type``: string with get, set
 type SyntheticEvent<'T when 'T :> EventTarget> = SyntheticEvent<'T, Event>
+type SyntheticEvent = SyntheticEvent<Element>
 
 type [<AllowNullLiteral>] MouseEvent<'T when 'T :> EventTarget> =
     inherit SyntheticEvent<'T, MouseEvent>
@@ -74,13 +75,13 @@ type [<AllowNullLiteral>] MouseEvent<'T when 'T :> EventTarget> =
     abstract screenX: float with get, set
     abstract screenY: float with get, set
     abstract shiftKey: bool with get, set
+type MouseEvent = MouseEvent<Element>
 
 type [<AllowNullLiteral>] TouchList =
     [<EmitIndexer>] abstract Item: index: float -> Touch with get, set
     abstract length: float with get, set
     abstract item: index: float -> Touch
     abstract identifiedTouch: identifier: float -> Touch
-
 type [<AllowNullLiteral>] TouchEvent<'T when 'T :> EventTarget> =
     inherit SyntheticEvent<'T, TouchEvent>
     abstract altKey: bool with get, set
@@ -91,6 +92,20 @@ type [<AllowNullLiteral>] TouchEvent<'T when 'T :> EventTarget> =
     abstract shiftKey: bool with get, set
     abstract targetTouches: TouchList with get, set
     abstract touches: TouchList with get, set
+type TouchEvent = TouchEvent<Element>
+
+type [<AllowNullLiteral>] KeyboardEvent<'T when 'T :> EventTarget> =
+    inherit SyntheticEvent<'T, KeyboardEvent>
+    abstract altKey: bool with get, set
+    abstract ctrlKey: bool with get, set
+    abstract code: string with get, set
+    abstract getModifierState: key: string -> bool
+    abstract key: string with get, set
+    abstract locale: string with get, set
+    abstract metaKey: bool with get, set
+    abstract repeat: bool with get, set
+    abstract shiftKey: bool with get, set
+type KeyboardEvent = KeyboardEvent<Element>
 
 type [<AllowNullLiteral>] EventHandler<'E when 'E :> SyntheticEventBase> =
     [<Emit "$0($1...)">] abstract Invoke: ``event``: 'E -> unit
@@ -101,6 +116,7 @@ module EventHandler =
 type ReactEventHandler<'T when 'T :> EventTarget> = EventHandler<SyntheticEvent<'T>>
 type MouseEventHandler<'T when 'T :> EventTarget> = EventHandler<MouseEvent<'T>>
 type TouchEventHandler<'T when 'T :> EventTarget> = EventHandler<TouchEvent<'T>>
+type KeyboardEventHandler<'T when 'T :> EventTarget> = EventHandler<KeyboardEvent<'T>>
 
 type RefObject<'T> = IRefValue<'T>
 

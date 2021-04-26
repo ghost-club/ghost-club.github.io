@@ -15,11 +15,34 @@ let [<Literal>] __FILE__ = __SOURCE_FILE__
 
 let private viewBody =
   FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
+    let menuModalIsShown = Hooks.useState false
+
+    let inline menuModal str =
+      if menuModalIsShown.current then str + " is-active"
+      else str
+
     div [Class "menu"; Key.Src(__FILE__,__LINE__)] [
       img [Class "menu-logo"; Key.Src(__FILE__,__LINE__); Src Assets.SVG.LogoSmall]
       div [Class "menu-desktop-body is-hidden-touch"; Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
           str "Foo"
+        ]
+      ]
+      div [Class (menuModal "menu-mobile-button is-hidden-desktop"); Key.Src(__FILE__,__LINE__)] [
+        button [
+          Class (menuModal "hamburger hamburger--squeeze")
+          Type "button"
+          OnClick (fun _e -> menuModalIsShown.update(not menuModalIsShown.current))] [
+          span [Class "hamburger-box"] [
+            span [Class "hamburger-inner"] []
+          ]
+        ]
+      ]
+      div [Class (menuModal "menu-mobile-modal is-hidden-desktop"); Key.Src(__FILE__,__LINE__)] [
+        div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
+          div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
+
+          ]
         ]
       ]
     ]
