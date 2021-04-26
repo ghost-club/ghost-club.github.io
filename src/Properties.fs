@@ -7,7 +7,8 @@ let DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
 
 module Assets =
   module SVG =
-    let [<Literal>] Logo  = "assets/image/logo.svg"
+    let [<Literal>] Logo = "assets/image/logo.svg"
+    let [<Literal>] LogoSmall = "assets/image/logo_small.svg"
     let [<Literal>] Obake = "assets/image/obake.svg"
     let [<Literal>] WatchMovie = "assets/image/watch_movie.svg"
 

@@ -1,3 +1,7 @@
+.button-container {
+  display: inline-block;
+}
+
 .shadowed {
   border: 2px solid white;
   background-color: black;
@@ -10,22 +14,40 @@
   height: -o-calc(100% - 10px);
   height: calc(100% - 10px);
   margin: 0px 10px 10px 0px;
+  padding: 0px;
   box-shadow: 10px 10px 0px 0 white;
+  transition: all 100ms ease-in-out;
 }
 
-button.shadowed-inner {
+button .shadowed-inner {
   color: white;
-  border: 2px solid white;
+  font-family: 'IBM Plex Serif', 'Noto Serif JP', serif;
+  font-weight: 500;
+  font-size: 1.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  border-width: 0 2px 2px 0;
+  border-color: white;
+  border-style: solid;
   background-color: black;
-  height: -moz-calc(100% - 5px);
-  height: -webkit-calc(100% - 5px);
-  height: -o-calc(100% - 5px);
-  height: calc(100% - 5px);
-  margin: 0px 5px 5px 0px;
+  width: -moz-calc(100% - 10px);
+  width: -webkit-calc(100% - 10px);
+  width: -o-calc(100% - 10px);
+  width: calc(100% - 10px);
+  height: -moz-calc(100% - 10px);
+  height: -webkit-calc(100% - 10px);
+  height: -o-calc(100% - 10px);
+  height: calc(100% - 10px);
+  top: 0px;
+  left: 0px;
+  margin: 0px 10px 10px 0px;
   transition: color,background-color 250ms ease-in-out;
 }
 
-button.shadowed-inner:hover {
+button .shadowed-inner:hover {
   color: black;
   background-color: white;
   transition: color,background-color 250ms ease-in-out;

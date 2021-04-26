@@ -46,9 +46,25 @@ let view (model: Model) dispatch =
         ofList (PhotoGallery.view model dispatch)
       ]
 
-      Section.section [Props [Key.Src(__FILE__,__LINE__); Style [Height "50vmax"]]] [
-        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-          Heading.h2 [Props [Style [Color "white"]]] [str "Contact"]
+      Section.section [Props [Key.Src(__FILE__,__LINE__); Style [Height "40vmax"]]] [
+        div [Key.Src(__FILE__,__LINE__); Class "content-contact"] [
+          div [Key.Src(__FILE__,__LINE__); Class "content-contact-head"] [
+            Heading.h2 [Props [Style [Color "white"]]] [str "Contact"]
+          ]
+          div [Key.Src(__FILE__,__LINE__); Class "content-contact-body"] [
+            div [Style [Width "240px"; Height "70px"; Display DisplayOptions.InlineBlock]] [
+              button [Class "shadowed"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
+                div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
+                  str "Contact"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      Section.section [Props [Key.Src(__FILE__,__LINE__); Style [Height "10vmax"]]] [
+        span [Key.Src(__FILE__,__LINE__); Style [FontSize "0.75rem"]] [
+          str "Copyright © GHOSTCLUB All Rights Reserved."
         ]
       ]
     ]

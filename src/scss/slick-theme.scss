@@ -54,25 +54,52 @@
     top: 50%;
     -webkit-transform: translate(0, -50%);
     -ms-transform: translate(0, -50%);
-    transform: translate(0, -50%)
+    transform: translate(0, -50%);
+    transition: transform 100ms ease-in
 }
 .slick-prev svg {
-    left: -25%;
+    left: -30%;
 }
 .slick-next svg {
-    right: -25%;
+    right: -30%;
+}
+.slick-next svg:hover, .slick-prev svg:hover {
+  transform: translate(0, -50%) scale(1.1);
+  transition: transform 100ms ease-in
+}
+
+.slick-prev svg .arrow, .slick-next svg .arrow {
+    stroke-width: 2px;
+    stroke: rgba($color: white, $alpha: 0.5);
+}
+@media screen and (max-width: 768px) {
+    .slick-prev svg .arrow, .slick-next svg .arrow {
+        stroke-width: 1px;
+    }
+}
+.slick-prev svg:hover .arrow, .slick-next svg:hover .arrow {
+    stroke: white;
 }
 
 .slick-prev svg .circle, .slick-next svg .circle {
-    stroke: transparent
+    stroke-width: 1px;
+    stroke: transparent;
+    transition: all 100ms ease-in-out;
 }
 
 .slick-prev:active svg .arrow, .slick-next:active svg .arrow {
     stroke: black;
 }
 .slick-prev:active svg .circle, .slick-next:active svg .circle {
+    stroke-width: 2px;
     stroke: white;
     fill: white;
+    transition: all 100ms ease-in-out;
+}
+@media screen and (max-width: 768px) {
+    .slick-prev:active svg .circle, .slick-next:active svg .circle {
+        stroke-width: 1px;
+    }
 }
 
 
