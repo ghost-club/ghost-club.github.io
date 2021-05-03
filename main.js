@@ -339,16 +339,17 @@ const xorShift = _=>{
 };
 for(let i=0;i<2;i++) xorShift();
 const bgNames = [];
-for(let i=0;i<3;i++) {
-  const l = bgBases.length;
-  let k = xorShift() % l;
-  if(k < 0) k += l;
-  bgNames.push(bgBases[k]);
-  bgBases.splice(k,1);
-}
-ix %= bgNames.length;
+// for(let i=0;i<3;i++) {
+//   const l = bgBases.length;
+//   let k = xorShift() % l;
+//   if(k < 0) k += l;
+//   bgNames.push(bgBases[k]);
+//   bgBases.splice(k,1);
+// }
+// ix %= bgNames.length;
 localStorage.setItem("index", ix+(Math.random() < 0.5 ? 1 : 2));
-const bgName = Math.random() < 0.01 ? "tv" : bgNames[ix];
+ix = Math.floor(Math.random()*bgBases.length);
+const bgName = Math.random() < 0.01 ? "tv" : bgBases[ix];
 const bgData = bgs[bgName];
 
 const present = buildMaterial(`
@@ -515,6 +516,6 @@ const bgImg = new Image();
 bgImg.onload = _=>{
   bg = ImageTexture(bgImg);
 };
-bgImg.src = "/background/" + bgImageName + ".png";
+bgImg.src = "/background/" + bgName + ".png";
 
 };
