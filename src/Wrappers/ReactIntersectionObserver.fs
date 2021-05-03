@@ -40,11 +40,11 @@ type Prop =
   | [<Erase>] CustomProp of Props.IHTMLProp
   static member inline op_ErasedCast (x: Props.IHTMLProp) : Prop = CustomProp x
 
-let inView (props: Prop list) (children: RenderProps -> ReactElement) =
+let inline inView (props: Prop list) (children: RenderProps -> ReactElement) =
   let options = keyValueList CaseRules.LowerFirst props |> box :?> InViewProps
   options.children <- !^(fun props -> children props)
   ofImport "InView" "react-intersection-observer" options []
 
-let inViewPlain (props: Prop list) children =
+let inline inViewPlain (props: Prop list) children =
   let options = keyValueList CaseRules.LowerFirst props |> box :?> InViewProps
   ofImport "InView" "react-intersection-observer" options [children]

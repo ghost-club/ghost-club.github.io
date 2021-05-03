@@ -30,6 +30,11 @@ html {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
 
 body {
   font-family: 'IBM Plex Serif', 'Noto Serif JP', serif;
@@ -259,6 +264,18 @@ body {
 
 // menu
 
+a.anchor {
+  display: block;
+  position: relative;
+  top: -110px; // menu height
+  visibility: hidden;
+}
+@media screen and (max-width: 1023.99px) {
+  a.anchor {
+    top: -100px;
+  }
+}
+
 .menu-container {
   z-index: 2;
   position: fixed;
@@ -307,6 +324,49 @@ body {
     width: 179px;
   }
 }
+
+ul.menu-links {
+  padding: 0;
+}
+
+ul.menu-links li {
+  list-style: none;
+}
+
+ul.menu-links li a {
+  position: relative;
+  left: -5px;
+  font-size: 1.25em;
+  font-weight: 500;
+  text-decoration: none;
+
+  padding: 0 5px;
+
+  --initialTextColor: #FFF;
+  --slideTextColor: #272838;
+
+  --initialBgColor: transparent;
+  --slideBgColor: #FFF;
+
+  color: var(--initialTextColor);
+
+  background-image: linear-gradient(90deg,
+    var(--initialBgColor) 0%,
+    var(--initialBgColor) 50%,
+    var(--slideBgColor) 50%,
+    var(--slideBgColor) 100%);
+  background-size: 300%;
+  transition:
+    background-position .1s cubic-bezier(.47, .1, 1, .63),
+    color .1s linear;
+}
+
+ul.menu-links li a:hover {
+  color: var(--slideTextColor);
+  cursor: pointer;
+  background-position: -75% 100%;
+}
+
 
 .menu-desktop-body {
   width: 728px;
@@ -377,7 +437,7 @@ body {
 }
 
 .menu-mobile-modal .twitter-logo:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 @media screen and (min-width: 768px) {

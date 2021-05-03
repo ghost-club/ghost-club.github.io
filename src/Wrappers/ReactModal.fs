@@ -61,5 +61,5 @@ let [<Import("ReactModal","react-modal")>] ReactModal: ReactModalStatic = jsNati
 open Fable.Core.JsInterop
 open Fable.React
 
-let modal (props: Prop seq) children =
+let inline modal (props: Prop seq) children =
   ofImport "ReactModal" "react-modal" (keyValueList CaseRules.LowerFirst props) children

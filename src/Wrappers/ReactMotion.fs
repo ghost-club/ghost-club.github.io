@@ -32,7 +32,7 @@ type [<RequireQualifiedAccess>] MotionProp<'Style, 'PlainStyle> =
   | Style of 'Style
   | OnRest of (unit -> unit)
 
-let motion (props: MotionProp<'Style, 'PlainStyle> list) (children: 'PlainStyle -> ReactElement) : ReactElement =
+let inline motion (props: MotionProp<'Style, 'PlainStyle> list) (children: 'PlainStyle -> ReactElement) : ReactElement =
   let props = keyValueList CaseRules.LowerFirst (!!("children", children) :: (box props :?> obj list))
   ofImport "Motion" "react-motion" props []
 
@@ -58,12 +58,12 @@ type [<RequireQualifiedAccess>] TransitionProp<'Data, 'Style, 'PlainStyle> =
   | WillLeave of (TransitionStyle<'Data, 'PlainStyle> -> 'Style)
   | DidLeave of (TransitionStyle<'Data, 'PlainStyle> -> unit)
 
-let transitionMotion (props: TransitionProp<'Data, 'Style, 'PlainStyle> list) (children: TransitionPlainStyle<'Data, 'PlainStyle>[] -> ReactElement) : ReactElement =
+let inline transitionMotion (props: TransitionProp<'Data, 'Style, 'PlainStyle> list) (children: TransitionPlainStyle<'Data, 'PlainStyle>[] -> ReactElement) : ReactElement =
   ofImport "TransitionMotion" "react-motion" (keyValueList CaseRules.LowerFirst (!!("children", children) :: (box props :?> obj list))) []
 
 type [<RequireQualifiedAccess>] StaggeredMotionProp<'Style, 'PlainStyle> =
   | DefaultStyles of 'PlainStyle[]
   | Styles of ('PlainStyle[] -> 'Style[])
 
-let staggeredMotion (props: StaggeredMotionProp<'Style, 'PlainStyle> list) (children: 'PlainStyle[] -> ReactElement) =
+let inline staggeredMotion (props: StaggeredMotionProp<'Style, 'PlainStyle> list) (children: 'PlainStyle[] -> ReactElement) =
   ofImport "StaggeredMotion" "react-motion" (keyValueList CaseRules.LowerFirst (!!("children", children) :: (box props :?> obj list))) []

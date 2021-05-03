@@ -44,6 +44,7 @@
     "remotedev": "^0.2.9",
     "sass-loader": "^11.0.1",
     "slick-carousel": "^1.8.1",
+    "smoothscroll-polyfill": "^0.4.4",
     "source-map-loader": "2.0.1",
     "style-loader": "^2.0.0",
     "webpack": "^5.24.4",

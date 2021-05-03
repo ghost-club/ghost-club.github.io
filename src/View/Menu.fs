@@ -29,6 +29,16 @@ let private viewBody =
   FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
     let menuModalIsShown = Hooks.useState false
 
+    let inline menuItem href title =
+      let target = Browser.Dom.document.getElementById(href)
+      li [Class "menu-item block"] [
+        a [
+          Href ("#" + href)
+          OnClick (fun _ ->
+            target.scrollIntoView(!!{| behavior = Browser.Types.ScrollIntoViewOptionsBehavior.Smooth |} :> Browser.Types.ScrollIntoViewOptions)
+            menuModalIsShown.update false)
+        ] [str title]]
+
     let inline menuModal str =
       if menuModalIsShown.current then str + " is-active"
       else str
@@ -55,12 +65,13 @@ let private viewBody =
         Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
           div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
-            div [Class "block menu-links"; Key.Src(__FILE__,__LINE__)] [
-              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
-              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
-              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
-              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
-              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
+            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            ul [Class "block menu-links"; Key.Src(__FILE__,__LINE__)] [
+              menuItem "about" "About"
+              menuItem "how-to-join" "How to join"
+              menuItem "dj-mix" "DJ Mix"
+              menuItem "gallery" "Gallery"
+              menuItem "contact" "Contact"
             ]
             div [Class "block"; Key.Src(__FILE__,__LINE__)] []
             div [Class "block align-center"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []

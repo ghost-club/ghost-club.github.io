@@ -128,7 +128,7 @@ type private TransitionChildrenFunc = Children of (TransitionStatus -> ReactElem
 /// By default the `Transition` component does not alter the behavior of the
 /// component it renders, it only tracks "enter" and "exit" states for the components.
 /// It's up to you to give meaning and effect to those states.
-let transition (props: ITransitionProp list) children =
+let inline transition (props: ITransitionProp list) children =
   let props = keyValueList CaseRules.LowerFirst props
   box (ofImport "Transition" "react-transition-group" props [children]) :?> ReactTransitionElement
 
@@ -151,18 +151,18 @@ let transition (props: ITransitionProp list) children =
 ///         )}
 ///     </Transition>
 /// ```
-let transitionFunc (props: ITransitionProp list) (children: TransitionStatus -> ReactElement) =
+let inline transitionFunc (props: ITransitionProp list) (children: TransitionStatus -> ReactElement) =
   let props = keyValueList CaseRules.LowerFirst (box (Children children) :: (box props :?> obj list))
   box (ofImport "Transition" "react-transition-group" props []) :?> ReactTransitionElement
 
-let cssTransition (props: ICSSTransitionProp list) children =
+let inline cssTransition (props: ICSSTransitionProp list) children =
   let props = keyValueList CaseRules.LowerFirst props
   box (ofImport "CSSTransition" "react-transition-group" props [children]) :?> ReactTransitionElement
 
 /// A function child can be used instead of a React element. This function is
 /// called with the current transition status ('entering', 'entered',
 /// 'exiting',  'exited', 'unmounted'), which can be used to apply context.
-let cssTransitionFunc (props: ICSSTransitionProp list) (children: TransitionStatus -> ReactElement) =
+let inline cssTransitionFunc (props: ICSSTransitionProp list) (children: TransitionStatus -> ReactElement) =
   let props = keyValueList CaseRules.LowerFirst (box (Children children) :: (box props :?> obj list))
   box (ofImport "CSSTransition" "react-transition-group" props []) :?> ReactTransitionElement
 
@@ -180,7 +180,7 @@ type [<RequireQualifiedAccess>] TransitionGroupProp<'T> =
 /// Exactly _how_ a list item animates is up to the individual `<Transition>`
 /// components. This means you can mix and match animations across different
 /// list items.
-let transitionGroup (props: ITransitionGroupProp list) (children: ReactTransitionElement seq) =
+let inline transitionGroup (props: ITransitionGroupProp list) (children: ReactTransitionElement seq) =
   let option = keyValueList CaseRules.LowerFirst props
   ofImport "TransitionGroup" "react-transition-group" option (box children :?> _)
 
@@ -194,5 +194,5 @@ type [<StringEnum>] [<RequireQualifiedAccess>] SwitchTransitionMode =
 ///
 /// If the `out-in` mode is selected, the `SwitchTransition` waits until the old child leaves and then inserts a new child.
 /// If the `in-out` mode is selected, the `SwitchTransition` inserts a new child first, waits for the new child to enter and then removes the old child
-let switchTransition (mode: SwitchTransitionMode) (children: ReactTransitionElement) =
+let inline switchTransition (mode: SwitchTransitionMode) (children: ReactTransitionElement) =
   ofImport "SwitchTransition" "react-transition-group" {| mode = mode |} (box children :?> _)

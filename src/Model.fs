@@ -42,6 +42,7 @@ type Model = {
 type Msg =
   | Ignore
   | CheckInitTaskDone
+  | CheckAnchorAndJump
   | InitError of exn
   | LoadAlbumResponse of Album.IResult
   | SwitchLanguage of Language

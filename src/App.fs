@@ -16,6 +16,17 @@ let [<ImportDefault("./locales/en/ui.json")>] enUi : obj = jsNative
 let [<ImportDefault("./locales/ja/translation.json")>] jaTranslation : obj = jsNative
 let [<ImportDefault("./locales/ja/ui.json")>] jaUi : obj = jsNative
 
+type ISmoothScrollPolyfill =
+  abstract polyfill: unit -> unit
+
+let [<ImportDefault("smoothscroll-polyfill")>] smoothscroll : ISmoothScrollPolyfill = jsNative
+
+let initSmoothScrollPolyfillTask =
+  promise {
+    smoothscroll.polyfill()
+    return Ignore
+  }
+
 let initI18nTask =
   let options =
     jsOptions<I18next.InitOptions>(fun it ->
@@ -55,6 +66,7 @@ let initAlbumTask =
 
 let initCmd =
   Cmd.batch [
+    Cmd.OfPromise.result (initSmoothScrollPolyfillTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initI18nTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initAlbumTask |> Promise.catch InitError)
   ]
@@ -64,6 +76,22 @@ let delayCmd ms msg : Cmd<Msg> =
     promise {
       let! _ = Promise.sleep ms
       return msg
+    }
+
+open Browser.Types
+open Browser.Dom
+
+let scrollToAnchorCmd () : Cmd<Msg> =
+  Cmd.OfPromise.result <|
+    promise {
+      if isNull window.location.hash then return Ignore
+      else
+        let hash = window.location.hash.TrimStart('#')
+        let target = document.getElementById(hash)
+        if isNull target then return Ignore
+        else
+          target.scrollIntoView(!!{| behavior = ScrollIntoViewOptionsBehavior.Smooth |} :> ScrollIntoViewOptions)
+          return Ignore
     }
 
 let init arg = initModel arg, initCmd
@@ -79,6 +107,7 @@ let internal update msg model =
       | ModelState.Error es -> ModelState.Error (e :: es)
       | _ -> ModelState.Error [e]
     { model with state = state }, Cmd.none
+  | CheckAnchorAndJump -> model, scrollToAnchorCmd ()
   | CheckInitTaskDone ->
     let model, cmd =
       match model.state with
@@ -87,7 +116,7 @@ let internal update msg model =
           || model.albumState = AlbumState.Loading
           || model.completed |> Set.contains LogoShown |> not
         then model, Cmd.none
-        else { model with state = ModelState.Loaded }, Cmd.none
+        else { model with state = ModelState.Loaded }, Cmd.ofMsg (TriggerAfter (1000, CheckAnchorAndJump))
       | _ -> model, Cmd.none
     model, cmd
   | Completed x -> { model with completed = Set.add x model.completed }, Cmd.ofMsg CheckInitTaskDone

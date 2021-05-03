@@ -51,20 +51,18 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
         cssTransition [
             CSSTransitionProp.ClassNamesForAll "fade"
             UnmountOnExit true
-            In (props.completed |> Set.contains LogoShown |> not)
+            In (props.completed |> Set.contains LogoShown |> not || props.state = ModelState.Loading)
             TimeoutForAll 1000.0] <|
           div [Class "header-loading-screen"; Key.Src(__FILE__, __LINE__)] []
 
         div [Class "header-top"; Key.Src(__FILE__, __LINE__)] [
-          div [Key.Src(__FILE__,__LINE__); Class "slide-parent"] [
-            p [Class "header-top-text"; Key.Src(__FILE__, __LINE__)] [
-              if firstViewShown.current then str "“" else str ""
-              AnimatedText.slot
-                {| targetText = "Just a whisper...\nI hear it in my ghost"
-                   period = "."
-                   visible = firstViewShown.current |}
-              if firstViewShown.current then str "”" else str ""
-            ]
+          p [Class "header-top-text"; Key.Src(__FILE__, __LINE__)] [
+            if firstViewShown.current then str "“" else str ""
+            AnimatedText.slot
+              {| targetText = "Just a whisper...\nI hear it in my ghost"
+                 period = "."
+                 visible = firstViewShown.current |}
+            if firstViewShown.current then str "”" else str ""
           ]
         ]
         div [Class "header-logo-container"; Key.Src(__FILE__, __LINE__)] [

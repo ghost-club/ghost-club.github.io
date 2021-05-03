@@ -22,10 +22,17 @@ let view (model: Model) dispatch =
     ]
 
     div [Class "content-foreground"; Key.Src(__FILE__,__LINE__)] [
+      a [Class "anchor"; Id "about"; Key.Src(__FILE__,__LINE__)] []
       Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-        p [Key.Src(__FILE__,__LINE__)] [str LoremIpsum]
+        p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]
       ]
 
+      a [Class "anchor"; Id "how-to-join"; Key.Src(__FILE__,__LINE__)] []
+      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+        p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]
+      ]
+
+      a [Class "anchor"; Id "dj-mix"; Key.Src(__FILE__,__LINE__)] []
       Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
           Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]
@@ -39,6 +46,7 @@ let view (model: Model) dispatch =
         }
       ]
 
+      a [Class "anchor"; Id "gallery"; Key.Src(__FILE__,__LINE__)] []
       Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
           Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
@@ -46,6 +54,7 @@ let view (model: Model) dispatch =
         ofList (PhotoGallery.view model dispatch)
       ]
 
+      a [Class "anchor"; Id "contact"; Key.Src(__FILE__,__LINE__)] []
       Section.section [Props [Key.Src(__FILE__,__LINE__); Style [Height "40vmax"]]] [
         div [Key.Src(__FILE__,__LINE__); Class "content-contact"] [
           div [Key.Src(__FILE__,__LINE__); Class "content-contact-head"] [
