@@ -15,7 +15,7 @@ let [<Literal>] __FILE__ = __SOURCE_FILE__
 
 let view (model: Model) dispatch =
   ofList [
-    picture [Class "content-building"] [
+    picture [Class "content-building"; Key.Src(__FILE__,__LINE__)] [
       source [SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
       source [SrcSet Assets.WebPAlt.GCBuilding2; Type "image/png"]
       img [Src Assets.WebPAlt.GCBuilding2; Alt ""]

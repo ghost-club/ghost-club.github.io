@@ -19,15 +19,30 @@
 @import "slick-theme.scss";
 @import "part.scss";
 
+* {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
 html {
   scroll-behavior: smooth;
   height: 100%;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
   font-family: 'IBM Plex Serif', 'Noto Serif JP', serif;
   overflow: hidden;
   background-color: #000;
+}
+
+// utils
+
+.align-center {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 
 // bulma
@@ -130,6 +145,7 @@ body {
   position: absolute;
   opacity: 1;
   transition: opacity 250ms ease-in;
+  cursor: pointer;
 }
 
 .header-bottom-playbutton.hidden {
@@ -303,33 +319,80 @@ body {
   height: 50px;
   right: 10px;
   border: 2px solid white;
+  z-index: 1;
   transition: all 100ms ease-in-out;
 }
 
 .menu-mobile-button.is-active {
-  z-index: 99;
   transition: all 100ms ease-in-out;
+}
+
+@keyframes modal-activate {
+  from {
+    opacity: 0;
+    visibility: visible;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+@keyframes modal-deactivate {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 .menu-mobile-modal {
   position: absolute;
   top: 0px;
   right: 0px;
-  //width: calc(min(100%, 400px));
-  //height: 735px;
-  //max-height: calc(100vh - 40px);
-  width: 100%;
-  height: calc(100vh - 40px);
-  z-index: -1;
   opacity: 0%;
-  transition: opacity 250ms ease-in-out;
+  visibility: hidden;
+  animation: modal-deactivate 250ms ease-in-out;
+}
+
+.twitter-logo {
+  cursor: pointer;
 }
 
 .menu-mobile-modal.is-active {
-  //display: inherit;
   opacity: 100%;
-  z-index: 98;
-  transition: opacity 250ms ease-in-out;
+  visibility: visible;
+  animation: modal-activate 250ms ease-in-out;
+}
+
+.menu-mobile-modal .menu-links {
+  width: 100%;
+}
+
+.menu-mobile-modal .twitter-logo {
+  transform: scale(1.0);
+  transition: transform 100ms ease-in;
+}
+
+.menu-mobile-modal .twitter-logo:hover {
+  transform: scale(1.1);
+}
+
+@media screen and (min-width: 768px) {
+  .menu-mobile-modal {
+    width: calc(min(100%, 400px));
+    height: 735px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+@media screen and (max-width: 767.99px) {
+  .menu-mobile-modal {
+    width: 100%;
+    height: calc(100vh - 40px);
+  }
 }
 
 // content

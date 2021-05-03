@@ -13,6 +13,18 @@ open Wrappers.Rewrapped
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
+let private viewLanguageSwitch =
+  FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
+    let containerClass =
+      match props.lang with
+      | Unspecified | En -> "block language-button-container language-en"
+      | Ja -> "block language-button-container language-jp"
+    div [
+      Class containerClass
+      DangerouslySetInnerHTML { __html = Assets.InlineSVG.LanguageButton }
+      OnClick (fun _e -> props.dispatch (SwitchLanguage (Language.Flip props.lang)))] []
+  ), memoizeWith=memoEqualsButFunctions)
+
 let private viewBody =
   FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
     let menuModalIsShown = Hooks.useState false
@@ -38,10 +50,22 @@ let private viewBody =
           ]
         ]
       ]
-      div [Class (menuModal "menu-mobile-modal is-hidden-desktop"); Key.Src(__FILE__,__LINE__)] [
+      div [
+        Class (menuModal "menu-mobile-modal is-hidden-desktop")
+        Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
           div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
-
+            div [Class "block menu-links"; Key.Src(__FILE__,__LINE__)] [
+              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
+              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
+              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
+              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
+              div [Class "block"; Key.Src(__FILE__,__LINE__)] [str "About"]
+            ]
+            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            div [Class "block align-center"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
+            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            viewLanguageSwitch props
           ]
         ]
       ]
