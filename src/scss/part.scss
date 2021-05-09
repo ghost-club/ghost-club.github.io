@@ -67,32 +67,13 @@ button .shadowed-inner:hover {
   align-items: center;
 }
 
-.language-button-container {
-  cursor: pointer;
-}
-
-.language-button-psuedo-button {
-  width: 50%;
+.menu-desktop-body .shadowed .shadowed-inner {
+  position: relative;
+  padding: 10px;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
   height: 100%;
-}
-
-.language-button * {
-  stroke-width: 2px;
-  transition: all 100ms ease-in-out;
-}
-
-.language-button-container.language-en .label-jp, .language-button-container.language-jp .label-en {
-  fill: white;
-}
-
-.language-button-container.language-en .label-en, .language-button-container.language-jp .label-jp {
-  fill: black;
-}
-
-.language-button-container.language-jp .slider {
-  transform: translate(0, 0);
-}
-
-.language-button-container.language-en .slider {
-  transform: translate(50%, 0);
 }

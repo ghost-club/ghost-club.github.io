@@ -1,0 +1,247 @@
+@import "part.scss";
+
+.menu-container {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px;
+  padding: 20px 20px 20px 20px;
+  opacity: 1;
+  transition: opacity 250ms ease-in;
+  color: white;
+  background: linear-gradient(180deg, black 0%, black 75%, transparent 100%);
+}
+@media screen and (max-width: 1023.99px) {
+  .menu-container {
+    height: 100px;
+  }
+}
+
+.menu-container.hidden {
+  opacity: 0;
+  transition: opacity 250ms ease-in;
+}
+
+.menu {
+  width: 100%;
+  height: 60px;
+  position: relative;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+@media screen and (max-width: 1023.99px) {
+  .menu {
+    height: 50px;
+  }
+}
+
+.menu-logo {
+  width: 236px;
+  height: 100%;
+}
+@media screen and (max-width: 1023.99px) {
+  .menu-logo {
+    width: 179px;
+  }
+}
+
+.language-button-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.menu-desktop-body .language-button-container {
+  height: 100%;
+}
+
+.language-button-psuedo-button {
+  width: 50%;
+  height: 100%;
+}
+
+.language-button * {
+  stroke-width: 2px;
+  transition: all 100ms ease-in-out;
+}
+
+.menu-desktop-body .language-button {
+  height: 100%;
+}
+
+.language-button-container.language-en .label-jp, .language-button-container.language-jp .label-en {
+  fill: white;
+}
+
+.language-button-container.language-en .label-en, .language-button-container.language-jp .label-jp {
+  fill: black;
+}
+
+.language-button-container.language-jp .slider {
+  transform: translate(0, 0);
+}
+
+.language-button-container.language-en .slider {
+  transform: translate(50%, 0);
+}
+
+ul.menu-links {
+  padding: 0;
+}
+
+ul.menu-links li {
+  list-style: none;
+}
+
+ul.menu-links li a {
+  position: relative;
+  left: -5px;
+  font-size: 1.25em;
+  font-weight: 500;
+  text-decoration: none;
+
+  padding: 0 5px;
+
+  --initialTextColor: #FFF;
+  --slideTextColor: #272838;
+
+  --initialBgColor: transparent;
+  --slideBgColor: #FFF;
+
+  color: var(--initialTextColor);
+
+  background-image: linear-gradient(90deg,
+    var(--initialBgColor) 0%,
+    var(--initialBgColor) 50%,
+    var(--slideBgColor) 50%,
+    var(--slideBgColor) 100%);
+  background-size: 300%;
+  transition:
+    background-position .1s cubic-bezier(.47, .1, 1, .63),
+    color .1s linear;
+}
+
+.menu-desktop-body ul.menu-links li a {
+  left: 0px;
+  font-size: 16px;
+  padding: 0px;
+  white-space: nowrap;
+}
+
+ul.menu-links li a:hover {
+  color: var(--slideTextColor);
+  cursor: pointer;
+  background-position: -75% 100%;
+}
+
+
+.menu-desktop-body {
+  width: 728px;
+  height: 100%;
+}
+
+.menu-mobile-button {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  right: 10px;
+  border: 2px solid white;
+  z-index: 1;
+  transition: all 100ms ease-in-out;
+}
+
+.menu-mobile-button.is-active {
+  transition: all 100ms ease-in-out;
+}
+
+@keyframes modal-activate {
+  from {
+    opacity: 0;
+    visibility: visible;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+@keyframes modal-deactivate {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.menu-mobile-modal {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  opacity: 0%;
+  visibility: hidden;
+  animation: modal-deactivate 250ms ease-in-out;
+}
+
+.menu-desktop-body .block {
+  height: 100%;
+  margin-bottom: 0;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-desktop-body .block:not(:last-child) {
+  margin-right: 1.5rem;
+}
+
+.twitter-logo {
+  cursor: pointer;
+}
+
+.menu-mobile-modal .twitter-logo {
+  width: 35%;
+}
+
+.menu-desktop-body .twitter-logo {
+  height: 80%;
+}
+
+.menu-mobile-modal.is-active {
+  opacity: 100%;
+  visibility: visible;
+  animation: modal-activate 250ms ease-in-out;
+}
+
+.menu-mobile-modal .menu-links {
+  width: 100%;
+}
+
+.menu-mobile-modal .twitter-logo {
+  transform: scale(1.0);
+  transition: transform 100ms ease-in;
+}
+
+.menu-mobile-modal .twitter-logo:hover {
+  transform: scale(1.05);
+}
+
+@media screen and (min-width: 768px) {
+  .menu-mobile-modal {
+    width: calc(min(100%, 400px));
+    height: 735px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+@media screen and (max-width: 767.99px) {
+  .menu-mobile-modal {
+    width: 100%;
+    height: calc(100vh - 40px);
+  }
+}

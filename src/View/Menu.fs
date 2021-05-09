@@ -47,7 +47,20 @@ let private viewBody =
       img [Class "menu-logo"; Key.Src(__FILE__,__LINE__); Src Assets.SVG.LogoSmall]
       div [Class "menu-desktop-body is-hidden-touch"; Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
-          str "Foo"
+          div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
+            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            ul [Class "block menu-links"; Key.Src(__FILE__,__LINE__)] [
+              menuItem "about" "About"
+              menuItem "how-to-join" "How to join"
+              menuItem "dj-mix" "DJ Mix"
+              menuItem "gallery" "Gallery"
+              menuItem "contact" "Contact"
+            ]
+            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            div [Class "block"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
+            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            viewLanguageSwitch props
+          ]
         ]
       ]
       div [Class (menuModal "menu-mobile-button is-hidden-desktop"); Key.Src(__FILE__,__LINE__)] [
