@@ -10,9 +10,12 @@
 @import "~bulma/sass/helpers/_all.sass";
 @import "~bulma/sass/base/_all.sass";
 @import "~bulma/sass/elements/title.sass";
+@import "~bulma/sass/grid/columns.sass";
 
 @import "hamburger-settings.scss";
 @import "~hamburgers/_sass/hamburgers/hamburgers.scss";
+
+@import "~animate.css/animate.min.css";
 
 @import "dark-scrollbar.scss";
 @import "animation.scss";
@@ -40,6 +43,14 @@ body {
   font-family: 'IBM Plex Serif', 'Noto Serif JP', serif;
   overflow: hidden;
   background-color: #000;
+}
+:root {
+  --app-height: 100%;
+}
+
+.limited-width {
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
 // utils
@@ -73,16 +84,19 @@ a.anchor {
   margin-bottom: 1.5rem;
 }
 
-.columns {
-  margin: 0;
-}
-
-.column {
-  padding: 0;
-}
-
 .section {
   padding: 5vw 5vw;
+}
+
+@media screen and (max-width: 768.99px) {
+  .is-hidden-mobile {
+    display: none !important;
+  }
+}
+@media screen and (min-width: 769px) {
+  .is-hidden-tablet {
+    display: none !important;
+  }
 }
 
 @media screen and (max-width: 1023.99px) {
@@ -222,6 +236,7 @@ a.anchor {
 
 .background-video {
   height: 100vh;
+  height: -webkit-calc(max(100vh, 100%));
   width:  100%;
   position: fixed;
   padding: 0%;
@@ -256,6 +271,7 @@ a.anchor {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: -webkit-calc(max(100vh, 100%));
   z-index: 0;
   display: none;
   opacity: 0;
@@ -265,13 +281,16 @@ a.anchor {
 .transition {
   height: 100vh;
   position: relative;
+  background: linear-gradient(transparent 0%, black 100%);
 }
 
 .transition-building {
   position: absolute;
+  width: 100vw;
   right: 0;
   bottom: 0;
   transform: translate(0, 20%);
+  z-index: 1;
 }
 
 // menu
@@ -285,6 +304,7 @@ a.anchor {
   color: #FFFFFF;
   position: relative;
   overflow: visible;
+  background-color: black;
 }
 
 .content-foreground {
@@ -296,7 +316,7 @@ a.anchor {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
   transform: translate(0, 10%);
   z-index: 0;
 }
@@ -316,4 +336,11 @@ a.anchor {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.content-about-picture-mobile {
+  position: relative;
+  z-index: -1;
+  right: 0px;
+  transform: scale(0.8);
 }

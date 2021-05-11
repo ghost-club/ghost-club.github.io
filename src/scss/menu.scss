@@ -1,4 +1,5 @@
 @import "part.scss";
+@import "~animate.css/animate.min.css";
 
 .menu-container {
   z-index: 2;
@@ -22,6 +23,12 @@
 .menu-container.hidden {
   opacity: 0;
   transition: opacity 250ms ease-in;
+}
+
+.menu-container.disable {
+  opacity: 0;
+  z-index: -99;
+  display: none;
 }
 
 .menu {
@@ -54,12 +61,7 @@
   cursor: pointer;
 }
 
-.menu-desktop-body .language-button-container {
-  height: 100%;
-}
-
-.language-button-psuedo-button {
-  width: 50%;
+.menu-desktop .language-button-container {
   height: 100%;
 }
 
@@ -68,7 +70,7 @@
   transition: all 100ms ease-in-out;
 }
 
-.menu-desktop-body .language-button {
+.menu-desktop .language-button {
   height: 100%;
 }
 
@@ -98,12 +100,10 @@ ul.menu-links li {
 
 ul.menu-links li a {
   position: relative;
-  left: -5px;
-  font-size: 1.25em;
+
   font-weight: 500;
   text-decoration: none;
-
-  padding: 0 5px;
+  white-space: nowrap;
 
   --initialTextColor: #FFF;
   --slideTextColor: #272838;
@@ -124,11 +124,16 @@ ul.menu-links li a {
     color .1s linear;
 }
 
-.menu-desktop-body ul.menu-links li a {
+.menu-mobile ul.menu-links li a {
+  left: -5px;
+  font-size: 1.25rem;
+  padding: 0 5px;
+}
+
+.menu-desktop ul.menu-links li a {
   left: 0px;
   font-size: 16px;
   padding: 0px;
-  white-space: nowrap;
 }
 
 ul.menu-links li a:hover {
@@ -137,9 +142,41 @@ ul.menu-links li a:hover {
   background-position: -75% 100%;
 }
 
+.menu-mobile {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  opacity: 0%;
+  visibility: hidden;
+  animation: modal-deactivate 250ms ease-in-out;
+}
 
-.menu-desktop-body {
+.menu-mobile .shadowed .shadowed-inner {
+  position: relative;
+  border-top: 2px solid white;
+  width: 100%;
+  height: calc(100% - 47px);
+  top: 47px;
+  padding: 0% 25%;
+  display: flex;
+  flex-flow: column;
+  justify-content:space-around;
+  align-items: center;
+}
+
+.menu-desktop {
   width: 728px;
+  height: 100%;
+}
+
+.menu-desktop .shadowed .shadowed-inner {
+  position: relative;
+  padding: 10px;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
   height: 100%;
 }
 
@@ -178,16 +215,7 @@ ul.menu-links li a:hover {
   }
 }
 
-.menu-mobile-modal {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  opacity: 0%;
-  visibility: hidden;
-  animation: modal-deactivate 250ms ease-in-out;
-}
-
-.menu-desktop-body .block {
+.menu-desktop .menu-item {
   height: 100%;
   margin-bottom: 0;
   display: flex;
@@ -196,43 +224,44 @@ ul.menu-links li a:hover {
   align-items: center;
 }
 
-.menu-desktop-body .block:not(:last-child) {
+.menu-desktop .menu-item:not(:last-child) {
   margin-right: 1.5rem;
 }
 
-.twitter-logo {
-  cursor: pointer;
+.menu-mobile .menu-links .menu-item:not(:last-child) {
+  margin-bottom: 1.25rem;
 }
 
-.menu-mobile-modal .twitter-logo {
+.menu-mobile .twitter-logo {
   width: 35%;
 }
 
-.menu-desktop-body .twitter-logo {
+.menu-desktop .twitter-logo {
   height: 80%;
 }
 
-.menu-mobile-modal.is-active {
+.menu-mobile.is-active {
   opacity: 100%;
   visibility: visible;
   animation: modal-activate 250ms ease-in-out;
 }
 
-.menu-mobile-modal .menu-links {
+.menu-mobile .menu-links {
   width: 100%;
 }
 
-.menu-mobile-modal .twitter-logo {
+.twitter-logo {
+  cursor: pointer;
   transform: scale(1.0);
   transition: transform 100ms ease-in;
 }
 
-.menu-mobile-modal .twitter-logo:hover {
-  transform: scale(1.05);
+.twitter-logo:hover {
+  transform: scale(1.1);
 }
 
 @media screen and (min-width: 768px) {
-  .menu-mobile-modal {
+  .menu-mobile {
     width: calc(min(100%, 400px));
     height: 735px;
     max-height: calc(100vh - 40px);
@@ -240,8 +269,12 @@ ul.menu-links li a:hover {
 }
 
 @media screen and (max-width: 767.99px) {
-  .menu-mobile-modal {
-    width: 100%;
-    height: calc(100vh - 40px);
+  .menu-mobile {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 20px;
   }
 }

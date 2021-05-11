@@ -17,8 +17,8 @@ let private viewLanguageSwitch =
   FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
     let containerClass =
       match props.lang with
-      | Unspecified | En -> "block language-button-container language-en"
-      | Ja -> "block language-button-container language-jp"
+      | Unspecified | En -> "menu-item language-button-container language-en"
+      | Ja -> "menu-item language-button-container language-jp"
     div [
       Class containerClass
       DangerouslySetInnerHTML { __html = Assets.InlineSVG.LanguageButton }
@@ -31,7 +31,7 @@ let private viewBody =
 
     let inline menuItem href title =
       let target = Browser.Dom.document.getElementById(href)
-      li [Class "menu-item block"] [
+      li [Class "menu-item"] [
         a [
           Href ("#" + href)
           OnClick (fun _ ->
@@ -43,22 +43,19 @@ let private viewBody =
       if menuModalIsShown.current then str + " is-active"
       else str
 
-    div [Class "menu"; Key.Src(__FILE__,__LINE__)] [
+    div [Class "menu limited-width"; Key.Src(__FILE__,__LINE__)] [
       img [Class "menu-logo"; Key.Src(__FILE__,__LINE__); Src Assets.SVG.LogoSmall]
-      div [Class "menu-desktop-body is-hidden-touch"; Key.Src(__FILE__,__LINE__)] [
+      div [Class "menu-desktop is-hidden-touch"; Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
           div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
-            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
-            ul [Class "block menu-links"; Key.Src(__FILE__,__LINE__)] [
+            ul [Class "menu-item menu-links"; Key.Src(__FILE__,__LINE__)] [
               menuItem "about" "About"
               menuItem "how-to-join" "How to join"
               menuItem "dj-mix" "DJ Mix"
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
-            div [Class "block"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
-            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            div [Class "menu-item"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
             viewLanguageSwitch props
           ]
         ]
@@ -74,21 +71,19 @@ let private viewBody =
         ]
       ]
       div [
-        Class (menuModal "menu-mobile-modal is-hidden-desktop")
+        Class (menuModal "menu-mobile is-hidden-desktop")
         Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
           div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
-            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
-            ul [Class "block menu-links"; Key.Src(__FILE__,__LINE__)] [
+            ul [Class "menu-item menu-links"; Key.Src(__FILE__,__LINE__)] [
+              li [Class "menu-item"] []
               menuItem "about" "About"
               menuItem "how-to-join" "How to join"
               menuItem "dj-mix" "DJ Mix"
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
-            div [Class "block align-center"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
-            div [Class "block"; Key.Src(__FILE__,__LINE__)] []
+            div [Class "menu-item align-center"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
             viewLanguageSwitch props
           ]
         ]
@@ -100,6 +95,7 @@ let viewMenu (model: Model) dispatch =
   let className =
     let baseClass = "menu-container"
     if model.flags |> Set.contains MenuIsVisible then baseClass
+    else if model.flags |> Set.contains PlayButtonIsShown then baseClass + " disable"
     else baseClass + " hidden"
   div [Class className; Key.Src(__FILE__,__LINE__)] [
     viewBody {| dispatch = dispatch; lang = model.lang |}

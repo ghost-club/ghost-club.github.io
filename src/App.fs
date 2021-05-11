@@ -152,9 +152,7 @@ let private viewMain model dispatch =
   ofList [
     Transition.viewTransition {| dispatch = dispatch |}
     Menu.viewMenu model dispatch
-    div [Class "content has-text-centered"; Key "content"] [
-      Content.view model dispatch
-    ]
+    Content.view model dispatch
   ]
 
 let private view model dispatch =
@@ -169,7 +167,7 @@ open Elmish.Debug
 open Elmish.HMR
 
 Program.mkProgram init update view
-|> Program.withReactSynchronous "app"
+|> Program.withReactSynchronous "root"
 #if DEBUG
 |> Program.withDebugger
 |> Program.withConsoleTrace

@@ -15,8 +15,14 @@
   height: calc(100% - 10px);
   margin: 0px 10px 10px 0px;
   padding: 0px;
-  box-shadow: 10px 10px 0px 0 white;
-  transition: all 100ms ease-in-out;
+  // https://stackoverflow.com/questions/9983520/webkit-animation-is-leaving-junk-pixels-behind-on-the-screen/17822836
+  box-shadow: 10px 10px 0px 0 white, 10px 10px 1px rgba(0, 0, 0, 0.05);
+  transition: all 250ms ease-in-out;
+}
+
+button.shadowed {
+  cursor: pointer;
+  display: inherit !important;
 }
 
 button .shadowed-inner {
@@ -27,7 +33,6 @@ button .shadowed-inner {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 
   position: relative;
   border-width: 0 2px 2px 0;
@@ -45,35 +50,18 @@ button .shadowed-inner {
   top: 0px;
   left: 0px;
   margin: 0px 10px 10px 0px;
-  transition: color,background-color 250ms ease-in-out;
+  transition: all 250ms ease-in-out;
 }
 
-button .shadowed-inner:hover {
+button.shadowed:hover {
+  // https://stackoverflow.com/questions/9983520/webkit-animation-is-leaving-junk-pixels-behind-on-the-screen/17822836
+  box-shadow: 15px 15px 0px 0 white, 15px 15px 1px rgba(0, 0, 0, 0.05);
+  transition: all 250ms ease-in-out;
+}
+
+button.shadowed .shadowed-inner:hover, button.shadowed:hover .shadowed-inner {
+  top: -10px;
+  left: -10px;
   color: black;
   background-color: white;
-  transition: color,background-color 250ms ease-in-out;
-}
-
-.menu-mobile-modal .shadowed .shadowed-inner {
-  position: relative;
-  border-top: 2px solid white;
-  width: 100%;
-  height: calc(100% - 47px);
-  top: 47px;
-  padding: 15% 25%;
-  display: flex;
-  flex-flow: column;
-  justify-content:space-between;
-  align-items: center;
-}
-
-.menu-desktop-body .shadowed .shadowed-inner {
-  position: relative;
-  padding: 10px;
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%;
 }
