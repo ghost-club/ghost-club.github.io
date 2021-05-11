@@ -15,7 +15,8 @@
 @import "hamburger-settings.scss";
 @import "~hamburgers/_sass/hamburgers/hamburgers.scss";
 
-@import "~animate.css/animate.min.css";
+@import "~animate.css/source/_vars.css";
+@import "~animate.css/source/attention_seekers/headShake.css";
 
 @import "dark-scrollbar.scss";
 @import "animation.scss";
@@ -136,8 +137,15 @@ a.anchor {
 .header-container {
   width: 100vw;
   height: 100vh;
+
   position: fixed;
   overflow: visible;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .header-container {
+    height: calc(100vh - 66px - env(safe-area-inset-bottom));
+  }
 }
 
 .header-top {
@@ -162,6 +170,15 @@ a.anchor {
   height: 17%;
   z-index: 1;
   padding: 3.5vmin 3.5vw;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .header-bottom {
+    position: fixed;
+    left: 0px;
+    bottom: calc(env(safe-area-inset-bottom));
+    width: 100vw;
+  }
 }
 
 .header-bottom-playbutton-container {
@@ -343,4 +360,18 @@ a.anchor {
   z-index: -1;
   right: 0px;
   transform: scale(0.8);
+}
+
+svg.obake:hover .head {
+  animation: headShake;
+  animation-duration: 1s;
+}
+
+svg.obake .tie {
+  transition: all 250ms;
+}
+
+svg.obake:hover .tie {
+  transition: all 250ms;
+  transform: translate(0, 5%);
 }

@@ -55,7 +55,7 @@ let private viewBody =
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            div [Class "menu-item"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
+            a [Class "menu-item"; Target "_blank"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
             viewLanguageSwitch props
           ]
         ]
@@ -83,7 +83,7 @@ let private viewBody =
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            div [Class "menu-item align-center"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
+            a [Class "menu-item align-center"; Target "_blank"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
             viewLanguageSwitch props
           ]
         ]

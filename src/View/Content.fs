@@ -59,6 +59,13 @@ let private viewAbout =
     ]
   ))
 
+let inline private viewObake customClass =
+  div [
+    Key.Src(__FILE__,__LINE__)
+    Class customClass
+    DangerouslySetInnerHTML { __html = Assets.InlineSVG.Obake }
+  ] []
+
 let private viewHowToJoin =
   FunctionComponent.Of ((fun (_props: {| lang: Language |}) ->
     Section.section [CustomClass "has-text-left"; Props [Key.Src(__FILE__,__LINE__)]] [
@@ -67,10 +74,12 @@ let private viewHowToJoin =
           Heading.h2 [Props [Style [Color "white"]]] [str "How to join"]
           Block.block [Props [Key.Src(__FILE__,__LINE__)]] [str !@"loremipsum"]
           Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-            img [Src Assets.SVG.Obake; Class "is-hidden-tablet"; Style [Width "100%"; ObjectFit "contain"]]
+            viewObake "is-hidden-tablet"
           ]
           Block.block [Props [Style [Width "100%"; Height "70px"; Display DisplayOptions.InlineBlock]]] [
-            button [Class "shadowed"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
+            button [
+              Class "shadowed"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore;
+              OnClick (fun _e -> Browser.Dom.window.``open``("https://vrchat.com/home/user/usr_7e0bc356-da1f-44da-be54-72b6e4216c15", "_blank") |> ignore)] [
               div [Class "shadowed-inner"; Style [FontSize "1.2rem"]; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
                 str "Send a friend request"
               ]
@@ -78,7 +87,7 @@ let private viewHowToJoin =
           ]
         ]
         Column.column [Props [Style [Padding "5% 10%"]; Key.Src(__FILE__,__LINE__)]] [
-          img [Src Assets.SVG.Obake; Class "is-hidden-mobile"; Style [Width "100%"; ObjectFit "contain"]]
+          viewObake "is-hidden-mobile"
         ]
       ]
     ]
@@ -104,13 +113,8 @@ let view (model: Model) dispatch =
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
           Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]
         ]
-        MixCloud.mixCloudList {
-          options = [MixCloud.HideCover true]
-          onLoad = None
-          items = [
-            { user = "cannorin"; mixName = "20210402-gc-birthday-mix" }
-          ]
-        }
+        // <iframe width="100%" height="180" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F" frameborder="0" ></iframe>
+        iframe [Src "https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F"; Style [Width "100%"; Height "180px"]; FrameBorder 0] []
       ]
 
       a [Class "anchor"; Id "gallery"; Key.Src(__FILE__,__LINE__)] []
