@@ -14,7 +14,7 @@ open Wrappers.Rewrapped
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
 let private viewLanguageSwitch =
-  FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
+  FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language; enabled: bool |}) ->
     let containerClass =
       match props.lang with
       | Unspecified | En -> "menu-item language-button-container language-en"
@@ -26,7 +26,7 @@ let private viewLanguageSwitch =
   ), memoizeWith=memoEqualsButFunctions)
 
 let private viewBody =
-  FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
+  FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language; enabled: bool |}) ->
     let menuModalIsShown = Hooks.useState false
     let mobileMenuRef = Hooks.useRef None
 
@@ -47,11 +47,11 @@ let private viewBody =
     *)
 
     Hooks.useEffect((fun () ->
-      if menuModalIsShown.current && Screen.check Screen.Mobile then
+      if props.enabled && menuModalIsShown.current && Screen.check Screen.Mobile then
         disableScroll.on()
       else
         disableScroll.off()
-    ), [| menuModalIsShown |])
+    ), [| menuModalIsShown; props.enabled |])
 
     let inline menuItem href title =
       li [Class "menu-item"] [
@@ -118,11 +118,11 @@ let private viewBody =
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__))
 
 let viewMenu (model: Model) dispatch =
-  let className =
+  let className, enabled =
     let baseClass = "menu-container"
-    if model.flags |> Set.contains MenuIsVisible then baseClass
-    else if model.flags |> Set.contains PlayButtonIsShown then baseClass + " disable"
-    else baseClass + " hidden"
+    if model.flags |> Set.contains MenuIsVisible then baseClass, true
+    else if model.flags |> Set.contains PlayButtonIsShown then baseClass + " disable", false
+    else baseClass + " hidden", false
   div [Class className; Key.Src(__FILE__,__LINE__)] [
-    viewBody {| dispatch = dispatch; lang = model.lang |}
+    viewBody {| dispatch = dispatch; lang = model.lang; enabled = enabled|}
   ]
