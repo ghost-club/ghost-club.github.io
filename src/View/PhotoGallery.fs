@@ -94,6 +94,7 @@ let view =
               disableScroll.on())
             OnCloseRequest (fun () ->
               disableScroll.off()
+              sliderRef.current.slickPlay()
               state.update {| state.current with isOpen = false |})
             OnMoveNextRequest (fun () ->
               let newIndex = (state.current.index + 1) % album.Length
