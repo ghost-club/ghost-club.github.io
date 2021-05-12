@@ -2,8 +2,9 @@ module Properties
 
 open Fable.Core
 
-[<Literal>]
-let DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
+let [<Literal>] DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
+
+let [<Literal>] GoogleAppUrl = "https://script.google.com/macros/s/AKfycbzx8Q1VskRL86vjbRkblv2tApfBC7Zzr7oYr80lH2Ivvg-eERx-cOauiWqckA11OW4/exec"
 
 module Assets =
   module SVG =

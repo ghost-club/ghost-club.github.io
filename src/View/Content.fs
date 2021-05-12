@@ -113,7 +113,6 @@ let view (model: Model) dispatch =
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
           Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]
         ]
-        // <iframe width="100%" height="180" src="https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F" frameborder="0" ></iframe>
         iframe [Src "https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F"; Style [Width "100%"; Height "180px"]; FrameBorder 0] []
       ]
 
@@ -133,7 +132,11 @@ let view (model: Model) dispatch =
           ]
           div [Key.Src(__FILE__,__LINE__); Class "content-contact-body"] [
             div [Style [Width "240px"; Height "70px"; Display DisplayOptions.InlineBlock]] [
-              button [Class "shadowed"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
+              button [
+                Class "shadowed"
+                Key.Src(__FILE__,__LINE__)
+                OnTouchStart ignore
+                OnClick (fun _e -> Browser.Dom.window.``open``("https://docs.google.com/forms/d/e/1FAIpQLSdKU2PixQJ1TMyWtZuukNiB39vVnstvA_vKV5PxULDKGMO4wg/viewform", "_blank") |> ignore)] [
                 div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
                   str "Contact"
                 ]

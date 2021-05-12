@@ -35,7 +35,6 @@ let view (model: Model) (dispatch: Msg -> unit) =
     div [Key.Src(__SOURCE_FILE__, __LINE__)] [
       ReactSlick.slider
         (fun it ->
-          it.className <- Some "center"
           it.centerMode <- Some true
           it.infinite <- Some true
           it.centerPadding <- Some "0"
@@ -43,14 +42,18 @@ let view (model: Model) (dispatch: Msg -> unit) =
           it.dots <- Some true
           it.dotsClass <- Some "slick-dots is-hidden-mobile"
           it.autoplay <- Some true
-          it.lazyLoad <- Some ReactSlick.LazyLoadTypes.Progressive
           it.prevArrow <- Some (prevArrow !!{||})
           it.nextArrow <- Some (nextArrow !!{||})
+          it.variableWidth <- Some true
           ()) [
-        for i, mi in Seq.indexed album do
+        for mi in album do
           yield
-            div [Key (sprintf "photo-gallery-img%d" i)] [
-              img [Src (Album.IMediaInfo.getOrigUrl mi)]
+            img [
+              Src (Album.IMediaInfo.getOrigUrl mi)
+              HTMLAttr.Custom ("loading", "lazy")
+              HTMLAttr.Width  mi.width
+              HTMLAttr.Height mi.height
+              Alt ""
             ]
       ]
     ]

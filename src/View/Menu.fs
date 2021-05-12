@@ -30,12 +30,13 @@ let private viewBody =
     let menuModalIsShown = Hooks.useState false
 
     let inline menuItem href title =
-      let target = Browser.Dom.document.getElementById(href)
       li [Class "menu-item"] [
         a [
           Href ("#" + href)
           OnClick (fun _ ->
-            target.scrollIntoView(!!{| behavior = Browser.Types.ScrollIntoViewOptionsBehavior.Smooth |} :> Browser.Types.ScrollIntoViewOptions)
+            let target = Browser.Dom.document.getElementById(href)
+            if target <> null then
+              target.scrollIntoView(!!{| behavior = Browser.Types.ScrollIntoViewOptionsBehavior.Smooth |} :> Browser.Types.ScrollIntoViewOptions)
             menuModalIsShown.update false)
         ] [str title]]
 

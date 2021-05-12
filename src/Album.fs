@@ -4,9 +4,6 @@ open System
 open Fable.Core
 open Fetch.Types
 
-[<Literal>]
-let private googleAppUrl = "https://script.google.com/macros/s/AKfycbwc04XnKjP8Yq-yCgw34WXxcEd06BO4Y3n2B9P65rVRcXN1qQjaXfNHXcsaXjhOd0fa/exec"
-
 type [<AllowNullLiteral>] IMediaInfo =
   abstract baseUrl: string with get, set
   abstract mimeType: string with get, set
@@ -15,6 +12,8 @@ type [<AllowNullLiteral>] IMediaInfo =
   abstract height: int with get, set
 
 module IMediaInfo =
+  let getUrlWithSize (width: int) (height: int) (x: IMediaInfo) =
+    sprintf "%s=w%d-h%d" x.baseUrl width height
   let getOrigUrl (x: IMediaInfo) = sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
 
 type [<AllowNullLiteral>] IResult =
@@ -38,7 +37,7 @@ let get () : JS.Promise<IResult> =
   promise {
     let! resp =
       Fetch.fetch
-        (googleAppUrl + "?action=images")
+        (Properties.GoogleAppUrl + "?action=images")
         [Method HttpMethod.GET; Mode RequestMode.Cors]
     let! txt = resp.text()
     return

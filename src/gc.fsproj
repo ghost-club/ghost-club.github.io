@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties.fs" />
+    <Compile Include="Extensions.fs" />
     <Compile Include="Wrappers/React.fs" />
     <Compile Include="Wrappers/IntersectionObserver.fs" />
     <Compile Include="Wrappers/I18next.fs" />
@@ -15,7 +16,6 @@
     <Compile Include="Wrappers/ReactTransitionGroup.fs" />
     <Compile Include="Wrappers/ReactMotion.fs" />
     <Compile Include="Wrappers/Rewrap.fs" />
-    <Compile Include="Extensions.fs" />
     <Compile Include="Component/MixCloud.fs" />
     <Compile Include="Component/AnimatedText.fs" />
     <Compile Include="Album.fs" />
