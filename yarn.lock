@@ -2008,6 +2008,11 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
+disable-scroll@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/disable-scroll/-/disable-scroll-0.6.0.tgz#ff0ae8d4c9d395e65842583eefb9313d046f462a"
+  integrity sha512-6bTAS16sz+3X7Pib8d5dAO9xo5MvqDZvSlzuhW/2c3NhUvbPNqnsV3JttvnqgNCDEgWUgNWJYM392iUmLETDxA==
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/dns-equal/-/dns-equal-1.0.0.tgz"
@@ -5489,6 +5494,14 @@ react-i18next@^11.8.12:
     "@babel/runtime" "^7.13.6"
     html-parse-stringify2 "^2.0.1"
 
+react-image-lightbox@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/react-image-lightbox/-/react-image-lightbox-5.1.1.tgz#872d1a4336b5a6410ea7909b767cf59014081004"
+  integrity sha512-GprldD8AqpRb2hsOdns3sI7Xeo9hJlcybDxuli4RB+ml1J/GaFaUuRkT/7IrTLv2+4vkR74ahz2LD0HOUHI7wA==
+  dependencies:
+    prop-types "^15.6.2"
+    react-modal "^3.8.1"
+
 react-intersection-observer@^8.31.0:
   version "8.31.0"
   resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.31.0.tgz#0ed21aaf93c4c0475b22b0ccaba6169076d01605"
@@ -5504,7 +5517,7 @@ react-lifecycles-compat@^3.0.0:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-modal@^3.13.1:
+react-modal@^3.13.1, react-modal@^3.8.1:
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.13.1.tgz#a02dce63bbfee7582936f1e9835d518ef8f56453"
   integrity sha512-m6yXK7I4YKssQnsjHK7xITSXy2O81BSOHOsg0/uWAsdKtuT9HF2tdoYhRuxNNQg2V+LgepsoHUPJKS8m6no+eg==

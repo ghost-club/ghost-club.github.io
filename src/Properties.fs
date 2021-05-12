@@ -37,12 +37,12 @@ module Assets =
 
   module InlineSVG =
     let LeftButton =
-      """<svg class="left-button" width="67" height="67" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+      """<svg class="left-button" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path class="circle" vector-effect="non-scaling-stroke" d="M33.4 65.8C51.294 65.8 65.8 51.294 65.8 33.4C65.8 15.506 51.294 1 33.4 1C15.506 1 1 15.506 1 33.4C1 51.294 15.506 65.8 33.4 65.8Z" stroke="white" stroke-width="2" stroke-miterlimit="10"/>
 <path class="arrow"  vector-effect="non-scaling-stroke" d="M41.1 18.6992L19.5 33.3992L41.1 48.0992" stroke="white" stroke-width="2" stroke-miterlimit="10"/>
 </svg>"""
     let RightButton =
-      """<svg class="right-button" width="67" height="67" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+      """<svg class="right-button" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path class="circle" vector-effect="non-scaling-stroke" d="M33.3998 1.00078C15.5058 1.00077 0.999806 15.5067 0.999804 33.4008C0.999803 51.2948 15.5058 65.8008 33.3998 65.8008C51.2938 65.8008 65.7998 51.2948 65.7998 33.4008C65.7998 15.5068 51.2938 1.00078 33.3998 1.00078Z" stroke="white" stroke-width="2" stroke-miterlimit="10"/>
 <path class="arrow"  vector-effect="non-scaling-stroke" d="M25.6998 48.1016L47.2998 33.4016L25.6998 18.7016" stroke="white" stroke-width="2" stroke-miterlimit="10"/>
 </svg>"""

@@ -94,7 +94,7 @@ let private viewHowToJoin =
   ))
 
 let view (model: Model) dispatch =
-  div [Class "content has-text-centered"; Key "content"] [
+  div [Id "content"; Class "content has-text-centered"; Key "content"] [
     picture [Key.Src(__FILE__,__LINE__)] [
       source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
       source [Class "content-building"; SrcSet Assets.WebPAlt.GCBuilding2; Type "image/png"]
@@ -121,7 +121,7 @@ let view (model: Model) dispatch =
         Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
           Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
         ]
-        ofList (PhotoGallery.view model dispatch)
+        PhotoGallery.view {| albumState = model.albumState; lang = model.lang; dispatch = dispatch |}
       ]
 
       a [Class "anchor"; Id "contact"; Key.Src(__FILE__,__LINE__)] []

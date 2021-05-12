@@ -18,6 +18,8 @@
 @import "~animate.css/source/_vars.css";
 @import "~animate.css/source/attention_seekers/headShake.css";
 
+@import "~react-image-lightbox/style.css";
+
 @import "dark-scrollbar.scss";
 @import "animation.scss";
 @import "slick-theme.scss";
@@ -42,16 +44,31 @@ html {
 
 body {
   font-family: 'IBM Plex Serif', 'Noto Serif JP', serif;
-  overflow: hidden;
   background-color: #000;
 }
-:root {
-  --app-height: 100%;
+
+.noscroll {
+  overflow-y: scroll;
+  position: fixed;
+  width: 100%;
+}
+
+div#root {
+  overflow: hidden;
 }
 
 .limited-width {
   max-width: 1440px;
   margin: 0 auto;
+}
+
+div#dummy-scrollbar {
+  overflow-y: scroll;
+  top: 0;
+  right: 0;
+  display: none;
+  height: 100%;
+  position: fixed;
 }
 
 // utils

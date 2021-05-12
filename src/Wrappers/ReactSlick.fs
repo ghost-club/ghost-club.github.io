@@ -86,14 +86,15 @@ type [<AllowNullLiteral>] Settings =
     abstract vertical: bool option with get, set
     abstract verticalSwiping: bool option with get, set
     abstract waitForAnimate: bool option with get, set
+    abstract key: string with get, set
+    abstract ref: React.Ref<Slider> with get, set
 
-type [<AbstractClass; Erase>] Slider =
-    inherit React.Component<Settings, obj>
+and [<AllowNullLiteralAttribute>] Slider =
     abstract slickNext: unit -> unit
     abstract slickPause: unit -> unit
     abstract slickPlay: unit -> unit
     abstract slickPrev: unit -> unit
-    abstract slickGoTo: slideNumber: float * ?dontAnimate: bool -> unit
+    abstract slickGoTo: slideNumber: int * ?dontAnimate: bool -> unit
 
 type [<AllowNullLiteral>] SliderStatic =
     [<Emit "new $0($1...)">] abstract Create: unit -> Slider

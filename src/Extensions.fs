@@ -9,6 +9,32 @@ module Fulma =
   open Fable.React
   open Fulma
 
+  module Screen =
+    open Browser.Dom
+    open Browser.MediaQueryListExtensions
+    type Screen = Fulma.Screen
+
+    let inline check (screen: Screen) =
+      match screen with
+      | Screen.All -> true
+      | Screen.Touch -> window.matchMedia("(max-width: 1023.99px)").matches
+      | Screen.Mobile -> window.matchMedia("(max-width: 768.99px)").matches
+      | Screen.Tablet -> window.matchMedia("(min-width: 769px)").matches
+      | Screen.Desktop -> window.matchMedia("(min-width: 1024px)").matches
+      | Screen.WideScreen -> window.matchMedia("(min-width: 1216px)").matches
+      | Screen.FullHD -> window.matchMedia("(min-width: 1408px)").matches
+
+    let inline checkOnly (screen: Screen) =
+      match screen with
+      | Screen.All -> true
+      | Screen.Touch -> window.matchMedia("(max-width: 1023.99px)").matches
+      | Screen.Mobile -> window.matchMedia("(max-width: 768.99px)").matches
+      | Screen.Tablet -> window.matchMedia("(min-width: 769px) and (max-width: 1023.99px)").matches
+      | Screen.Desktop -> window.matchMedia("(min-width: 1024px) and (max-width: 1215.99px)").matches
+      | Screen.WideScreen -> window.matchMedia("(min-width: 1216px) and (max-width: 1407.99px)").matches
+      | Screen.FullHD -> window.matchMedia("(min-width: 1408px)").matches
+
+
   [<RequireQualifiedAccess>]
   module Block =
     let inline block (options: GenericOption list) children =

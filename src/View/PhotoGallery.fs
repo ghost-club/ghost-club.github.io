@@ -6,6 +6,9 @@ open Fable.Core
 open Fable.Core.JsInterop
 open Fable.React
 open Fable.React.Props
+open Properties
+open ReactModal
+open ReactImageLightbox
 open Wrappers.Rewrapped
 
 open Model
@@ -30,35 +33,76 @@ let private nextArrow =
     ] []
   ), withKey=(fun _ -> __SOURCE_FILE__ + ":" + __LINE__))
 
-let view (model: Model) (dispatch: Msg -> unit) =
-  let render (album: Album.IMediaInfo[]) =
-    div [Key.Src(__SOURCE_FILE__, __LINE__)] [
-      ReactSlick.slider
-        (fun it ->
-          it.centerMode <- Some true
-          it.infinite <- Some true
-          it.centerPadding <- Some "0"
-          it.slidesToShow <- Some 1.0
-          it.dots <- Some true
-          it.dotsClass <- Some "slick-dots is-hidden-mobile"
-          it.autoplay <- Some true
-          it.prevArrow <- Some (prevArrow !!{||})
-          it.nextArrow <- Some (nextArrow !!{||})
-          it.variableWidth <- Some true
-          ()) [
-        for mi in album do
-          yield
-            img [
-              Src (Album.IMediaInfo.getOrigUrl mi)
-              HTMLAttr.Custom ("loading", "lazy")
-              HTMLAttr.Width  mi.width
-              HTMLAttr.Height mi.height
-              Alt ""
-            ]
+let view =
+  FunctionComponent.Of((fun (props: {| albumState: AlbumState; lang: Language; dispatch: (Msg -> unit) |}) ->
+    let state = Hooks.useState {| isOpen = false; index = 0 |}
+    let sliderRef = Hooks.useRef null
+    let lightboxRef = Hooks.useState null
+
+    (*
+    Hooks.useEffectDisposable((fun () ->
+      if lightboxRef.current <> null then
+        if state.current.isOpen then
+          ScrollLock.lock lightboxRef.current
+          //ScrollLock.lockWithOptions lightboxRef.current !!{| reserveScrollBarGap = true |}
+        else
+          ScrollLock.unlock lightboxRef.current
+      { new IDisposable with member __.Dispose() = ScrollLock.clearAll() }
+    ), [| state; lightboxRef |])
+    *)
+
+    match props.albumState with
+    | AlbumState.Loading | AlbumState.LoadFailed _ -> null
+    | AlbumState.Loaded album ->
+      ofList [
+        ReactSlick.slider
+          (fun it ->
+            it.key <- __SOURCE_FILE__ + ":" + __LINE__
+            it.centerMode <- Some true
+            it.infinite <- Some true
+            it.centerPadding <- Some "0"
+            it.slidesToShow <- Some 1.0
+            it.dots <- Some true
+            it.dotsClass <- Some "slick-dots is-hidden-mobile"
+            it.autoplay <- Some (not state.current.isOpen)
+            it.prevArrow <- Some (prevArrow !!{||})
+            it.nextArrow <- Some (nextArrow !!{||})
+            it.variableWidth <- Some true
+            it.ref <- Some (U2.Case2 sliderRef)
+            ()) [
+          for i, mi in album |> Seq.indexed do
+            yield
+              img [
+                Src (Album.IMediaInfo.getOrigUrl mi)
+                HTMLAttr.Custom ("loading", "lazy")
+                HTMLAttr.Width  mi.width
+                HTMLAttr.Height mi.height
+                Alt ""
+                OnDoubleClick (fun _e ->
+                  sliderRef.current.slickGoTo(i)
+                  state.update {| isOpen = true; index = i |})
+              ]
+        ]
+        if state.current.isOpen then
+          lightbox [
+            !^Key.Src(__SOURCE_FILE__,__LINE__)
+            ReactModalProps [ModalId "lightbox"; OverlayRef (fun el -> lightboxRef.update el)]
+            MainSrc (album.[state.current.index] |> Album.IMediaInfo.getOrigUrl)
+            //NextSrc (album.[(state.current.index + 1) % album.Length] |> Album.IMediaInfo.getOrigUrl)
+            //PrevSrc (album.[(state.current.index + album.Length - 1) % album.Length] |> Album.IMediaInfo.getOrigUrl)
+            OnAfterOpen (fun () ->
+              disableScroll.on())
+            OnCloseRequest (fun () ->
+              disableScroll.off()
+              state.update {| state.current with isOpen = false |})
+            OnMoveNextRequest (fun () ->
+              let newIndex = (state.current.index + 1) % album.Length
+              sliderRef.current.slickGoTo(newIndex)
+              state.update {| state.current with index = newIndex |})
+            OnMovePrevRequest (fun () ->
+              let newIndex = (state.current.index + album.Length - 1) % album.Length
+              sliderRef.current.slickGoTo(newIndex)
+              state.update {| state.current with index = newIndex |})
+          ]
       ]
-    ]
-
-
-  match model.albumState with
-  | AlbumState.Loaded album -> [render album]
-  | _ -> []
+  ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __SOURCE_FILE__ + ":" + __LINE__))

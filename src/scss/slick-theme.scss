@@ -26,7 +26,7 @@
     align-items: center;
 }
 
-.slick-slide > div {
+.slick-slide > div > div {
     height: 100%;
     max-height: 75vh;
 }
@@ -41,8 +41,8 @@
     position: absolute;
     top: 50%;
     display: block;
-    width: 18.7%;
-    height: 18.7%;
+    width: 67px;
+    height: 67px;
     padding: 0;
     -webkit-transform: translate(0, -50%);
     -ms-transform: translate(0, -50%);
@@ -56,14 +56,15 @@
 }
 .slick-prev
 {
-    left: 0;
+    left: -5%;
 }
 .slick-next
 {
-    right: 0;
+    right: -5%;
 }
 
 .slick-prev svg, .slick-next svg {
+    height: 100%;
     object-fit: contain;
     overflow: visible;
     position: absolute;
@@ -74,10 +75,10 @@
     transition: transform 100ms ease-in
 }
 .slick-prev svg {
-    left: -30%;
+    left: 0;
 }
 .slick-next svg {
-    right: -30%;
+    right: 0;
 }
 .slick-next svg:hover, .slick-prev svg:hover {
   transform: translate(0, -50%) scale(1.1);
@@ -88,13 +89,16 @@
     stroke-width: 2px;
     stroke: rgba($color: white, $alpha: 0.5);
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767.99px) {
     .slick-prev svg .arrow, .slick-next svg .arrow {
         stroke-width: 1px;
     }
 }
-.slick-prev svg:hover .arrow, .slick-next svg:hover .arrow {
-    stroke: white;
+
+@media screen and (min-width: 768px) {
+    .slick-prev svg:hover .arrow, .slick-next svg:hover .arrow {
+        stroke: white;
+    }
 }
 
 .slick-prev svg .circle, .slick-next svg .circle {
@@ -112,7 +116,7 @@
     fill: white;
     transition: all 100ms ease-in-out;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767.99px) {
     .slick-prev:active svg .circle, .slick-next:active svg .circle {
         stroke-width: 1px;
     }

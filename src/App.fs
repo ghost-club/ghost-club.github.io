@@ -6,6 +6,8 @@ open Fable.React.Props
 open Fulma
 open Fable.Core
 open Fable.Core.JsInterop
+open Browser.Types
+open Browser.Dom
 open Properties
 open Model
 open View
@@ -20,6 +22,12 @@ type ISmoothScrollPolyfill =
   abstract polyfill: unit -> unit
 
 let [<ImportDefault("smoothscroll-polyfill")>] smoothscroll : ISmoothScrollPolyfill = jsNative
+
+let initReactModalTask =
+  promise {
+    ReactModal.ReactModal.setAppElement(!^document.getElementById("#root"))
+    return Ignore
+  }
 
 let initSmoothScrollPolyfillTask =
   promise {
@@ -66,6 +74,7 @@ let initAlbumTask =
 
 let initCmd =
   Cmd.batch [
+    Cmd.OfPromise.result (initReactModalTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initSmoothScrollPolyfillTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initI18nTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initAlbumTask |> Promise.catch InitError)
@@ -77,9 +86,6 @@ let delayCmd ms msg : Cmd<Msg> =
       let! _ = Promise.sleep ms
       return msg
     }
-
-open Browser.Types
-open Browser.Dom
 
 let scrollToAnchorCmd () : Cmd<Msg> =
   Cmd.OfPromise.result <|

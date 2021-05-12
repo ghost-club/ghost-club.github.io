@@ -18,7 +18,7 @@ type OnAfterOpenCallback = OnAfterOpenCallbackOptions -> unit
 
 type Prop =
   | IsOpen of bool
-  | Styles of Styles
+  | [<CompiledName("styles")>] ModalStyles of Styles
   | PortalClassName of string
   | BodyOpenClassName of string
   | HtmlOpenClassName of string
@@ -47,7 +47,7 @@ type Prop =
   | OverlayElement of ((Fable.React.Props.IHTMLProp seq * React.ReactElement) -> React.ReactElement)
   | ContentElement of ((Fable.React.Props.IHTMLProp seq * React.ReactElement) -> React.ReactElement)
   | TestId of string
-  | Id of string
+  | [<CompiledName("id")>] ModalId of string
 
 type [<AllowNullLiteral>] ReactModalStatic =
   abstract defaultStyles: {| content: React.CSSProperties option; overlay: React.CSSProperties option |}
@@ -56,10 +56,10 @@ type [<AllowNullLiteral>] ReactModalStatic =
   /// and other assistive technologies while the modal is open.
   abstract setAppElement: appElement: U2<string, HTMLElement> -> unit
 
-let [<Import("ReactModal","react-modal")>] ReactModal: ReactModalStatic = jsNative
+let [<ImportDefault("react-modal")>] ReactModal: ReactModalStatic = jsNative
 
 open Fable.Core.JsInterop
 open Fable.React
 
 let inline modal (props: Prop seq) children =
-  ofImport "ReactModal" "react-modal" (keyValueList CaseRules.LowerFirst props) children
+  ofImport "default" "react-modal" (keyValueList CaseRules.LowerFirst props) children

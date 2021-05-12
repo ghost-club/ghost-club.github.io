@@ -28,6 +28,30 @@ let private viewLanguageSwitch =
 let private viewBody =
   FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language |}) ->
     let menuModalIsShown = Hooks.useState false
+    let mobileMenuRef = Hooks.useRef None
+
+    Browser.Dom.window.onorientationchange <- (fun _e -> menuModalIsShown.update false)
+
+    (*
+    Hooks.useEffectDisposable((fun () ->
+      match mobileMenuRef.current with
+      | None ->
+        ScrollLock.clearAll()
+      | Some menu ->
+        if menuModalIsShown.current then
+          ScrollLock.lock(menu)
+        else
+          ScrollLock.unlock(menu)
+      { new System.IDisposable with member __.Dispose() = ScrollLock.clearAll() }
+    ), [| menuModalIsShown; mobileMenuRef |])
+    *)
+
+    Hooks.useEffect((fun () ->
+      if menuModalIsShown.current && Screen.check Screen.Mobile then
+        disableScroll.on()
+      else
+        disableScroll.off()
+    ), [| menuModalIsShown |])
 
     let inline menuItem href title =
       li [Class "menu-item"] [
@@ -65,7 +89,8 @@ let private viewBody =
         button [
           Class (menuModal "hamburger hamburger--squeeze")
           Type "button"
-          OnClick (fun _e -> menuModalIsShown.update(not menuModalIsShown.current))] [
+          OnClick (fun _e ->
+            menuModalIsShown.update(not menuModalIsShown.current))] [
           span [Class "hamburger-box"] [
             span [Class "hamburger-inner"] []
           ]
@@ -74,7 +99,7 @@ let private viewBody =
       div [
         Class (menuModal "menu-mobile is-hidden-desktop")
         Key.Src(__FILE__,__LINE__)] [
-        div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
+        div [Class "shadowed"; Key.Src(__FILE__,__LINE__); RefValue mobileMenuRef] [
           div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
             ul [Class "menu-item menu-links"; Key.Src(__FILE__,__LINE__)] [
               li [Class "menu-item"] []

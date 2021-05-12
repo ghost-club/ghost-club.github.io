@@ -4,6 +4,7 @@ open Fable.Core.JsInterop
 
 open Browser.Types
 open Fable.React
+open System.ComponentModel
 
 type ReactTransitionElement =
   inherit ReactElement
@@ -22,7 +23,7 @@ type CommonProp =
   | Enter of bool
   /// Enable or disable exit transitions.
   | Exit of bool
-  | [<Erase>] CustomProp of Props.IHTMLProp
+  | [<Erase; EditorBrowsable(EditorBrowsableState.Never)>] CustomProp of Props.IHTMLProp
   interface ITransitionProp
   interface ICSSTransitionProp
   interface ITransitionGroupProp
