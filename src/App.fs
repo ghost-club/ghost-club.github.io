@@ -60,14 +60,26 @@ let initI18nTask =
   promise {
     let! _ =
       I18next.i18next
+        //.``use``(!^ReactI18next.initReactI18next)
         .``use``(!^ReactI18nextBrowserLanguageDetector.languageDetector)
         .init(options)
     let lang =
       match I18next.i18next.language with
       | "ja" -> Ja
       | _ -> En
+    //let langAttr = document.createAttribute("lang")
+    //langAttr.value <- lang.AsLangCode
+    //document.documentElement.attributes.setNamedItem(langAttr) |> ignore
     return SwitchLanguage lang
   }
+
+let changeLanguageTask (langCode: string) =
+  I18next.i18next.changeLanguage(langCode).``then``(fun _ ->
+    let langAttr = document.createAttribute("lang")
+    langAttr.value <- langCode
+    document.documentElement.attributes.setNamedItem(langAttr) |> ignore
+    Ignore
+  )
 
 let initAlbumTask =
   Album.get () |> Promise.map LoadAlbumResponse
@@ -130,8 +142,8 @@ let internal update msg model =
     let cmd =
       match lang with
       | Unspecified -> Cmd.none
-      | En -> Cmd.OfPromise.perform (fun lang -> I18next.i18next.changeLanguage(lang)) "en" (fun _ -> Ignore)
-      | Ja -> Cmd.OfPromise.perform (fun lang -> I18next.i18next.changeLanguage(lang)) "ja" (fun _ -> Ignore)
+      | En -> Cmd.OfPromise.perform changeLanguageTask "en" id
+      | Ja -> Cmd.OfPromise.perform changeLanguageTask "ja" id
     { model with lang = lang }, Cmd.batch [cmd; Cmd.ofMsg CheckInitTaskDone]
   | LoadAlbumResponse (Album.IResult.Ok x) ->
     { model with albumState = AlbumState.Loaded x.value }, Cmd.ofMsg CheckInitTaskDone
@@ -157,8 +169,8 @@ let private viewError model (exns: exn list) dispatch =
 let private viewMain model dispatch =
   ofList [
     Transition.viewTransition {| dispatch = dispatch |}
-    Menu.viewMenu model dispatch
-    Content.view model dispatch
+    Menu.viewMenu {| lang = model.lang; flags = model.flags; dispatch = dispatch |}
+    Content.view {| lang = model.lang; albumState = model.albumState; dispatch = dispatch |}
   ]
 
 let private view model dispatch =

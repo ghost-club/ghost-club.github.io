@@ -79,7 +79,7 @@ let private viewBody =
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            a [Class "menu-item"; Target "_blank"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
+            a [Class "menu-item"; Target "_blank"; Rel "noopener"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
             viewLanguageSwitch props
           ]
         ]
@@ -108,7 +108,7 @@ let private viewBody =
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            a [Class "menu-item align-center"; Target "_blank"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
+            a [Class "menu-item align-center"; Target "_blank"; Rel "noopener"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
             viewLanguageSwitch props
           ]
         ]
@@ -116,12 +116,12 @@ let private viewBody =
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__))
 
-let viewMenu (model: Model) dispatch =
+let viewMenu (prop: {| lang: Language; flags: Set<Flag>; dispatch: Msg -> unit |}) =
   let className, enabled =
     let baseClass = "menu-container"
-    if model.flags |> Set.contains MenuIsVisible then baseClass, true
-    else if model.flags |> Set.contains PlayButtonIsShown then baseClass + " disable", false
+    if prop.flags |> Set.contains MenuIsVisible then baseClass, true
+    else if prop.flags |> Set.contains PlayButtonIsShown then baseClass + " disable", false
     else baseClass + " hidden", false
   div [Class className; Key.Src(__FILE__,__LINE__)] [
-    viewBody {| dispatch = dispatch; lang = model.lang; enabled = enabled|}
+    viewBody {| dispatch = prop.dispatch; lang = prop.lang; enabled = enabled |}
   ]

@@ -221,12 +221,17 @@ a.anchor {
   cursor: pointer;
 }
 
+.content-mobile-playbutton {
+  cursor: pointer;
+  transition: opacity 250ms ease-in;
+}
+
 .header-bottom-playbutton.hidden {
   opacity: 0;
   transition: opacity 250ms ease-in;
 }
 
-.header-bottom-playbutton svg {
+.header-bottom-playbutton svg, .content-mobile-playbutton svg {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -234,16 +239,16 @@ a.anchor {
   transition: transform 100ms ease-in;
 }
 
-.header-bottom-playbutton:hover svg {
+.header-bottom-playbutton:hover svg, .content-mobile-playbutton:hover svg {
   transform: scale(1.05);
   transition: transform 100ms ease-in;
 }
 
-.header-bottom-playbutton:hover svg .circle {
+.header-bottom-playbutton:hover svg .circle, .content-mobile-playbutton:hover svg .circle {
   fill: #FFFFFF;
 }
 
-.header-bottom-playbutton:hover svg .play {
+.header-bottom-playbutton:hover svg .play, .content-mobile-playbutton:hover svg .play {
   stroke: #000000;
   fill: #000000;
 }

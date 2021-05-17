@@ -34,6 +34,8 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 // The HtmlWebpackPlugin allows us to use a template for the index.html page
 // and automatically injects <script> or <link> tags for generated bundles.
@@ -63,6 +65,8 @@ module.exports = {
     optimization: {
         // Split the code coming from npm packages into a different file.
         // 3rd party dependencies change less often, let the browser cache them.
+        minimize: isProduction,
+        minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
         splitChunks: {
             cacheGroups: {
                 commons: {
@@ -81,7 +85,16 @@ module.exports = {
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
     plugins: isProduction ?
         commonPlugins.concat([
-            new MiniCssExtractPlugin({ filename: 'style.css' }),
+            new MiniCssExtractPlugin({
+                filename: 'style.css',
+                insert: function (linkTag) {
+                    const preloadLinkTag = document.createElement('link')
+                    preloadLinkTag.rel = 'preload'
+                    preloadLinkTag.as = 'style'
+                    preloadLinkTag.href = linkTag.href
+                    document.head.appendChild(preloadLinkTag)
+                }
+            }),
             new CopyWebpackPlugin({
                 patterns: [
                     { from: CONFIG.assetsDir }

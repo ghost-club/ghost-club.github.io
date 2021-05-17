@@ -16,7 +16,7 @@ type Animation =
 
 type Prop<'Platform> = {|
   isOpen: bool
-  key: string
+  useKey: string
   url: string
   config: 'Platform list
   onAfterOpen: (ReactModal.OnAfterOpenCallbackOptions -> unit) option
@@ -82,7 +82,6 @@ let inline modalVideoPlayer< ^Platform when ^Platform: (static member Player: IP
           AnimationDirection (if state.current.isClosing then SingleAnimationDirection.Normal else SingleAnimationDirection.Reverse)
         ]
         OnKeyDown handleKeyInput; OnKeyUp handleKeyInput
-        Key (prop.key + "-outer")
       ] [
         div [
           Class "ril-inner ril__inner"
@@ -94,10 +93,10 @@ let inline modalVideoPlayer< ^Platform when ^Platform: (static member Player: IP
             JustifyContent "center"
             Height "100%"
           ]
-          Key (prop.key + "-inner")] [
+          Key (prop.useKey + "-inner")] [
 
           div [
-            Key (prop.key + "-inner-video-wrapper")
+            Key (prop.useKey + "-inner-video-wrapper")
             Style [
               Position PositionOptions.Relative
               Width "100%"
@@ -122,7 +121,7 @@ let inline modalVideoPlayer< ^Platform when ^Platform: (static member Player: IP
           ]
         ]
 
-        div [Class "ril-toolbar ril__toolbar"; Key (prop.key + "-toolbar")] [
+        div [Class "ril-toolbar ril__toolbar"; Key (prop.useKey + "-toolbar")] [
           ul [Class "ril-toolbar-left ril__toolbarSide ril__toolbarLeftSide"] []
           ul [Class "ril-toolbar-right ril__toolbarSide ril__toolbarRightSide"] [
             li [Class "ril-toolbal__item ril__toolbarItem"] [
@@ -136,4 +135,4 @@ let inline modalVideoPlayer< ^Platform when ^Platform: (static member Player: IP
         ]
       ]
     ]
-  ), memoizeWith=memoEqualsButFunctions, withKey=(fun p -> p.key))
+  ), memoizeWith=memoEqualsButFunctions, withKey=(fun p -> p.useKey))

@@ -10,6 +10,24 @@ open Properties
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
+let viewVideoModal =
+  FunctionComponent.Of((fun (prop: {| isOpen: bool; onClose: unit -> unit; key: string |}) ->
+    modalVideoPlayer
+      {| isOpen = prop.isOpen
+         useKey = __LINE__ + ":" + __FILE__
+         url = "https://vimeo.com/551444345"
+         config = [
+           VimeoConfig.PlayerOptions [
+             VimeoOption.Byline false
+             VimeoOption.Dnt true
+             VimeoOption.Responsive true
+             VimeoOption.Title false
+           ]
+         ]
+         onAfterOpen = None
+         onCloseRequest = Some (fun _ -> prop.onClose ()) |}
+  ), memoizeWith=memoEqualsButFunctions, withKey=(fun p -> p.key))
+
 let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; dispatch: (Msg -> unit) |} -> ReactElement =
   FunctionComponent.Of ((fun props ->
     let logoLoaded = Hooks.useState false
@@ -77,19 +95,20 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
             img [
               Class "header-logo fade-init-hidden"
               Src Assets.SVG.Logo
+              Alt "ghostclub logo"
               OnLoad (fun _ ->
                 logoLoaded.update true
                 props.dispatch (TriggerAfter(1000, Completed LogoShown)))
             ]
         ]
         div [Class "header-bottom"; Key.Src(__FILE__, __LINE__)] [
-          div [Class "header-bottom-playbutton-container"; Key.Src(__FILE__,__LINE__)] [
+          div [Class "header-bottom-playbutton-container is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
             div [
               Class (
                 if props.flags |> Set.contains PlayButtonIsShown then "header-bottom-playbutton"
                 else "header-bottom-playbutton hidden"
               )
-              DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovie }
+              DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovieMini }
               OnClick (fun _ -> videoModalShown.update true)
             ] []
           ]
@@ -101,19 +120,9 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
           ]
         ]
       ]
-      modalVideoPlayer
+      viewVideoModal
         {| isOpen = videoModalShown.current
            key = __LINE__ + ":" + __FILE__
-           url = "https://vimeo.com/551444345"
-           config = [
-             VimeoConfig.PlayerOptions [
-               VimeoOption.Byline false
-               VimeoOption.Dnt true
-               VimeoOption.Responsive true
-               VimeoOption.Title false
-             ]
-           ]
-           onAfterOpen = None
-           onCloseRequest = Some (fun _ -> videoModalShown.update false) |}
+           onClose = (fun () -> videoModalShown.update false) |}
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> sprintf "%s:%s" __FILE__ __LINE__))

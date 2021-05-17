@@ -150,6 +150,34 @@ ul.menu-links li a:hover {
   animation: modal-deactivate 250ms ease-in-out;
 }
 
+.menu-mobile.is-active {
+  opacity: 100%;
+  display: inherit;
+  visibility: visible;
+  animation: modal-activate 250ms ease-in-out;
+}
+
+@media screen and (min-width: 768px) and (min-height: 775px) {
+  .menu-mobile {
+    width: calc(min(100%, 400px));
+    height: 735px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+@media screen and (max-width: 767.99px),
+       screen and (max-height: 774.99px) {
+  .menu-mobile {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 20px;
+  }
+}
+
+
 .menu-mobile .shadowed .shadowed-inner {
   position: relative;
   border-top: 2px solid white;
@@ -239,12 +267,6 @@ ul.menu-links li a:hover {
   height: 80%;
 }
 
-.menu-mobile.is-active {
-  opacity: 100%;
-  visibility: visible;
-  animation: modal-activate 250ms ease-in-out;
-}
-
 .menu-mobile .menu-links {
   width: 100%;
 }
@@ -257,23 +279,4 @@ ul.menu-links li a:hover {
 
 .twitter-logo:hover {
   transform: scale(1.1);
-}
-
-@media screen and (min-width: 768px) {
-  .menu-mobile {
-    width: calc(min(100%, 400px));
-    height: 735px;
-    max-height: calc(100vh - 40px);
-  }
-}
-
-@media screen and (max-width: 767.99px) {
-  .menu-mobile {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 20px;
-  }
 }

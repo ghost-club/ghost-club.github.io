@@ -72,7 +72,8 @@ type [<AllowNullLiteral>] UseTranslationOptions =
     abstract useSuspense: bool option with get, set
 
 type [<AllowNullLiteral>] UseTranslationResponse =
-    interface end
+    abstract t: TFunction with get
+    abstract i18n: i18n with get
 
 type [<AllowNullLiteral>] WithTranslation =
     inherit WithT
