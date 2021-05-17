@@ -9,7 +9,6 @@ open Fable.React.Props
 open Properties
 open ReactModal
 open ReactImageLightbox
-open Wrappers.Rewrapped
 
 open Model
 

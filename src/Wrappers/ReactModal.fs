@@ -1,10 +1,14 @@
 module ReactModal
 open Fable.Core
+open Fable.Core.JsInterop
 open Browser.Types
+open System.ComponentModel
 
-type Styles =
-  | Content of Fable.React.Props.CSSProp list
-  | Overlay of Fable.React.Props.CSSProp list
+type Style = interface end
+module Style =
+  open Fable.React.Props
+  let inline Overlay (props: CSSProp list) : Style = !!("overlay", keyValueList CaseRules.LowerFirst props)
+  let inline Content (props: CSSProp list) : Style = !!("content", keyValueList CaseRules.LowerFirst props)
 
 type Classes = {| ``base``: string; afterOpen: string; beforeClose: string |}
 
@@ -18,7 +22,7 @@ type OnAfterOpenCallback = OnAfterOpenCallbackOptions -> unit
 
 type Prop =
   | IsOpen of bool
-  | [<CompiledName("styles")>] ModalStyles of Styles
+  // | [<CompiledName("styles")>] ModalStyles of Styles
   | PortalClassName of string
   | BodyOpenClassName of string
   | HtmlOpenClassName of string
@@ -48,6 +52,9 @@ type Prop =
   | ContentElement of ((Fable.React.Props.IHTMLProp seq * React.ReactElement) -> React.ReactElement)
   | TestId of string
   | [<CompiledName("id")>] ModalId of string
+  | [<Erase; EditorBrowsable(EditorBrowsableState.Never)>] CustomItem of string * obj
+  static member inline Style (styles: Style list) : Prop =
+    CustomItem ("style", keyValueList CaseRules.LowerFirst styles)
 
 type [<AllowNullLiteral>] ReactModalStatic =
   abstract defaultStyles: {| content: React.CSSProperties option; overlay: React.CSSProperties option |}

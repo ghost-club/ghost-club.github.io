@@ -12,3 +12,7 @@ type IDisableScroll =
 
 [<ImportDefault("disable-scroll")>]
 let disableScroll : IDisableScroll = jsNative
+
+module Hooks =
+  [<Import("useReduceMotion", "react-reduce-motion")>]
+  let useReduceMotion: unit -> bool = jsNative

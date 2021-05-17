@@ -9,7 +9,6 @@ open Fable.Core.JsInterop
 open Properties
 open Model
 open View
-open Wrappers.Rewrapped
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 

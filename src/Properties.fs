@@ -23,6 +23,7 @@ module Assets =
     let [<Literal>] GCBuilding1 = "assets/image/gc_mansion_1.png"
     let [<Literal>] GCBuilding2 = "assets/image/gc_mansion_2.jpg"
     let [<Literal>] About = "assets/image/about.jpg"
+    let [<Literal>] VideoThumbnail = "assets/image/video_thumb.jpg"
 
   module WebP =
     let [<Literal>] GCPhotoMobile1 = "assets/image/gc_sp_1.webp"
@@ -34,6 +35,7 @@ module Assets =
     let [<Literal>] GCBuilding1 = "assets/image/gc_mansion_1.webp"
     let [<Literal>] GCBuilding2 = "assets/image/gc_mansion_2.webp"
     let [<Literal>] About = "assets/image/about.webp"
+    let [<Literal>] VideoThumbnail = "assets/image/video_thumb.webp"
 
   module InlineSVG =
     let LeftButton =

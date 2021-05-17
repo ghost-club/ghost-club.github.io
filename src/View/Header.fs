@@ -4,6 +4,8 @@ open Fable.React
 open Fable.React.Props
 open Model
 open ReactTransitionGroup
+open ReactPlayer
+open ModalVideoPlayer
 open Properties
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
@@ -13,6 +15,7 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
     let logoLoaded = Hooks.useState false
     let firstViewShown = Hooks.useState false
     let videoRef : IRefValue<option<Browser.Types.Element>> = Hooks.useRef(None)
+    let videoModalShown = Hooks.useState false
 
     // workaround for React bug: https://github.com/facebook/react/issues/10389
     Hooks.useEffect(
@@ -87,7 +90,7 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
                 else "header-bottom-playbutton hidden"
               )
               DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovie }
-              OnClick (fun _ -> printfn "play!")
+              OnClick (fun _ -> videoModalShown.update true)
             ] []
           ]
           div [Class "header-bottom-scroll-indicator is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
@@ -98,5 +101,19 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
           ]
         ]
       ]
+      modalVideoPlayer
+        {| isOpen = videoModalShown.current
+           key = __LINE__ + ":" + __FILE__
+           url = "https://vimeo.com/551444345"
+           config = [
+             VimeoConfig.PlayerOptions [
+               VimeoOption.Byline false
+               VimeoOption.Dnt true
+               VimeoOption.Responsive true
+               VimeoOption.Title false
+             ]
+           ]
+           onAfterOpen = None
+           onCloseRequest = Some (fun _ -> videoModalShown.update false) |}
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> sprintf "%s:%s" __FILE__ __LINE__))

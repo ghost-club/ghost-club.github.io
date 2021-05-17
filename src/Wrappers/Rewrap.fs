@@ -1,4 +1,5 @@
-module Wrappers.Rewrapped
+[<AutoOpen>]
+module Rewrapped
 
 open Fable.Core
 open Fable.Core.JsInterop

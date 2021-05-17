@@ -4,7 +4,6 @@ open Fable.Core
 open Fable.Core.JsInterop
 open Fable.React
 open Fable.React.Props
-open Wrappers.Rewrapped
 open ReactIntersectionObserver
 
 open Properties
