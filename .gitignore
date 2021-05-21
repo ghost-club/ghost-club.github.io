@@ -1,4 +1,5 @@
 docs/
+output/
 .DS_Store
 *.fs.js
 *.fs.js.map
