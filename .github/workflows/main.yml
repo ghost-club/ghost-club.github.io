@@ -46,6 +46,7 @@ jobs:
         if: success()
         uses: crazy-max/ghaction-github-pages@v2.4.1
         with:
+          repo: ghost-club/test
           build_dir: output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
