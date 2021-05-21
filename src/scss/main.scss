@@ -111,7 +111,7 @@ a.anchor {
 }
 
 .section {
-  padding: 5vw 5vw;
+  padding: calc(min(5vw, 5%)) calc(min(10vw, 10%));
 }
 
 @media screen and (max-width: 768.99px) {
@@ -347,7 +347,6 @@ a.anchor {
 // content
 
 .content {
-  padding: 0% 5%;
   color: #FFFFFF;
   position: relative;
   overflow: visible;
@@ -364,7 +363,6 @@ a.anchor {
   left: 0;
   bottom: 0;
   width: 100vw;
-  transform: translate(0, 10%);
   z-index: 0;
 }
 
@@ -383,6 +381,7 @@ a.anchor {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 5% 0;
 }
 
 .content-about-picture-mobile {
@@ -390,6 +389,10 @@ a.anchor {
   z-index: -1;
   right: 0px;
   transform: scale(0.8);
+}
+
+svg.obake {
+  margin: 5% 10%;
 }
 
 svg.obake:hover .head {
@@ -404,4 +407,70 @@ svg.obake .tie {
 svg.obake:hover .tie {
   transition: all 250ms;
   transform: translate(0, 5%);
+}
+
+// credits
+
+.credits {
+  display: flex;
+  flex-flow: column nowrap;
+  z-index: 1;
+  min-height: 35vw;
+  text-shadow: black 0 0 10px, black 0 0 10px, black 0 0 10px;
+}
+
+.credits-head {
+  flex: 0 1 auto;
+}
+
+.credits-body {
+  flex: 1 1 auto;
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content:center;
+  align-content: stretch;
+  z-index: 1;
+  height: 100%;
+}
+
+.credits-section {
+  display: flex;
+  flex-flow: column nowrap;
+  align-content: space-around;
+  margin: 0 5%;
+  padding: 0;
+}
+
+.credits-item, .credits-item-dummy {
+  flex: 1 1 auto;
+  font-size: 0.75rem;
+  line-height: 180%;
+  z-index: 1;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.credits-item-dummy {
+  color: transparent;
+  text-shadow: none;
+  user-select: none;
+}
+
+// footer
+
+.footer {
+  color: #FFFFFF;
+  position: relative;
+  overflow: visible;
+  background-color: black;
+  padding: 0 10vw calc(max(1rem, 3vw)) 10vw;
+}
+
+.footer-copyright-text {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  font-size: 0.75rem;
 }

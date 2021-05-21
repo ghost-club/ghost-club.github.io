@@ -114,18 +114,41 @@ let private viewHowToJoin =
             ]
           ]
         ]
-        Column.column [Props [Style [Padding "5% 10%"]; Key.Src(__FILE__,__LINE__)]] [
+        Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
           viewObake "is-hidden-mobile"
         ]
       ]
     ]
   ), memoizeWith=memoEqualsButFunctions)
 
+let viewCredits =
+  Section.section [CustomClass "credits"; Props [Id "credits";  Key "credits"]] [
+    Heading.h6 [CustomClass "credits-head has-text-centered"; Props [Style [Color "white"; FontWeight "500"]]] [str "Staff & Credits"]
+    div [Class "credits-body is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
+      for i, group in Credits.Entries |> List.indexed do
+        div [Class "credits-section"; Key (sprintf "credits-group-%d" i)] [
+          for entry in group do
+            match Credits.pp entry with
+            | Some text -> p [Class "credits-item"] [str text]
+            | None -> p [Class "credits-item-dummy"] [str "end"]
+        ]
+    ]
+    div [Class "credits-body is-hidden-tablet"; Key.Src(__FILE__,__LINE__)] [
+      div [Class "credits-section"; Key.Src(__FILE__,__LINE__)] [
+        for group in Credits.Entries do
+          for entry in group do
+            match Credits.pp entry with
+            | Some text -> p [Class "credits-item"] [str text]
+            | None -> null
+      ]
+    ]
+  ]
+
 let view (prop: {| lang: Language; albumState: AlbumState; dispatch: Msg -> unit |}) =
   div [Id "content"; Class "content has-text-centered"; Key "content"] [
     picture [Key.Src(__FILE__,__LINE__)] [
       source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
-      source [Class "content-building"; SrcSet Assets.WebPAlt.GCBuilding2; Type "image/png"]
+      source [Class "content-building"; SrcSet Assets.WebPAlt.GCBuilding2; Type "image/jpg"]
       img [Class "content-building"; Src Assets.WebPAlt.GCBuilding2; Alt ""]
     ]
 
@@ -157,12 +180,12 @@ let view (prop: {| lang: Language; albumState: AlbumState; dispatch: Msg -> unit
       ]
 
       a [Class "anchor"; Id "contact"; Href "contact"; Key.Src(__FILE__,__LINE__)] []
-      Section.section [Props [Key.Src(__FILE__,__LINE__); Style [Height "40vmax"]]] [
+      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
         div [Key.Src(__FILE__,__LINE__); Class "content-contact"] [
-          div [Key.Src(__FILE__,__LINE__); Class "content-contact-head"] [
+          Block.block [CustomClass "content-contact-head"; Props [Key.Src(__FILE__,__LINE__)]] [
             Heading.h2 [Props [Style [Color "white"]]] [str "Contact"]
           ]
-          div [Key.Src(__FILE__,__LINE__); Class "content-contact-body"] [
+          Block.block [CustomClass "content-contact-body"; Props [Key.Src(__FILE__,__LINE__)]] [
             div [Style [Width "240px"; Height "70px"; Display DisplayOptions.InlineBlock]] [
               button [
                 Class "shadowed"
@@ -178,10 +201,7 @@ let view (prop: {| lang: Language; albumState: AlbumState; dispatch: Msg -> unit
           ]
         ]
       ]
-      Section.section [Props [Key.Src(__FILE__,__LINE__); Style [Height "10vmax"]]] [
-        span [Key.Src(__FILE__,__LINE__); Style [FontSize "0.75rem"]] [
-          str "Copyright © GHOSTCLUB All Rights Reserved."
-        ]
-      ]
+
+      viewCredits
     ]
   ]

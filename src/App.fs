@@ -99,17 +99,22 @@ let delayCmd ms msg : Cmd<Msg> =
       return msg
     }
 
+let private validHash =
+  ["about"; "how-to-join"; "dj-mix"; "gallery"; "contact"; "credits"]
+
 let scrollToAnchorCmd () : Cmd<Msg> =
   Cmd.OfPromise.result <|
     promise {
       if isNull window.location.hash then return Ignore
       else
         let hash = window.location.hash.TrimStart('#')
-        let target = document.getElementById(hash)
-        if isNull target then return Ignore
-        else
-          target.scrollIntoView(!!{| behavior = ScrollIntoViewOptionsBehavior.Smooth |} :> ScrollIntoViewOptions)
-          return Ignore
+        if validHash |> List.contains hash then
+          let target = document.getElementById(hash)
+          if isNull target then return Ignore
+          else
+            target.scrollIntoView(!!{| behavior = ScrollIntoViewOptionsBehavior.Smooth |} :> ScrollIntoViewOptions)
+            return Ignore
+        else return Ignore
     }
 
 let init arg = initModel arg, initCmd
@@ -171,6 +176,7 @@ let private viewMain model dispatch =
     Transition.viewTransition {| dispatch = dispatch |}
     Menu.viewMenu {| lang = model.lang; flags = model.flags; dispatch = dispatch |}
     Content.view {| lang = model.lang; albumState = model.albumState; dispatch = dispatch |}
+    Footer.view
   ]
 
 let private view model dispatch =
