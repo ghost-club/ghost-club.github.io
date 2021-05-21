@@ -1,0 +1,4 @@
+# Example 3: Block all but AdsBot crawlers
+User-agent: *
+User-agent: AdsBot-Google
+Disallow: /
