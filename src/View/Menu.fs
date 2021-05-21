@@ -79,8 +79,10 @@ let private viewBody =
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            a [Class "menu-item"; Target "_blank"; Rel "noopener"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
-            viewLanguageSwitch props
+            div [Class "menu-item menu-buttons"; Key.Src(__FILE__,__LINE__)] [
+              a [Class "menu-item twitter-button-container"; Target "_blank"; Rel "noopener"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
+              viewLanguageSwitch props
+            ]
           ]
         ]
       ]
@@ -109,8 +111,10 @@ let private viewBody =
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            a [Class "menu-item align-center"; Target "_blank"; Rel "noopener"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
-            viewLanguageSwitch props
+            div [Class "menu-item menu-buttons"; Key.Src(__FILE__,__LINE__)] [
+              a [Class "menu-item twitter-button-container align-center"; Target "_blank"; Rel "noopener"; Href "https://twitter.com/6h057clu8"; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton }] []
+              viewLanguageSwitch props
+            ]
           ]
         ]
       ]

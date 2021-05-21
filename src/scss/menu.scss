@@ -125,7 +125,7 @@ ul.menu-links li a {
 
 .menu-mobile ul.menu-links li a {
   left: -5px;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   padding: 0 5px;
 }
 
@@ -148,6 +148,7 @@ ul.menu-links li a:hover {
   opacity: 0%;
   visibility: hidden;
   animation: modal-deactivate 250ms ease-in-out;
+  max-height: 735px;
 }
 
 .menu-mobile.is-active {
@@ -177,14 +178,13 @@ ul.menu-links li a:hover {
   }
 }
 
-
 .menu-mobile .shadowed .shadowed-inner {
   position: relative;
   border-top: 2px solid white;
   width: 100%;
   height: calc(100% - 47px);
   top: 47px;
-  padding: 0% 25%;
+  padding: 5%;
   display: flex;
   flex-flow: column;
   justify-content:space-around;
@@ -255,10 +255,6 @@ ul.menu-links li a:hover {
   margin-right: 1.5rem;
 }
 
-.menu-mobile .menu-links .menu-item:not(:last-child) {
-  margin-bottom: 1.25rem;
-}
-
 .menu-mobile .twitter-logo {
   width: 35%;
 }
@@ -271,10 +267,64 @@ ul.menu-links li a:hover {
   width: 100%;
 }
 
+.menu-mobile .menu-buttons .language-button-container {
+  max-width: 205px;
+  max-height: 45px;
+}
+
+@media screen and (orientation: portrait) {
+  .menu-mobile .menu-links, .menu-mobile .menu-buttons {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 0% 20%;
+    flex: 1 1 auto;
+  }
+
+  .menu-mobile .menu-links {
+    margin-top: 5%;
+  }
+
+  .menu-mobile .menu-buttons {
+    justify-content: space-around;
+  }
+
+  .menu-mobile .menu-links .menu-item:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+
+}
+@media screen and (orientation: landscape) {
+  .menu-mobile .menu-links, .menu-mobile .menu-buttons {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .menu-mobile .menu-buttons {
+    width: 75%;
+  }
+
+  .menu-mobile .menu-buttons .twitter-button-container {
+    width: 60px;
+    height: 60px;
+  }
+
+  .menu-mobile .menu-buttons .language-button-container {
+    width: 205px;
+    height: 45px;
+  }
+}
+
 .twitter-logo {
   cursor: pointer;
   transform: scale(1.0);
   transition: transform 100ms ease-in;
+}
+.menu-mobile .twitter-logo {
+  width: 100%;
+  max-width: 60px;
 }
 
 .twitter-logo:hover {
