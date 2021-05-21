@@ -68,7 +68,7 @@ let private viewBody =
       else str
 
     div [Class "menu limited-width"; Key.Src(__FILE__,__LINE__)] [
-      img [Class "menu-logo"; Key.Src(__FILE__,__LINE__); Src Assets.SVG.LogoSmall]
+      img [Class "menu-logo"; Key.Src(__FILE__,__LINE__); Src Assets.SVG.LogoSmall; Alt ""]
       div [Class "menu-desktop is-hidden-touch"; Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
           div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [
@@ -87,6 +87,7 @@ let private viewBody =
       div [Class (menuModal "menu-mobile-button is-hidden-desktop"); Key.Src(__FILE__,__LINE__)] [
         button [
           Class (menuModal "hamburger hamburger--squeeze")
+          Title "Menu Button"
           Type "button"
           OnClick (fun _e ->
             menuModalIsShown.update(not menuModalIsShown.current))] [
