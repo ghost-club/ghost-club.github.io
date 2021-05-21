@@ -184,7 +184,7 @@ ul.menu-links li a:hover {
   width: 100%;
   height: calc(100% - 47px);
   top: 47px;
-  padding: 5%;
+  padding: 5% 10%;
   display: flex;
   flex-flow: column;
   justify-content:space-around;
@@ -277,19 +277,16 @@ ul.menu-links li a:hover {
     display: flex;
     flex-flow: column nowrap;
     padding: 0% 20%;
+    justify-content: space-around;
     flex: 1 1 auto;
   }
 
   .menu-mobile .menu-links {
-    margin-top: 5%;
+    margin-top: 10%;
   }
 
   .menu-mobile .menu-buttons {
     justify-content: space-around;
-  }
-
-  .menu-mobile .menu-links .menu-item:not(:last-child) {
-    margin-bottom: 1.5rem;
   }
 
 }
