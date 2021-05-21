@@ -45,8 +45,11 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
           video.volume <- 0.0
           video.defaultMuted <- true
           video.muted <- true
-          video.setAttribute("muted", "")
-          Fable.Core.JS.setTimeout (fun () -> video.play()) 1 |> ignore
+          video.autoplay <- true
+          video.setAttribute("playsinline", "")
+          video.setAttribute("disablepictureinpicture", "")
+          video.setAttribute("preload", "true")
+          Fable.Core.JS.setTimeout (fun () -> video.play()) 1000 |> ignore
       ), [| videoRef |])
 
     Hooks.useEffect(
@@ -62,7 +65,7 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
         Class "background-video"
         Key "background-video";
         RefValue videoRef;
-        HTMLAttr.Custom ("playsInline", true); Muted true; AutoPlay true; Loop true; Poster "assets/video/bg.jpg"
+         Muted true; AutoPlay true; HTMLAttr.Custom ("playsInline", true); Loop true; Poster "assets/video/bg.jpg"
         OnLoadedData (fun _ -> props.dispatch (Completed BackgroundVideoLoaded))] [
         source [Src "assets/video/bg.webm"; Type "video/webm"]
         source [Src "assets/video/bg.mp4";  Type "video/mp4"]
