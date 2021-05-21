@@ -28,7 +28,6 @@ jobs:
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1.8.0
         with:
-          # Optional SDK version to use. If not provided, will install global.json version when available. Examples: 2.2.104, 3.1, 3.1.x
           dotnet-version: 5.0.x
           
       - name: Setup Node.js environment
@@ -36,11 +35,17 @@ jobs:
         with:
           node-version: 14.x
 
-      # Runs a single command using the runners shell
       - name: Install Dependencies
         run: dotnet restore
            | dotnet tool restore
 
-      # Runs a set of commands using the runners shell
       - name: Run FAKE
         run: dotnet fake build
+        
+      - name: Push artifact to gh-pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2.4.1
+        with:
+          build_dir: output
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
