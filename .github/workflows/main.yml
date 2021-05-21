@@ -39,6 +39,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Install Dependencies
         run: dotnet restore
+           | dotnet tool restore
 
       # Runs a set of commands using the runners shell
       - name: Run FAKE
