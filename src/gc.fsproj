@@ -21,6 +21,7 @@
     <Compile Include="Wrappers/Rewrap.fs" />
     <Compile Include="Component/AnimatedText.fs" />
     <Compile Include="Component/ModalVideoPlayer.fs" />
+    <Compile Include="Component/FadeIn.fs" />
     <Compile Include="Album.fs" />
     <Compile Include="Model.fs" />
     <Compile Include="View/Misc.fs" />

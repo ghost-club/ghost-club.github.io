@@ -99,6 +99,16 @@ a.anchor {
   }
 }
 
+.fade-in {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+.fade-in.active {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+
 // bulma
 
 .title {
@@ -382,6 +392,14 @@ a.anchor {
   justify-content: center;
   align-items: center;
   margin: 5% 0;
+}
+
+.content-about-title {
+  position: relative;
+  color: white;
+  text-shadow: black 0 0 10px, black 0 0 10px, black 0 0 10px;
+  margin-bottom: 1.5rem;
+  z-index: 2;
 }
 
 .content-about-picture-mobile {

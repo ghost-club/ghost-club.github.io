@@ -9,16 +9,22 @@ open Fable.Core.JsInterop
 open Properties
 open Model
 open View
+open FadeIn
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
 let inline private pictureWebpOrPNG key webp webpAlt =
   let style = [Width "100%"; ObjectFit "contain"]
-  picture [Key key] [
-    source [Style style; SrcSet webp; Type "image/webp"]
-    source [Style style; SrcSet webpAlt; Type "image/png"]
-    img [Style style; Src webpAlt; Alt ""]
-  ]
+  fadeIn
+    {|
+      children =
+        picture [Key key] [
+          source [Style style; SrcSet webp; Type "image/webp"]
+          source [Style style; SrcSet webpAlt; Type "image/png"]
+          img [Style style; Src webpAlt; Alt ""]
+        ]
+      key = key+"fade-container"
+    |}
 
 let private viewAbout =
   FunctionComponent.Of ((fun (_props: {| lang: Language |}) ->
@@ -28,15 +34,20 @@ let private viewAbout =
       div [Class "is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
         Columns.columns [Columns.IsVCentered; Props [Key.Src(__FILE__,__LINE__)]] [
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
-            Heading.h2 [Props [Style [Color "white"]]] [str "About"]
-            p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]
+            fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
+            fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]; key = __FILE__+":"+__LINE__ |}
           ]
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
-            picture [Key.Src(__FILE__,__LINE__)] [
-              source [SrcSet Assets.WebP.About; Type "image/webp"]
-              source [SrcSet Assets.WebPAlt.About; Type "image/png"]
-              img [Src Assets.WebPAlt.About; Alt ""]
-            ]
+            fadeIn
+              {|
+                children =
+                  picture [Key.Src(__FILE__,__LINE__)] [
+                    source [SrcSet Assets.WebP.About; Type "image/webp"]
+                    source [SrcSet Assets.WebPAlt.About; Type "image/png"]
+                    img [Src Assets.WebPAlt.About; Alt ""]
+                  ]
+                key = __FILE__+":"+__LINE__
+              |}
           ]
         ]
         pictureWebpOrPNG (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoPC1 Assets.WebPAlt.GCPhotoPC1
@@ -45,16 +56,20 @@ let private viewAbout =
       ]
 
       div [Class "is-hidden-tablet"; Key.Src(__FILE__,__LINE__)] [
-        picture [Key.Src(__FILE__,__LINE__); Style [Position PositionOptions.Absolute; Width "100%"]] [
-          source [Class "content-about-picture-mobile"; SrcSet Assets.WebP.About; Type "image/webp"]
-          source [Class "content-about-picture-mobile"; SrcSet Assets.WebPAlt.About; Type "image/png"]
-          img [Class "content-about-picture-mobile"; Src Assets.WebPAlt.About; Alt ""]
-        ]
+        fadeIn
+          {|
+            children =
+              picture [Key.Src(__FILE__,__LINE__); Style [Position PositionOptions.Absolute; Width "100%"]] [
+                source [Class "content-about-picture-mobile"; SrcSet Assets.WebP.About; Type "image/webp"]
+                source [Class "content-about-picture-mobile"; SrcSet Assets.WebPAlt.About; Type "image/png"]
+                img [Class "content-about-picture-mobile"; Src Assets.WebPAlt.About; Alt ""]
+              ]
+            key = __FILE__+":"+__LINE__
+          |}
         div [Style [PaddingTop "50%"]; Key.Src(__FILE__,__LINE__)] []
 
-        Heading.h2 [Props [Style [Color "white"]]] [str "About"]
-
-        p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]
+        fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
+        fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]; key = __FILE__+":"+__LINE__ |}
 
         div [Key.Src(__FILE__,__LINE__); Style [
           Position PositionOptions.Relative
