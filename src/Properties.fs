@@ -68,7 +68,7 @@ module Assets =
 </svg>"""
 
     let LanguageButton =
-      """<svg class="language-button" width="100%" viewBox="0 0 130 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      """<svg class="language-button" viewBox="0 0 130 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect vector-effect="non-scaling-stroke" x="1" y="1" width="128" height="28" stroke="white" stroke-width="2"/>
 <rect class="slider" vector-effect="non-scaling-stroke" x="0" y="1" width="65" height="28" fill="white" stroke-width="2"/>
 <path class="label-jp" d="M24.916 22.216C27.4 22.216 28.606 20.956 28.606 18.778V10.408H29.92V9.436H24.79V10.408H26.464V19.282C26.464 20.686 25.924 21.28 24.898 21.28C24.574 21.28 24.286 21.244 24.07 21.19V21.118C24.34 21.01 24.592 20.668 24.592 20.2C24.592 19.552 24.142 19.084 23.476 19.084C22.702 19.084 22.252 19.66 22.252 20.344C22.252 21.442 23.134 22.216 24.916 22.216ZM31.548 22H36.714V21.028H35.004V16.366H37.794C40.206 16.366 41.592 15.07 41.592 12.838C41.592 10.624 40.296 9.436 37.884 9.436H31.548V10.408H32.862V21.028H31.548V22ZM35.004 10.498H37.398C38.658 10.498 39.378 11.29 39.378 12.478V13.324C39.378 14.512 38.658 15.304 37.398 15.304H35.004V10.498Z" fill="black"/>
