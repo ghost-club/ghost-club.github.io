@@ -101,12 +101,12 @@ a.anchor {
 
 .fade-in {
   opacity: 0;
-  transition: opacity 300ms ease-in-out;
+  transition: opacity 600ms ease-in-out;
 }
 
 .fade-in.active {
   opacity: 1;
-  transition: opacity 300ms ease-in-out;
+  transition: opacity 600ms ease-in-out;
 }
 
 // bulma
@@ -433,21 +433,24 @@ svg.obake:hover .tie {
   display: flex;
   flex-flow: column nowrap;
   z-index: 1;
-  min-height: 35vw;
+  min-height: 40vw;
   text-shadow: black 0 0 10px, black 0 0 10px, black 0 0 10px;
+  justify-content:center;
 }
 
 .credits-head {
   flex: 0 1 auto;
+  margin-bottom: 2.6rem;
+  font-weight: 500;
 }
 
 .credits-body {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   position: relative;
   display: flex;
   flex-flow: row wrap;
   justify-content:center;
-  align-content: stretch;
+  align-content: center;
   z-index: 1;
   height: 100%;
 }
@@ -455,7 +458,7 @@ svg.obake:hover .tie {
 .credits-section {
   display: flex;
   flex-flow: column nowrap;
-  align-content: space-around;
+  align-content:center;
   margin: 0 5%;
   padding: 0;
 }
@@ -463,11 +466,12 @@ svg.obake:hover .tie {
 .credits-item, .credits-item-dummy {
   flex: 1 1 auto;
   font-size: 0.75rem;
-  line-height: 180%;
+  line-height: 240%;
   z-index: 1;
   text-align: left;
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .credits-item-dummy {

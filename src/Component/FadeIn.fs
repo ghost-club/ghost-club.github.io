@@ -12,7 +12,6 @@ let fadeIn =
     let isShown = Hooks.useState false
     inViewPlain [
       !^Class(if isShown.current then "fade-in active" else "fade-in")
-      !^Key(prop.key + "-observer")
       OnChange (fun inView _ ->
         isShown.update inView
       )

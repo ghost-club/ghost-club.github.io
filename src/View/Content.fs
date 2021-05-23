@@ -138,7 +138,7 @@ let private viewHowToJoin =
 
 let viewCredits =
   Section.section [CustomClass "credits"; Props [Id "credits";  Key "credits"]] [
-    Heading.h6 [CustomClass "credits-head has-text-centered"; Props [Style [Color "white"; FontWeight "500"]]] [str "Staff & Credits"]
+    h6 [Class "credits-head has-text-centered"] [str "Staff & Credits"]
     div [Class "credits-body is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
       for i, group in Credits.Entries |> List.indexed do
         div [Class "credits-section"; Key (sprintf "credits-group-%d" i)] [
