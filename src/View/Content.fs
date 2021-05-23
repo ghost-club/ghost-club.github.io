@@ -71,26 +71,32 @@ let private viewAbout =
         fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
         fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]; key = __FILE__+":"+__LINE__ |}
 
-        div [Key.Src(__FILE__,__LINE__); Style [
-          Position PositionOptions.Relative
-          Display DisplayOptions.Flex
-          AlignItems AlignItemsOptions.Center
-          JustifyContent "center"
-          Margin "20px 0px"]] [
-          let style = [Width "100%"; ObjectFit "contain"]
-          picture [Key.Src(__FILE__,__LINE__)] [
-            source [Style style; SrcSet Assets.WebP.VideoThumbnail; Type "image/webp"]
-            source [Style style; SrcSet Assets.WebPAlt.VideoThumbnail; Type "image/jpeg"]
-            img [Style style; Src Assets.WebPAlt.VideoThumbnail; Alt ""]
-          ]
-          let style = [Position PositionOptions.Absolute; Width "30%"; Height "30%"]
-          div [
-            Class "content-mobile-playbutton"
-            DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovieMini }
-            Style style
-            OnClick (fun _ -> videoModalShown.update true)
-          ] []
-        ]
+        fadeIn
+          {|
+            children =
+              div [Key.Src(__FILE__,__LINE__); Style [
+                Position PositionOptions.Relative
+                Display DisplayOptions.Flex
+                AlignItems AlignItemsOptions.Center
+                JustifyContent "center"
+                Margin "20px 0px"]] [
+                let style = [Width "100%"; ObjectFit "contain"]
+                picture [Key.Src(__FILE__,__LINE__)] [
+                  source [Style style; SrcSet Assets.WebP.VideoThumbnail; Type "image/webp"]
+                  source [Style style; SrcSet Assets.WebPAlt.VideoThumbnail; Type "image/jpeg"]
+                  img [Style style; Src Assets.WebPAlt.VideoThumbnail; Alt ""]
+                ]
+                let style = [Position PositionOptions.Absolute; Width "30%"; Height "30%"]
+                div [
+                  Class "content-mobile-playbutton"
+                  DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovieMini }
+                  Style style
+                  OnClick (fun _ -> videoModalShown.update true)
+                ] []
+              ]
+            key = __FILE__+":"+__LINE__
+          |}
+
         Header.viewVideoModal
           {| isOpen = videoModalShown.current
              key = __LINE__ + ":" + __FILE__
