@@ -14,9 +14,7 @@ open View
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 let [<ImportDefault("./locales/en/translation.json")>] enTranslation : obj = jsNative
-let [<ImportDefault("./locales/en/ui.json")>] enUi : obj = jsNative
 let [<ImportDefault("./locales/ja/translation.json")>] jaTranslation : obj = jsNative
-let [<ImportDefault("./locales/ja/ui.json")>] jaUi : obj = jsNative
 
 type ISmoothScrollPolyfill =
   abstract polyfill: unit -> unit
@@ -39,13 +37,13 @@ let initI18nTask =
   let options =
     jsOptions<I18next.InitOptions>(fun it ->
       it.supportedLngs <- Some (ResizeArray ["ja"; "en"])
-      it.ns <- Some (!^(ResizeArray ["translation"; "ui"]))
+      it.ns <- Some (!^(ResizeArray ["translation"]))
       it.fallbackLng <- Some !^"en"
       it.returnEmptyString <- Some false
       it.resources <-
         Some (jsOptions<I18next.Resource>(fun it ->
-          it.["ja"] <- !!{| translation = jaTranslation; ui = jaUi |}
-          it.["en"] <- !!{| translation = enTranslation; ui = enUi |}
+          it.["ja"] <- !!{| translation = jaTranslation |}
+          it.["en"] <- !!{| translation = enTranslation |}
         ))
       it.detection <-
         Some (jsOptions<ReactI18nextBrowserLanguageDetector.DetectorOptions>(fun it ->

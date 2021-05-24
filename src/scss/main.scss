@@ -109,6 +109,12 @@ a.anchor {
   transition: opacity 600ms ease-in-out;
 }
 
+.text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  // text-indent: 1em;
+}
+
 // bulma
 
 .title {

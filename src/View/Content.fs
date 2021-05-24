@@ -39,7 +39,7 @@ let private viewAbout =
         match prop.lang with
         | Ja -> poems.[poemIndex].Japanese
         | _ -> poems.[poemIndex].English
-      | _ -> !@"loremipsum"
+      | _ -> !@Texts.About
 
     Section.section [CustomClass "has-text-left"; Props [Key.Src(__FILE__,__LINE__)]] [
       div [Class "is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
@@ -132,16 +132,18 @@ let private viewHowToJoin =
       Columns.columns [Columns.IsVCentered; Props [Key.Src(__FILE__,__LINE__)]] [
         Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
           Heading.h2 [Props [Style [Color "white"]]] [str "How to join"]
-          Block.block [Props [Key.Src(__FILE__,__LINE__)]] [str !@"loremipsum"]
+          Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
+            p [Class "text"] [str !@Texts.HowToJoin]
+          ]
           Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
             viewObake "is-hidden-tablet"
           ]
           Block.block [Props [Style [Width "100%"; Height "70px"; Display DisplayOptions.InlineBlock]]] [
             button [
               Class "shadowed"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore;
-              OnClick (fun _e -> Browser.Dom.window.``open``("https://vrchat.com/home/user/usr_7e0bc356-da1f-44da-be54-72b6e4216c15", "_blank", "noopener") |> ignore)] [
+              OnClick (fun _e -> Browser.Dom.window.``open``(Links.Discord, "_blank", "noopener") |> ignore)] [
               div [Class "shadowed-inner"; Style [FontSize "1.2rem"]; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
-                str "Send a friend request"
+                str "Join our Discord server"
               ]
             ]
           ]
@@ -198,7 +200,7 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
         ]
         iframe [
           Title "GHOSTCLUB Mixcloud"
-          Src "https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F"
+          Src Links.MixCloudWidget
           Style [Width "100%"; Height "180px"]
           FrameBorder 0] []
       ]
@@ -227,7 +229,7 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
                 Key.Src(__FILE__,__LINE__)
                 OnTouchStart ignore
                 OnClick (fun _e ->
-                  Browser.Dom.window.``open``("https://docs.google.com/forms/d/e/1FAIpQLSdKU2PixQJ1TMyWtZuukNiB39vVnstvA_vKV5PxULDKGMO4wg/viewform", "_blank", "noopener") |> ignore)] [
+                  Browser.Dom.window.``open``(Links.Contact, "_blank", "noopener") |> ignore)] [
                 div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
                   str "Contact"
                 ]

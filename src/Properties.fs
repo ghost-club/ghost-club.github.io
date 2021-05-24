@@ -129,6 +129,13 @@ module Credits =
       Some (sprintf "%s:\u2002%s" title (persons |> String.concat " / "))
     | None -> None
 
+module Links =
+  let [<Literal>] Twitter = "https://twitter.com/6h057clu8"
+  let [<Literal>] MixCloudWidget = "https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F"
+  let [<Literal>] Discord = "https://discord.gg/9KpCdUW"
+  let [<Literal>] Contact = "https://docs.google.com/forms/d/e/1FAIpQLSdKU2PixQJ1TMyWtZuukNiB39vVnstvA_vKV5PxULDKGMO4wg/viewform"
+
 [<StringEnum; RequireQualifiedAccess>]
-type UITexts =
-  | [<CompiledName("ui:change-to-another-language")>] ChangeToAnotherLanguage
+type Texts =
+  | [<CompiledName("translation:about")>] About
+  | [<CompiledName("translation:how-to-join")>] HowToJoin
