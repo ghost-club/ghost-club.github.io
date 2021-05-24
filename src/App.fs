@@ -76,17 +76,17 @@ let changeLanguageTask (langCode: string) =
     Ignore
   )
 
-let initApiTask =
-  let completed = ref false
-  let retried = ref false
+let mutable private initApiCompleted = false
+let mutable private initApiRetried = false
 
+let initApiTask () =
   let timeout ms =
     promise {
       do! Promise.sleep ms
-      if not !completed && not !retried then
-        retried := true
+      if not initApiCompleted && not initApiRetried then
+        initApiRetried <- true
         return TryLoadApiAgain
-      else if !retried then
+      else if initApiRetried then
         window.location.reload(true)
         return Ignore
       else
@@ -94,13 +94,13 @@ let initApiTask =
     }
 
   Promise.race [
+    if not initApiRetried then timeout 5000
     Api.getAll ()
-    |> Promise.tap (fun _ -> completed := true)
+    |> Promise.tap (fun _ -> initApiCompleted <- true)
     |> Promise.map LoadApiResponse
     |> Promise.catch (fun e ->
       LoadApiResponse (Api.IResult.Error e.Message)
     )
-    timeout 5000
   ]
 
 
@@ -109,7 +109,7 @@ let initCmd =
     Cmd.OfPromise.result (initReactModalTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initSmoothScrollPolyfillTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initI18nTask |> Promise.catch InitError)
-    Cmd.OfPromise.result (initApiTask |> Promise.catch InitError)
+    Cmd.OfPromise.result (initApiTask () |> Promise.catch InitError)
   ]
 
 let delayCmd ms msg : Cmd<Msg> =
@@ -170,7 +170,7 @@ let internal update msg model =
       | En -> Cmd.OfPromise.perform changeLanguageTask "en" id
       | Ja -> Cmd.OfPromise.perform changeLanguageTask "ja" id
     { model with lang = lang }, Cmd.batch [cmd; Cmd.ofMsg CheckInitTaskDone]
-  | TryLoadApiAgain -> model, Cmd.OfPromise.result initApiTask
+  | TryLoadApiAgain -> model, Cmd.OfPromise.result (initApiTask ())
   | LoadApiResponse x -> { model with api = x }, Cmd.ofMsg CheckInitTaskDone
   | SetFlag (flag, true)  -> { model with flags = Set.add flag model.flags }, Cmd.none
   | SetFlag (flag, false) -> { model with flags = Set.remove flag model.flags }, Cmd.none
