@@ -29,16 +29,21 @@ let inline private pictureWebpOrPNG key webp webpAlt =
 let private viewAbout =
   FunctionComponent.Of ((fun (prop: {| lang: Language; api: Api.IResult<Api.All> |}) ->
     let videoModalShown = Hooks.useState false
-    let rand = Hooks.useState (new System.Random())
+    let poemIndex = Hooks.useState 0
+    Hooks.useEffect((fun () ->
+      let rand = System.Random()
+      match prop.api with
+      | Api.IResult.Ok all when all.poems.Length > 0 ->
+        poemIndex.update(rand.Next(all.poems.Length))
+      | _ -> ()
+    ), [|prop.api|])
 
     let aboutText =
       match prop.api with
       | Api.IResult.Ok all when all.poems.Length > 0 ->
-        let poems = all.poems
-        let poemIndex = rand.current.Next(poems.Length)
         match prop.lang with
-        | Ja -> poems.[poemIndex].Japanese
-        | _ -> poems.[poemIndex].English
+        | Ja -> all.poems.[poemIndex.current].Japanese
+        | _ -> all.poems.[poemIndex.current].English
       | _ -> !@Texts.About
 
     Section.section [CustomClass "has-text-left"; Props [Key.Src(__FILE__,__LINE__)]] [
