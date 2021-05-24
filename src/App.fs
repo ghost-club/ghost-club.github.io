@@ -78,12 +78,17 @@ let changeLanguageTask (langCode: string) =
 
 let initApiTask =
   let completed = ref false
+  let retried = ref false
 
   let timeout ms =
     promise {
       do! Promise.sleep ms
-      if not !completed then
+      if not !completed && not !retried then
+        retried := true
         return TryLoadApiAgain
+      else if !retried then
+        window.location.reload(true)
+        return Ignore
       else
         return Ignore
     }

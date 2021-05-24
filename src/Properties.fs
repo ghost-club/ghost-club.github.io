@@ -123,7 +123,7 @@ module Credits =
       [ Some ("Gardener", ["amanek"])
         Some ("Builder", ["free458679"])
         Some ("Instrument Artist", ["Cap"])
-        Some ("Web Architect & Translator", ["cannorin"])
+        Some ("Translator & Web Architect", ["cannorin"])
         Some ("Video Animation & Video Music", ["Billain"])
         Some ("Production Assistant", ["minawa"])
         Some ("Photographer", ["MANE"; "tingaara_sora"; "Finn·"]) ] ]
