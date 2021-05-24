@@ -33,6 +33,7 @@ type Msg =
   | CheckInitTaskDone
   | CheckAnchorAndJump
   | InitError of exn
+  | TryLoadApiAgain
   | LoadApiResponse of Api.IResult<Api.All>
   | SwitchLanguage of Language
   | Completed of Completed

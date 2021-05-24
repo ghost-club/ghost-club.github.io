@@ -77,11 +77,27 @@ let changeLanguageTask (langCode: string) =
   )
 
 let initApiTask =
-  Api.getAll ()
-  |> Promise.map LoadApiResponse
-  |> Promise.catch (fun e ->
-    LoadApiResponse (Api.IResult.Error e.Message)
-  )
+  let completed = ref false
+
+  let timeout ms =
+    promise {
+      do! Promise.sleep ms
+      if not !completed then
+        return TryLoadApiAgain
+      else
+        return Ignore
+    }
+
+  Promise.race [
+    Api.getAll ()
+    |> Promise.tap (fun _ -> completed := true)
+    |> Promise.map LoadApiResponse
+    |> Promise.catch (fun e ->
+      LoadApiResponse (Api.IResult.Error e.Message)
+    )
+    timeout 5000
+  ]
+
 
 let initCmd =
   Cmd.batch [
@@ -149,6 +165,7 @@ let internal update msg model =
       | En -> Cmd.OfPromise.perform changeLanguageTask "en" id
       | Ja -> Cmd.OfPromise.perform changeLanguageTask "ja" id
     { model with lang = lang }, Cmd.batch [cmd; Cmd.ofMsg CheckInitTaskDone]
+  | TryLoadApiAgain -> model, Cmd.OfPromise.result initApiTask
   | LoadApiResponse x -> { model with api = x }, Cmd.ofMsg CheckInitTaskDone
   | SetFlag (flag, true)  -> { model with flags = Set.add flag model.flags }, Cmd.none
   | SetFlag (flag, false) -> { model with flags = Set.remove flag model.flags }, Cmd.none
