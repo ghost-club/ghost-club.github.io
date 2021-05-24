@@ -79,7 +79,11 @@ let changeLanguageTask (langCode: string) =
   )
 
 let initApiTask =
-  Api.getAll () |> Promise.map LoadApiResponse
+  Api.getAll ()
+  |> Promise.map LoadApiResponse
+  |> Promise.catch (fun e ->
+    LoadApiResponse (Api.IResult.Error e.Message)
+  )
 
 let initCmd =
   Cmd.batch [
