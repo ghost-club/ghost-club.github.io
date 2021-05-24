@@ -46,7 +46,7 @@ let private viewAbout =
         Columns.columns [Columns.IsVCentered; Props [Key.Src(__FILE__,__LINE__)]] [
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
             fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
-            fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
+            fadeIn {| children = p [Class "text"; Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
           ]
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
             fadeIn
@@ -80,7 +80,7 @@ let private viewAbout =
         div [Style [PaddingTop "50%"]; Key.Src(__FILE__,__LINE__)] []
 
         fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
-        fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
+        fadeIn {| children = p [Class "text"; Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
 
         fadeIn
           {|
