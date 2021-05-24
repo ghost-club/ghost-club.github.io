@@ -121,7 +121,7 @@ module Credits =
         Some ("Web Architect", ["cannorin"])
         Some ("Video Animation & Music", ["Billain"])
         Some ("Production Assistant", ["minawa"])
-        None ] ]
+        Some ("Photographer", ["MANE"; "tingaara_sora"; "Finn·"]) ] ]
 
   let pp (x: (string * string list) option) =
     match x with
