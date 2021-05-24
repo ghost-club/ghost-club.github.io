@@ -4,17 +4,6 @@ open Fable.Core
 open Properties
 
 [<RequireQualifiedAccess>]
-type AlbumState =
-  | Loading
-  | Loaded of Album.IMediaInfo[]
-  | LoadFailed of string
-  member this.AsString =
-    match this with
-    | Loading -> "Album Loading"
-    | Loaded _ -> "Album Loaded"
-    | LoadFailed msg -> sprintf "Album Load Failed (%s)" msg
-
-[<RequireQualifiedAccess>]
 type ModelState =
   | Loading
   | Loaded
@@ -33,7 +22,7 @@ type Flag =
 
 type Model = {
   state: ModelState
-  albumState: AlbumState
+  api: Api.IResult<Api.All>
   lang: Language
   completed: Set<Completed>
   flags: Set<Flag>
@@ -44,7 +33,7 @@ type Msg =
   | CheckInitTaskDone
   | CheckAnchorAndJump
   | InitError of exn
-  | LoadAlbumResponse of Album.IResult
+  | LoadApiResponse of Api.IResult<Api.All>
   | SwitchLanguage of Language
   | Completed of Completed
   | SetFlag of Flag * bool
@@ -52,7 +41,7 @@ type Msg =
 
 let initModel arg = {
   state = ModelState.Loading
-  albumState = AlbumState.Loading
+  api = Api.IResult.Loading
   lang = Unspecified
   completed = Set.empty
   flags = Set.ofList [PlayButtonIsShown]

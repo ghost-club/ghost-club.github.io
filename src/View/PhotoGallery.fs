@@ -33,7 +33,7 @@ let private nextArrow =
   ), withKey=(fun _ -> __SOURCE_FILE__ + ":" + __LINE__))
 
 let view =
-  FunctionComponent.Of((fun (props: {| albumState: AlbumState; lang: Language; dispatch: (Msg -> unit) |}) ->
+  FunctionComponent.Of((fun (prop: {| images: Api.IMediaInfo[]; lang: Language; dispatch: (Msg -> unit) |}) ->
     let state = Hooks.useState {| isOpen = false; index = 0 |}
     let sliderRef = Hooks.useRef null
     let lightboxRef = Hooks.useState null
@@ -50,59 +50,56 @@ let view =
     ), [| state; lightboxRef |])
     *)
 
-    match props.albumState with
-    | AlbumState.Loading | AlbumState.LoadFailed _ -> null
-    | AlbumState.Loaded album ->
-      ofList [
-        ReactSlick.slider
-          (fun it ->
-            it.key <- __SOURCE_FILE__ + ":" + __LINE__
-            it.centerMode <- Some true
-            it.infinite <- Some true
-            it.centerPadding <- Some "0"
-            it.slidesToShow <- Some 1.0
-            it.dots <- Some true
-            it.dotsClass <- Some "slick-dots is-hidden-mobile"
-            it.autoplay <- Some (not state.current.isOpen)
-            it.prevArrow <- Some (prevArrow !!{||})
-            it.nextArrow <- Some (nextArrow !!{||})
-            it.variableWidth <- Some true
-            it.ref <- Some (U2.Case2 sliderRef)
-            ()) [
-          for i, mi in album |> Seq.indexed do
-            yield
-              img [
-                Src (Album.IMediaInfo.getOrigUrl mi)
-                HTMLAttr.Custom ("loading", "lazy")
-                HTMLAttr.Width  mi.width
-                HTMLAttr.Height mi.height
-                Alt ""
-                OnDoubleClick (fun _e ->
-                  sliderRef.current.slickGoTo(i)
-                  state.update {| isOpen = true; index = i |})
-              ]
-        ]
-        if state.current.isOpen then
-          lightbox [
-            !^Key.Src(__SOURCE_FILE__,__LINE__)
-            ReactModalProps [ModalId "lightbox"; OverlayRef (fun el -> lightboxRef.update el)]
-            MainSrc (album.[state.current.index] |> Album.IMediaInfo.getOrigUrl)
-            //NextSrc (album.[(state.current.index + 1) % album.Length] |> Album.IMediaInfo.getOrigUrl)
-            //PrevSrc (album.[(state.current.index + album.Length - 1) % album.Length] |> Album.IMediaInfo.getOrigUrl)
-            OnAfterOpen (fun () ->
-              disableScroll.on())
-            OnCloseRequest (fun () ->
-              disableScroll.off()
-              sliderRef.current.slickPlay()
-              state.update {| state.current with isOpen = false |})
-            OnMoveNextRequest (fun () ->
-              let newIndex = (state.current.index + 1) % album.Length
-              sliderRef.current.slickGoTo(newIndex)
-              state.update {| state.current with index = newIndex |})
-            OnMovePrevRequest (fun () ->
-              let newIndex = (state.current.index + album.Length - 1) % album.Length
-              sliderRef.current.slickGoTo(newIndex)
-              state.update {| state.current with index = newIndex |})
-          ]
+    ofList [
+      ReactSlick.slider
+        (fun it ->
+          it.key <- __SOURCE_FILE__ + ":" + __LINE__
+          it.centerMode <- Some true
+          it.infinite <- Some true
+          it.centerPadding <- Some "0"
+          it.slidesToShow <- Some 1.0
+          it.dots <- Some true
+          it.dotsClass <- Some "slick-dots is-hidden-mobile"
+          it.autoplay <- Some (not state.current.isOpen)
+          it.prevArrow <- Some (prevArrow !!{||})
+          it.nextArrow <- Some (nextArrow !!{||})
+          it.variableWidth <- Some true
+          it.ref <- Some (U2.Case2 sliderRef)
+          ()) [
+        for i, mi in prop.images |> Seq.indexed do
+          yield
+            img [
+              Src (Api.IMediaInfo.getOrigUrl mi)
+              HTMLAttr.Custom ("loading", "lazy")
+              HTMLAttr.Width  mi.width
+              HTMLAttr.Height mi.height
+              Alt ""
+              OnDoubleClick (fun _e ->
+                sliderRef.current.slickGoTo(i)
+                state.update {| isOpen = true; index = i |})
+            ]
       ]
+      if state.current.isOpen then
+        lightbox [
+          !^Key.Src(__SOURCE_FILE__,__LINE__)
+          ReactModalProps [ModalId "lightbox"; OverlayRef (fun el -> lightboxRef.update el)]
+          MainSrc (prop.images.[state.current.index] |> Api.IMediaInfo.getOrigUrl)
+          //NextSrc (album.[(state.current.index + 1) % album.Length] |> Api.IMediaInfo.getOrigUrl)
+          //PrevSrc (album.[(state.current.index + album.Length - 1) % album.Length] |> Api.IMediaInfo.getOrigUrl)
+          OnAfterOpen (fun () ->
+            disableScroll.on())
+          OnCloseRequest (fun () ->
+            disableScroll.off()
+            sliderRef.current.slickPlay()
+            state.update {| state.current with isOpen = false |})
+          OnMoveNextRequest (fun () ->
+            let newIndex = (state.current.index + 1) % prop.images.Length
+            sliderRef.current.slickGoTo(newIndex)
+            state.update {| state.current with index = newIndex |})
+          OnMovePrevRequest (fun () ->
+            let newIndex = (state.current.index + prop.images.Length - 1) % prop.images.Length
+            sliderRef.current.slickGoTo(newIndex)
+            state.update {| state.current with index = newIndex |})
+        ]
+    ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __SOURCE_FILE__ + ":" + __LINE__))

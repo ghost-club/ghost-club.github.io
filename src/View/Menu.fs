@@ -12,8 +12,10 @@ open Fulma
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
+type MenuProps = {| dispatch: Msg -> unit; lang: Language; apiIsOk: bool; enabled: bool |}
+
 let private viewLanguageSwitch =
-  FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language; enabled: bool |}) ->
+  FunctionComponent.Of ((fun (props: MenuProps) ->
     let containerClass =
       match props.lang with
       | Unspecified | En -> "menu-item language-button-container language-en"
@@ -25,7 +27,7 @@ let private viewLanguageSwitch =
   ), memoizeWith=memoEqualsButFunctions)
 
 let private viewBody =
-  FunctionComponent.Of ((fun (props: {| dispatch: Msg -> unit; lang: Language; enabled: bool |}) ->
+  FunctionComponent.Of ((fun (props: MenuProps) ->
     let menuModalIsShown = Hooks.useState false
     let mobileMenuRef = Hooks.useRef None
 
@@ -76,7 +78,7 @@ let private viewBody =
               menuItem "about" "About"
               menuItem "how-to-join" "How to join"
               menuItem "dj-mix" "DJ Mix"
-              menuItem "gallery" "Gallery"
+              if props.apiIsOk then menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
             div [Class "menu-item menu-buttons"; Key.Src(__FILE__,__LINE__)] [
@@ -108,7 +110,7 @@ let private viewBody =
               menuItem "about" "About"
               menuItem "how-to-join" "How to join"
               menuItem "dj-mix" "DJ Mix"
-              menuItem "gallery" "Gallery"
+              if props.apiIsOk then menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
             div [Class "menu-item menu-buttons"; Key.Src(__FILE__,__LINE__)] [
@@ -121,12 +123,12 @@ let private viewBody =
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__))
 
-let viewMenu (prop: {| lang: Language; flags: Set<Flag>; dispatch: Msg -> unit |}) =
+let viewMenu (prop: {| apiIsOk: bool; lang: Language; flags: Set<Flag>; dispatch: Msg -> unit |}) =
   let className, enabled =
     let baseClass = "menu-container"
     if prop.flags |> Set.contains MenuIsVisible then baseClass, true
     else if prop.flags |> Set.contains PlayButtonIsShown then baseClass + " disable", false
     else baseClass + " hidden", false
   div [Class className; Key.Src(__FILE__,__LINE__)] [
-    viewBody {| dispatch = prop.dispatch; lang = prop.lang; enabled = enabled |}
+    viewBody {| dispatch = prop.dispatch; apiIsOk = prop.apiIsOk; lang = prop.lang; enabled = enabled |}
   ]

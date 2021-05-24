@@ -27,15 +27,26 @@ let inline private pictureWebpOrPNG key webp webpAlt =
     |}
 
 let private viewAbout =
-  FunctionComponent.Of ((fun (_props: {| lang: Language |}) ->
+  FunctionComponent.Of ((fun (prop: {| lang: Language; api: Api.IResult<Api.All> |}) ->
     let videoModalShown = Hooks.useState false
+    let rand = Hooks.useState (new System.Random())
+
+    let aboutText =
+      match prop.api with
+      | Api.IResult.Ok all when all.poems.Length > 0 ->
+        let poems = all.poems
+        let poemIndex = rand.current.Next(poems.Length)
+        match prop.lang with
+        | Ja -> poems.[poemIndex].Japanese
+        | _ -> poems.[poemIndex].English
+      | _ -> !@"loremipsum"
 
     Section.section [CustomClass "has-text-left"; Props [Key.Src(__FILE__,__LINE__)]] [
       div [Class "is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
         Columns.columns [Columns.IsVCentered; Props [Key.Src(__FILE__,__LINE__)]] [
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
             fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
-            fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]; key = __FILE__+":"+__LINE__ |}
+            fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
           ]
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
             fadeIn
@@ -69,7 +80,7 @@ let private viewAbout =
         div [Style [PaddingTop "50%"]; Key.Src(__FILE__,__LINE__)] []
 
         fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
-        fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str !@"loremipsum"]; key = __FILE__+":"+__LINE__ |}
+        fadeIn {| children = p [Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
 
         fadeIn
           {|
@@ -165,7 +176,7 @@ let viewCredits =
     ]
   ]
 
-let view (prop: {| lang: Language; albumState: AlbumState; dispatch: Msg -> unit |}) =
+let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> unit |}) =
   div [Id "content"; Class "content has-text-centered"; Key "content"] [
     picture [Key.Src(__FILE__,__LINE__)] [
       source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
@@ -175,7 +186,7 @@ let view (prop: {| lang: Language; albumState: AlbumState; dispatch: Msg -> unit
 
     div [Class "content-foreground limited-width"; Key.Src(__FILE__,__LINE__)] [
       a [Class "anchor"; Id "about"; Href "#about"; Key.Src(__FILE__,__LINE__)] []
-      viewAbout {| lang = prop.lang |}
+      viewAbout {| lang = prop.lang; api = prop.api |}
 
       a [Class "anchor"; Id "how-to-join"; Href "#how-to-join"; Key.Src(__FILE__,__LINE__)] []
       viewHowToJoin {| lang = prop.lang |}
@@ -192,13 +203,16 @@ let view (prop: {| lang: Language; albumState: AlbumState; dispatch: Msg -> unit
           FrameBorder 0] []
       ]
 
-      a [Class "anchor"; Id "gallery"; Href "gallery"; Key.Src(__FILE__,__LINE__)] []
-      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-          Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
+      match prop.api with
+      | Api.IResult.Ok all ->
+        a [Class "anchor"; Id "gallery"; Href "gallery"; Key.Src(__FILE__,__LINE__)] []
+        Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+          Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
+            Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
+          ]
+          PhotoGallery.view {| lang = prop.lang; images = all.images; dispatch = prop.dispatch |}
         ]
-        PhotoGallery.view prop
-      ]
+      | _ -> null
 
       a [Class "anchor"; Id "contact"; Href "contact"; Key.Src(__FILE__,__LINE__)] []
       Section.section [Props [Key.Src(__FILE__,__LINE__)]] [

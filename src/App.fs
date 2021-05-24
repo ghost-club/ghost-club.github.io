@@ -67,9 +67,6 @@ let initI18nTask =
       match I18next.i18next.language with
       | "ja" -> Ja
       | _ -> En
-    //let langAttr = document.createAttribute("lang")
-    //langAttr.value <- lang.AsLangCode
-    //document.documentElement.attributes.setNamedItem(langAttr) |> ignore
     return SwitchLanguage lang
   }
 
@@ -81,15 +78,15 @@ let changeLanguageTask (langCode: string) =
     Ignore
   )
 
-let initAlbumTask =
-  Album.get () |> Promise.map LoadAlbumResponse
+let initApiTask =
+  Api.getAll () |> Promise.map LoadApiResponse
 
 let initCmd =
   Cmd.batch [
     Cmd.OfPromise.result (initReactModalTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initSmoothScrollPolyfillTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initI18nTask |> Promise.catch InitError)
-    Cmd.OfPromise.result (initAlbumTask |> Promise.catch InitError)
+    Cmd.OfPromise.result (initApiTask |> Promise.catch InitError)
   ]
 
 let delayCmd ms msg : Cmd<Msg> =
@@ -136,7 +133,7 @@ let internal update msg model =
       match model.state with
       | ModelState.Loading ->
         if   model.lang = Unspecified
-          || model.albumState = AlbumState.Loading
+          || model.api |> Api.IResult.isLoading
           || model.completed |> Set.contains LogoShown |> not
         then model, Cmd.none
         else { model with state = ModelState.Loaded }, Cmd.ofMsg (TriggerAfter (1000, CheckAnchorAndJump))
@@ -150,10 +147,7 @@ let internal update msg model =
       | En -> Cmd.OfPromise.perform changeLanguageTask "en" id
       | Ja -> Cmd.OfPromise.perform changeLanguageTask "ja" id
     { model with lang = lang }, Cmd.batch [cmd; Cmd.ofMsg CheckInitTaskDone]
-  | LoadAlbumResponse (Album.IResult.Ok x) ->
-    { model with albumState = AlbumState.Loaded x.value }, Cmd.ofMsg CheckInitTaskDone
-  | LoadAlbumResponse (Album.IResult.Error x) ->
-    { model with albumState = AlbumState.LoadFailed x.message }, Cmd.ofMsg CheckInitTaskDone
+  | LoadApiResponse x -> { model with api = x }, Cmd.ofMsg CheckInitTaskDone
   | SetFlag (flag, true)  -> { model with flags = Set.add flag model.flags }, Cmd.none
   | SetFlag (flag, false) -> { model with flags = Set.remove flag model.flags }, Cmd.none
 
@@ -174,8 +168,8 @@ let private viewError model (exns: exn list) dispatch =
 let private viewMain model dispatch =
   ofList [
     Transition.viewTransition {| dispatch = dispatch |}
-    Menu.viewMenu {| lang = model.lang; flags = model.flags; dispatch = dispatch |}
-    Content.view {| lang = model.lang; albumState = model.albumState; dispatch = dispatch |}
+    Menu.viewMenu {| lang = model.lang; apiIsOk = model.api |> Api.IResult.isOk; flags = model.flags; dispatch = dispatch |}
+    Content.view {| lang = model.lang; api = model.api; dispatch = dispatch |}
     Footer.view
   ]
 
