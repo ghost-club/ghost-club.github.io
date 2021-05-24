@@ -268,6 +268,7 @@ ul.menu-links li a:hover {
 }
 
 .menu-mobile .menu-buttons .language-button-container {
+  width: 100%;
   max-width: 205px;
   max-height: 45px;
 }
@@ -279,6 +280,7 @@ ul.menu-links li a:hover {
     padding: 0% 20%;
     justify-content: space-around;
     flex: 1 1 auto;
+    width: 100%;
   }
 
   .menu-mobile .menu-links {
@@ -288,7 +290,6 @@ ul.menu-links li a:hover {
   .menu-mobile .menu-buttons {
     justify-content: space-around;
   }
-
 }
 @media screen and (orientation: landscape) {
   .menu-mobile .menu-links, .menu-mobile .menu-buttons {
