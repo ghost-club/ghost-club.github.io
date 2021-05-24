@@ -37,6 +37,11 @@ module Assets =
     let [<Literal>] About = "assets/image/about.webp"
     let [<Literal>] VideoThumbnail = "assets/image/video_thumb.webp"
 
+  module Movie =
+    let [<Literal>] MP4 = "assets/video/website_background_movie_1080.mp4"
+    let [<Literal>] WebM = "assets/video/website_background_movie_1080.webm"
+    let [<Literal>] JPG = "assets/video/website_background_movie_1080.jpg"
+
   module InlineSVG =
     let LeftButton =
       """<svg class="left-button" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">

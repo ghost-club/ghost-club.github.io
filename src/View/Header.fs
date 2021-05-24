@@ -65,11 +65,11 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
         Class "background-video"
         Key "background-video";
         RefValue videoRef;
-         Muted true; AutoPlay true; HTMLAttr.Custom ("playsInline", true); Loop true; Poster "assets/video/bg.jpg"
+         Muted true; AutoPlay true; HTMLAttr.Custom ("playsInline", true); Loop true; Poster Assets.Movie.JPG
         OnLoadedData (fun _ -> props.dispatch (Completed BackgroundVideoLoaded))] [
-        source [Src "assets/video/bg.webm"; Type "video/webm"]
-        source [Src "assets/video/bg.mp4";  Type "video/mp4"]
-        img    [Src "assets/video/bg.jpg"; HTMLAttr.Custom("decoding", "async"); Title "HTML5 not supported"]
+        source [Src Assets.Movie.WebM; Type "video/webm"]
+        source [Src Assets.Movie.MP4;  Type "video/mp4"]
+        img    [Src Assets.Movie.JPG; HTMLAttr.Custom("decoding", "async"); Title "HTML5 not supported"]
       ]
       div [Class "header-container"] [
         cssTransition [
