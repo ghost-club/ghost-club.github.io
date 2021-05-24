@@ -83,14 +83,17 @@ let getAll () : JS.Promise<IResult<All>> =
     let! resp =
       Fetch.fetch Properties.DataUrl [Method HttpMethod.GET; Mode RequestMode.Cors]
     let! txt = resp.text()
-    let result =
-      JS.JSON.parse(txt, (fun key value ->
-        if (key :?> string) = "created" then
-          JS.Constructors.Date.Create(value :?> string) |> box
-        else value
-      )) :?> IResult<All>
-    if IResult.isOk result then
-      return result
-    else
-      return! getImpl "all"
+    try
+      let result =
+        JS.JSON.parse(txt, (fun key value ->
+          if (key :?> string) = "created" then
+            JS.Constructors.Date.Create(value :?> string) |> box
+          else value
+        )) :?> IResult<All>
+      if IResult.isOk result then
+        return result
+      else
+        return! getImpl "all"
+    with
+      | _ -> return! getImpl "all"
   }
