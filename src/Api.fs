@@ -78,4 +78,19 @@ let getPoems () : JS.Promise<IResult<IPoem[]>> = getImpl "poems"
 
 type All = {| images: IMediaInfo[]; poems: IPoem[] |}
 
-let getAll () : JS.Promise<IResult<All>> = getImpl "all"
+let getAll () : JS.Promise<IResult<All>> =
+  promise {
+    let! resp =
+      Fetch.fetch Properties.DataUrl [Method HttpMethod.GET; Mode RequestMode.Cors]
+    let! txt = resp.text()
+    let result =
+      JS.JSON.parse(txt, (fun key value ->
+        if (key :?> string) = "created" then
+          JS.Constructors.Date.Create(value :?> string) |> box
+        else value
+      )) :?> IResult<All>
+    if IResult.isOk result then
+      return result
+    else
+      return! getImpl "all"
+  }
