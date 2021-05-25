@@ -8,7 +8,6 @@ open Fetch.Types
 type [<AllowNullLiteral>] IResult<'T> =
   abstract status: string with get, set
 
-
 [<RequireQualifiedAccess>]
 module IResult =
   type [<AllowNullLiteral>] Ok<'T> =
@@ -36,19 +35,21 @@ module IResult =
     | _ ->
       Error (x :?> Error<'T>).message
 
-let private getImpl action : JS.Promise<IResult<'a>> =
+let inline private parseJson txt =
+  JS.JSON.parse(txt, (fun key value ->
+    if (key :?> string) = "created" then
+      JS.Constructors.Date.Create(value :?> string) |> box
+    else value
+  ))
+
+let inline private getImpl action : JS.Promise<IResult<'a>> =
   promise {
     let! resp =
       Fetch.fetch
         (Properties.GoogleAppUrl + "?action=" + action)
         [Method HttpMethod.GET; Mode RequestMode.Cors]
     let! txt = resp.text()
-    return
-      JS.JSON.parse(txt, (fun key value ->
-        if (key :?> string) = "created" then
-          JS.Constructors.Date.Create(value :?> string) |> box
-        else value
-      )) :?> IResult<'a>
+    return parseJson txt :?> IResult<'a>
   }
 
 type [<AllowNullLiteral>] IMediaInfo =
@@ -59,11 +60,11 @@ type [<AllowNullLiteral>] IMediaInfo =
   abstract height: int with get, set
 
 module IMediaInfo =
-  let getUrlWithSize (width: int) (height: int) (x: IMediaInfo) =
+  let inline getUrlWithSize (width: int) (height: int) (x: IMediaInfo) =
     sprintf "%s=w%d-h%d" x.baseUrl width height
-  let getOrigUrl (x: IMediaInfo) = sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
+  let inline getOrigUrl (x: IMediaInfo) = sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
 
-let getImages () : JS.Promise<IResult<IMediaInfo[]>> = getImpl "images"
+// let getImages () : JS.Promise<IResult<IMediaInfo[]>> = getImpl "images"
 
 type [<AllowNullLiteral>] IPoem =
   [<Emit("$0[0]")>]
@@ -74,7 +75,7 @@ type [<AllowNullLiteral>] IPoem =
 module IPoem =
   let inline create (ja: string) (en: string) : IPoem = !!(ja, en)
 
-let getPoems () : JS.Promise<IResult<IPoem[]>> = getImpl "poems"
+// let getPoems () : JS.Promise<IResult<IPoem[]>> = getImpl "poems"
 
 type All = {| images: IMediaInfo[]; poems: IPoem[] |}
 
@@ -84,12 +85,7 @@ let getAll () : JS.Promise<IResult<All>> =
       Fetch.fetch Properties.DataUrl [Method HttpMethod.GET; Mode RequestMode.Cors]
     let! txt = resp.text()
     try
-      let result =
-        JS.JSON.parse(txt, (fun key value ->
-          if (key :?> string) = "created" then
-            JS.Constructors.Date.Create(value :?> string) |> box
-          else value
-        )) :?> IResult<All>
+      let result = parseJson txt :?> IResult<All>
       if IResult.isOk result then
         return result
       else

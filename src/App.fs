@@ -87,8 +87,11 @@ let initApiTask () =
         initApiRetried <- true
         return TryLoadApiAgain
       else if initApiRetried then
-        window.location.reload(true)
-        return Ignore
+        if Screen.check Screen.Mobile then
+          return LoadApiResponse (Api.IResult.Error "API timed out")
+        else
+          window.location.reload(true)
+          return Ignore
       else
         return Ignore
     }

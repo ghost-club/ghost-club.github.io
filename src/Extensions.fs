@@ -40,7 +40,7 @@ module Fulma =
     let inline block (options: GenericOption list) children =
       GenericOptions.Parse(options, parseOptions, "block").ToReactElement(div, children)
 
-  type Option =
+  type [<Erase>] Option =
     static member inline CustomClass (x, [<Optional>]__: GenericOption) = CustomClass x
     static member inline CustomClass (x, [<Optional>]__: Section.Option) = Section.CustomClass x
     static member inline CustomClass (x, [<Optional>]__: Container.Option) = Container.CustomClass x
