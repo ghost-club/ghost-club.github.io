@@ -69,7 +69,7 @@ module Assets =
 </svg>"""
 
     let PlayMovieMini =
-      """<svg class="watch-movie" width="67" height="67" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+      """<svg class="watch-movie" viewBox="0 0 67 67" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path class="circle" d="M33.4 65.8C51.294 65.8 65.8 51.294 65.8 33.4C65.8 15.506 51.294 1 33.4 1C15.506 1 1 15.506 1 33.4C1 51.294 15.506 65.8 33.4 65.8Z" stroke="white" stroke-width="2" stroke-miterlimit="10"/>
 <path class="play" d="M28.0996 44.8L44.8996 33.4L28.0996 22V44.8Z" fill="white"/>
 </svg>"""

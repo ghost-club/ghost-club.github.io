@@ -102,11 +102,9 @@ let private viewAbout =
                   source [Style style; SrcSet Assets.WebPAlt.VideoThumbnail; Type "image/jpeg"]
                   img [Style style; Src Assets.WebPAlt.VideoThumbnail; Alt ""; HTMLAttr.Custom("loading", "lazy")]
                 ]
-                let style = [Position PositionOptions.Absolute; Width "30%"; Height "30%"]
                 div [
                   Class "content-mobile-playbutton"
                   DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovieMini }
-                  Style style
                   OnClick (fun _ -> videoModalShown.update true)
                 ] []
               ]
