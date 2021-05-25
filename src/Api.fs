@@ -52,17 +52,28 @@ let inline private getImpl action : JS.Promise<IResult<'a>> =
     return parseJson txt :?> IResult<'a>
   }
 
-type [<AllowNullLiteral>] IMediaInfo =
-  abstract baseUrl: string with get, set
-  abstract mimeType: string with get, set
-  abstract created: DateTimeOffset with get, set
-  abstract width: int with get, set
-  abstract height: int with get, set
+type IMediaInfo = {|
+  id: string
+  baseUrl: string
+  mimeType: string
+  created: DateTimeOffset
+  width: int
+  height: int
+  thumbnailUrl: string
+  origUrl: string
+|}
 
 module IMediaInfo =
   let inline getUrlWithSize (width: int) (height: int) (x: IMediaInfo) =
     sprintf "%s=w%d-h%d" x.baseUrl width height
-  let inline getOrigUrl (x: IMediaInfo) = sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
+  let inline getThumbUrl (x: IMediaInfo) =
+    if isNullOrUndefined x.thumbnailUrl then x.baseUrl
+    else x.thumbnailUrl
+  let inline getOrigUrl (x: IMediaInfo) =
+    if isNullOrUndefined x.origUrl then
+      sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
+    else
+      x.origUrl
 
 // let getImages () : JS.Promise<IResult<IMediaInfo[]>> = getImpl "images"
 

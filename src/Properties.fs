@@ -6,7 +6,7 @@ let [<Literal>] DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
 
 let [<Literal>] DataUrl = "https://xn--pckjp4dudxftf.xn--tckwe/data/index.json"
 
-let [<Literal>] GoogleAppUrl = "https://script.google.com/macros/s/AKfycby0xdKkzfXovdxmGOUOBGwptupdxReW5JoY4RyuckoB4KFgm8nY4w23hIuBZBc49nuX/exec"
+let [<Literal>] GoogleAppUrl = "https://script.google.com/macros/s/AKfycbxkGeSRx3QMBSyCLIZCMlAjy_iqxz7e_1B3eyrhmDifjUyFUR5U53gRF_9oF78sLlgI/exec"
 
 module Assets =
   module SVG =
@@ -104,6 +104,12 @@ module Assets =
   <path d="M48.913 44.3594H34.2402V63.2414H48.913V44.3594Z" fill="white"/>
 </g>
 </svg>"""
+
+  module StaticGallery =
+    let Photos = [|
+      for i = 0 to 13 do
+        sprintf "assets/gallery_static/%d.jpg" i
+    |]
 
 [<StringEnum>]
 type Language = Unspecified | En | Ja with

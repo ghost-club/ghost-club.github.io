@@ -195,7 +195,7 @@ let private viewError model (exns: exn list) dispatch =
 let private viewMain model dispatch =
   ofList [
     Transition.viewTransition {| dispatch = dispatch |}
-    Menu.viewMenu {| lang = model.lang; apiIsOk = model.api |> Api.IResult.isOk; flags = model.flags; dispatch = dispatch |}
+    Menu.viewMenu {| lang = model.lang; flags = model.flags; dispatch = dispatch |}
     Content.view {| lang = model.lang; api = model.api; dispatch = dispatch |}
     Footer.view
   ]

@@ -217,16 +217,15 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
           HTMLAttr.Custom("loading", "lazy")] []
       ]
 
-      match prop.api with
-      | Api.IResult.Ok all ->
-        a [Class "anchor"; Id "gallery"; Href "gallery"; Key.Src(__FILE__,__LINE__)] []
-        Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-          Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-            Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
-          ]
-          PhotoGallery.view {| lang = prop.lang; images = all.images; dispatch = prop.dispatch |}
+      a [Class "anchor"; Id "gallery"; Href "gallery"; Key.Src(__FILE__,__LINE__)] []
+      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
+          Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
         ]
-      | _ -> null
+        match prop.api with
+        //| Api.IResult.Ok all -> PhotoGallery.view {| lang = prop.lang; images = Some all.images; dispatch = prop.dispatch |}
+        | _ -> PhotoGallery.view {| lang = prop.lang; images = None; dispatch = prop.dispatch |}
+      ]
 
       a [Class "anchor"; Id "contact"; Href "contact"; Key.Src(__FILE__,__LINE__)] []
       Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
