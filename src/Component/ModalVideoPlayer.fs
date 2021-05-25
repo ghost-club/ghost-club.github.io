@@ -87,11 +87,10 @@ let inline modalVideoPlayer< ^Platform when ^Platform: (static member Player: IP
           Class "ril-inner ril__inner"
           OnClick closeIfClickInner
           Style [
-            Position PositionOptions.Relative
             Display DisplayOptions.Flex
             AlignItems AlignItemsOptions.Center
             JustifyContent "center"
-            Height "100%"
+            Padding "50px 0px"
           ]
           Key (prop.useKey + "-inner")] [
 
@@ -99,8 +98,8 @@ let inline modalVideoPlayer< ^Platform when ^Platform: (static member Player: IP
             Key (prop.useKey + "-inner-video-wrapper")
             Style [
               Position PositionOptions.Relative
-              Width "100%"
-              PaddingBottom "56.25%"
+              Width "calc(min(100vw, 177.77vh))"
+              Height "calc(min(56.25vw, 100vh))"
             ]
           ] [
             (^Platform: (static member Player: IPlatformSpecificReactPlayerProp< ^Platform > list -> ReactElement) [
@@ -111,10 +110,6 @@ let inline modalVideoPlayer< ^Platform when ^Platform: (static member Player: IP
               PP.Loop true
               PP.Width "100%"
               PP.Height "100%"
-              PP.Style [
-                Position PositionOptions.Absolute
-                Top 0; Left 0
-              ]
               PP.Playsinline true
               PP.Pip false
             ])
