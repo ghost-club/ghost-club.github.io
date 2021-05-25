@@ -6,7 +6,7 @@ let [<Literal>] DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
 
 let [<Literal>] DataUrl = "https://xn--pckjp4dudxftf.xn--tckwe/data/index.json"
 
-let [<Literal>] GoogleAppUrl = "https://script.google.com/macros/s/AKfycbzpf25Ji-4wUKc7wvV1yjvhowR-vkrpzukrUc7fQdprBLovAetNr83ju7Am4vuaNiRo/exec"
+let [<Literal>] GoogleAppUrl = "https://script.google.com/macros/s/AKfycby0xdKkzfXovdxmGOUOBGwptupdxReW5JoY4RyuckoB4KFgm8nY4w23hIuBZBc49nuX/exec"
 
 module Assets =
   module SVG =
