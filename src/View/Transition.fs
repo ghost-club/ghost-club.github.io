@@ -53,7 +53,7 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
           picture [Key.Src(__FILE__,__LINE__)] [
             source [SrcSet Assets.WebP.GCBuilding1; Type "image/webp"; Class "transition-building"]
             source [SrcSet Assets.WebPAlt.GCBuilding1; Type "image/png"; Class "transition-building"]
-            img [Src Assets.WebPAlt.GCBuilding1; Alt ""; Class "transition-building"]
+            img [Src Assets.WebPAlt.GCBuilding1; Alt ""; Class "transition-building"; HTMLAttr.Custom("loading", "lazy")]
           ]
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__)) props

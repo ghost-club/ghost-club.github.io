@@ -21,7 +21,7 @@ let inline private pictureWebpOrPNG key webp webpAlt =
         picture [Key key] [
           source [Style style; SrcSet webp; Type "image/webp"]
           source [Style style; SrcSet webpAlt; Type "image/png"]
-          img [Style style; Src webpAlt; Alt ""]
+          img [Style style; Src webpAlt; Alt ""; HTMLAttr.Custom("loading", "lazy")]
         ]
       key = key+"fade-container"
     |}
@@ -60,7 +60,7 @@ let private viewAbout =
                   picture [Key.Src(__FILE__,__LINE__)] [
                     source [SrcSet Assets.WebP.About; Type "image/webp"]
                     source [SrcSet Assets.WebPAlt.About; Type "image/png"]
-                    img [Src Assets.WebPAlt.About; Alt ""]
+                    img [Src Assets.WebPAlt.About; Alt ""; HTMLAttr.Custom("loading", "lazy")]
                   ]
                 key = __FILE__+":"+__LINE__
               |}
@@ -78,7 +78,7 @@ let private viewAbout =
               picture [Key.Src(__FILE__,__LINE__); Style [Position PositionOptions.Absolute; Width "100%"]] [
                 source [Class "content-about-picture-mobile"; SrcSet Assets.WebP.About; Type "image/webp"]
                 source [Class "content-about-picture-mobile"; SrcSet Assets.WebPAlt.About; Type "image/png"]
-                img [Class "content-about-picture-mobile"; Src Assets.WebPAlt.About; Alt ""]
+                img [Class "content-about-picture-mobile"; Src Assets.WebPAlt.About; Alt ""; HTMLAttr.Custom("loading", "lazy")]
               ]
             key = __FILE__+":"+__LINE__
           |}
@@ -100,7 +100,7 @@ let private viewAbout =
                 picture [Key.Src(__FILE__,__LINE__)] [
                   source [Style style; SrcSet Assets.WebP.VideoThumbnail; Type "image/webp"]
                   source [Style style; SrcSet Assets.WebPAlt.VideoThumbnail; Type "image/jpeg"]
-                  img [Style style; Src Assets.WebPAlt.VideoThumbnail; Alt ""]
+                  img [Style style; Src Assets.WebPAlt.VideoThumbnail; Alt ""; HTMLAttr.Custom("loading", "lazy")]
                 ]
                 let style = [Position PositionOptions.Absolute; Width "30%"; Height "30%"]
                 div [
@@ -188,7 +188,7 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
     picture [Key.Src(__FILE__,__LINE__)] [
       source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
       source [Class "content-building"; SrcSet Assets.WebPAlt.GCBuilding2; Type "image/jpg"]
-      img [Class "content-building"; Src Assets.WebPAlt.GCBuilding2; Alt ""]
+      img [Class "content-building"; Src Assets.WebPAlt.GCBuilding2; Alt ""; HTMLAttr.Custom("loading", "lazy")]
     ]
 
     div [Class "content-foreground limited-width"; Key.Src(__FILE__,__LINE__)] [
@@ -207,7 +207,8 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
           Title "GHOSTCLUB Mixcloud"
           Src Links.MixCloudWidget
           Style [Width "100%"; Height "180px"]
-          FrameBorder 0] []
+          FrameBorder 0
+          HTMLAttr.Custom("loading", "lazy")] []
       ]
 
       match prop.api with

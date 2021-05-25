@@ -69,7 +69,7 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
         OnLoadedData (fun _ -> props.dispatch (Completed BackgroundVideoLoaded))] [
         source [Src Assets.Movie.WebM; Type "video/webm"]
         source [Src Assets.Movie.MP4;  Type "video/mp4"]
-        img    [Src Assets.Movie.JPG; HTMLAttr.Custom("decoding", "async"); Title "HTML5 not supported"]
+        img    [Src Assets.Movie.JPG; HTMLAttr.Custom("decoding", "async"); Title "HTML5 not supported"; HTMLAttr.Custom("loading", "lazy")]
       ]
       div [Class "header-container"] [
         cssTransition [
