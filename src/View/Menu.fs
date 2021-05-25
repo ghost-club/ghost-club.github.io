@@ -126,7 +126,8 @@ let private viewBody =
 let viewMenu (prop: {| apiIsOk: bool; lang: Language; flags: Set<Flag>; dispatch: Msg -> unit |}) =
   let className, enabled =
     let baseClass = "menu-container"
-    if prop.flags |> Set.contains MenuIsVisible then baseClass, true
+    if   prop.flags |> Set.contains MenuIsVisible
+      && prop.flags |> Set.contains TransitionCompleted then baseClass, true
     else if prop.flags |> Set.contains PlayButtonIsShown then baseClass + " disable", false
     else baseClass + " hidden", false
   div [Class className; Key.Src(__FILE__,__LINE__)] [

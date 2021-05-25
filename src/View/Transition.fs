@@ -13,9 +13,7 @@ let [<Literal>] __FILE__ = __SOURCE_FILE__
 
 let viewTransition (props: {| dispatch: Msg -> unit |}) =
   FunctionComponent.Of((fun (props: {| dispatch: Msg -> unit |}) ->
-    let transitionCompleted = Hooks.useState false
     let transitionInProgress = Hooks.useState false
-
     let scrollAmount = Hooks.useState 0.0
 
     ofList [
@@ -23,27 +21,17 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
         Class "transition-background"
         Key.Src(__FILE__, __LINE__)
         Style (
-          let opacity, display =
-            if transitionCompleted.current then 1.0, DisplayOptions.Inherit
-            else if transitionInProgress.current then
-              min 1.0 scrollAmount.current, DisplayOptions.Inherit
-            else 0.0, DisplayOptions.None
-          [Opacity opacity; Display display]
+          let opacity = min 1.0 scrollAmount.current
+          [Opacity opacity]
         )] []
-      inViewPlain [
-        !^Class("transition-checker")
-        !^Key.Src(__FILE__, __LINE__)
-        OnChange (fun inView _ ->
-          props.dispatch (SetFlag (MenuIsVisible, not inView))
-          transitionCompleted.update (not inView))
-        ] nothing
+          //props.dispatch (SetFlag (MenuIsVisible, not inView))
       inViewPlain [
         !^Class("transition-scroll")
         !^Key.Src(__FILE__,__LINE__)
         Thresholds [| for i = 0 to 10 do yield 0.1 * float i |]
-        OnChange (fun _ entry ->
-          if not transitionCompleted.current then
-            scrollAmount.update (entry.intersectionRatio * 1.75))] nothing
+        OnChange (fun inView entry ->
+          props.dispatch (SetFlag (TransitionCompleted, not inView))
+          scrollAmount.update (1.0 - entry.intersectionRatio))] nothing
       inViewPlain [
         !^Class("transition")
         !^Key.Src(__FILE__,__LINE__)

@@ -46,7 +46,7 @@ let private viewAbout =
         | _ -> all.poems.[poemIndex.current].English
       | _ -> !@Texts.About
 
-    Section.section [CustomClass "has-text-left"; Props [Key.Src(__FILE__,__LINE__)]] [
+    Section.section [CustomClass "has-text-left"; Props [Style [PaddingTop "0"]; Key.Src(__FILE__,__LINE__)]] [
       div [Class "is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
         Columns.columns [Columns.IsVCentered; Props [Key.Src(__FILE__,__LINE__)]] [
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
@@ -181,8 +181,16 @@ let viewCredits =
     ]
   ]
 
+open ReactIntersectionObserver
+
 let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> unit |}) =
-  div [Id "content"; Class "content has-text-centered"; Key "content"] [
+  inViewPlain [
+    !^Id("content")
+    !^Class("content has-text-centered")
+    !^Key("content")
+    OnChange (fun inView _ ->
+      prop.dispatch (SetFlag (MenuIsVisible, inView)))
+  ] <| ofList [
     picture [Key.Src(__FILE__,__LINE__)] [
       source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
       source [Class "content-building"; SrcSet Assets.WebPAlt.GCBuilding2; Type "image/jpg"]

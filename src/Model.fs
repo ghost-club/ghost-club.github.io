@@ -19,6 +19,7 @@ type Completed =
 type Flag =
   | MenuIsVisible
   | PlayButtonIsShown
+  | TransitionCompleted
 
 type Model = {
   state: ModelState

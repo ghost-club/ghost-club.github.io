@@ -154,7 +154,7 @@ a.anchor {
 }
 
 .header-loaded {
-  margin-bottom: 100vh;
+  margin-bottom: 10vh;
 }
 
 .header-loading-screen {
@@ -195,6 +195,7 @@ a.anchor {
   line-height: 132%;
   //letter-spacing: 0.05rem;
   white-space: pre-line;
+  user-select: none;
 }
 
 .header-bottom {
@@ -270,6 +271,7 @@ a.anchor {
   bottom: 3.5vmin;
   right: 3.5vw;
   transform: translate(40%, -100%) rotate(90deg);
+  user-select: none;
 }
 
 .header-bottom-scroll-indicator-text {
@@ -291,6 +293,7 @@ a.anchor {
 .header-logo {
   height: 100%;
   object-fit: contain;
+  user-select: none;
 }
 
 .background-video {
@@ -306,21 +309,11 @@ a.anchor {
 
 // transition
 
-.transition-checker {
-  position: absolute;
-  top: 0vh;
-  right: 0;
-  width: 1%;
-  height: 250vh;
-  z-index: 99;
-  overflow: hidden;
-}
-
 .transition-scroll {
   position: absolute;
   width: 1%;
-  top: 200vh;
-  height: 200vh;
+  top: 0px;
+  height: 100vh;
   right: 1%;
 }
 
@@ -332,19 +325,19 @@ a.anchor {
   height: 100vh;
   height: -webkit-calc(max(100vh, 100%));
   z-index: 0;
-  display: none;
   opacity: 0;
   background-color: #000000;
+  pointer-events: none;
 }
 
 .transition {
-  height: 100vh;
   position: relative;
   background: linear-gradient(transparent 0%, black 100%);
+  pointer-events: none;
 }
 
 .transition-building {
-  position: absolute;
+  position: relative;
   width: 100vw;
   right: 0;
   bottom: 0;
