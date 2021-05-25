@@ -225,6 +225,7 @@ a.anchor {
   position: absolute;
   opacity: 1;
   transition: opacity 250ms ease-in;
+  object-fit: contain;
   cursor: pointer;
 }
 
@@ -241,7 +242,6 @@ a.anchor {
 .header-bottom-playbutton svg, .content-mobile-playbutton svg {
   width: 100%;
   height: 100%;
-  object-fit: contain;
   transform: scale(1.0);
   transition: transform 100ms ease-in;
 }
