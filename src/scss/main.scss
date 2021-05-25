@@ -70,15 +70,6 @@ div#root {
   margin: 0 auto;
 }
 
-div#dummy-scrollbar {
-  overflow-y: scroll;
-  top: 0;
-  right: 0;
-  display: none;
-  height: 100%;
-  position: fixed;
-}
-
 // utils
 
 .align-center {
