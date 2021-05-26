@@ -1,3 +1,8 @@
 User-agent: *
-User-agent: AdsBot-Google
-Disallow: /
+Allow: /
+
+# Optimization for Google Ads Bot
+User-Agent: AdsBot-Google-Mobile
+User-Agent: AdsBot-Google
+Disallow: /assets/*
+Disallow: /data/*
