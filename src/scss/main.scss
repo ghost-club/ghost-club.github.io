@@ -398,6 +398,10 @@ a.anchor {
   z-index: 2;
 }
 
+.content-about-picture, .content-about-picture-mobile {
+  user-select: none;
+}
+
 .content-about-picture-mobile {
   position: relative;
   z-index: -1;

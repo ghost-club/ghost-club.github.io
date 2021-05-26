@@ -14,7 +14,7 @@ open FadeIn
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
 let inline private pictureWebpOrPNG key webp webpAlt =
-  let style = [Width "100%"; ObjectFit "contain"]
+  let style = [Width "100%"; ObjectFit "contain"; UserSelect UserSelectOptions.None]
   fadeIn
     {|
       children =
@@ -58,9 +58,9 @@ let private viewAbout =
               {|
                 children =
                   picture [Key.Src(__FILE__,__LINE__)] [
-                    source [SrcSet Assets.WebP.About; Type "image/webp"]
-                    source [SrcSet Assets.WebPAlt.About; Type "image/png"]
-                    img [Src Assets.WebPAlt.About; Alt ""; HTMLAttr.Custom("loading", "lazy")]
+                    source [Class "content-about-picture"; SrcSet Assets.WebP.About; Type "image/webp"]
+                    source [Class "content-about-picture"; SrcSet Assets.WebPAlt.About; Type "image/png"]
+                    img [Class "content-about-picture"; Src Assets.WebPAlt.About; Alt ""; HTMLAttr.Custom("loading", "lazy")]
                   ]
                 key = __FILE__+":"+__LINE__
               |}
