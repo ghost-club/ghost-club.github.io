@@ -143,6 +143,7 @@ module Credits =
     | None -> None
 
 module Links =
+  let [<Literal>] VimeoMovie = "https://vimeo.com/551444345"
   let [<Literal>] Twitter = "https://twitter.com/6h057clu8"
   let [<Literal>] MixCloudWidget = "https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F"
   let [<Literal>] Discord = "https://discord.gg/9KpCdUW"

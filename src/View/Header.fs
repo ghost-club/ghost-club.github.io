@@ -15,7 +15,7 @@ let viewVideoModal =
     modalVideoPlayer
       {| isOpen = prop.isOpen
          useKey = __LINE__ + ":" + __FILE__
-         url = "https://vimeo.com/551444345"
+         url = Links.VimeoMovie
          config = [
            VimeoConfig.PlayerOptions [
              VimeoOption.Byline false
