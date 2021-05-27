@@ -20,6 +20,7 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
       div [
         Class "transition-background"
         Key.Src(__FILE__, __LINE__)
+        HTMLAttr.Custom("data-nosnippet","")
         Style (
           let opacity = min 1.0 scrollAmount.current
           [Opacity opacity]
@@ -28,6 +29,7 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
       inViewPlain [
         !^Class("transition-scroll")
         !^Key.Src(__FILE__,__LINE__)
+        !^HTMLAttr.Custom("data-nosnippet","")
         Thresholds [| for i = 0 to 10 do yield 0.1 * float i |]
         OnChange (fun inView entry ->
           props.dispatch (SetFlag (TransitionCompleted, not inView))
@@ -35,6 +37,7 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
       inViewPlain [
         !^Class("transition")
         !^Key.Src(__FILE__,__LINE__)
+        !^HTMLAttr.Custom("data-nosnippet","")
         OnChange (fun inView _ ->
           transitionInProgress.update inView
           props.dispatch (SetFlag (PlayButtonIsShown, not inView)))] <|

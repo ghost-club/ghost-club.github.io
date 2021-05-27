@@ -130,6 +130,6 @@ let viewMenu (prop: {| lang: Language; flags: Set<Flag>; dispatch: Msg -> unit |
       && prop.flags |> Set.contains TransitionCompleted then baseClass, true
     else if prop.flags |> Set.contains PlayButtonIsShown then baseClass + " disable", false
     else baseClass + " hidden", false
-  div [Class className; Key.Src(__FILE__,__LINE__)] [
+  div [Class className; HTMLAttr.Custom("data-nosnippet",""); Key.Src(__FILE__,__LINE__)] [
     viewBody {| dispatch = prop.dispatch; lang = prop.lang; enabled = enabled |}
   ]

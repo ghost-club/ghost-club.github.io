@@ -60,7 +60,11 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
           props.dispatch (TriggerAfter (1000, Completed FirstViewShown))),
       [|props.completed|])
 
-    div [Id "header"; Class (if props.state = ModelState.Loaded then "header header-loaded" else "header"); Key.Src(__FILE__,__LINE__)] [
+    div [
+      Id "header"
+      Class (if props.state = ModelState.Loaded then "header header-loaded" else "header")
+      HTMLAttr.Custom("data-nosnippet","")
+      Key.Src(__FILE__,__LINE__)] [
       video [
         Class "background-video"
         Key "background-video";
