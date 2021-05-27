@@ -68,6 +68,8 @@ div#root {
 .limited-width {
   max-width: 1440px;
   margin: 0 auto;
+  padding-left: calc(env(safe-area-inset-left));
+  padding-right: calc(env(safe-area-inset-right));
 }
 
 // utils
@@ -174,12 +176,6 @@ a.anchor {
   overflow: visible;
 }
 
-@supports (-webkit-touch-callout: none) {
-  .header-container {
-    height: calc(100vh - 66px - env(safe-area-inset-bottom));
-  }
-}
-
 .header-top {
   position: relative;
   height: 17%;
@@ -205,15 +201,6 @@ a.anchor {
   padding: 3.5vmin 3.5vw;
 }
 
-@supports (-webkit-touch-callout: none) {
-  .header-bottom {
-    position: fixed;
-    left: 0px;
-    bottom: calc(env(safe-area-inset-bottom));
-    width: 100vw;
-  }
-}
-
 .header-bottom-playbutton-container {
   width: 100%;
   height: 100%;
@@ -221,6 +208,7 @@ a.anchor {
 }
 
 .header-bottom-playbutton {
+  width: 10vh;
   height: 10vh;
   bottom: 0;
   position: absolute;

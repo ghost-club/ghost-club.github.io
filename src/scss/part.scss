@@ -5,13 +5,7 @@
 .shadowed {
   border: 2px solid white;
   background-color: black;
-  width: -moz-calc(100% - 10px);
-  width: -webkit-calc(100% - 10px);
-  width: -o-calc(100% - 10px);
   width: calc(100% - 10px);
-  height: -moz-calc(100% - 10px);
-  height: -webkit-calc(100% - 10px);
-  height: -o-calc(100% - 10px);
   height: calc(100% - 10px);
   margin: 0px 10px 10px 0px;
   padding: 0px;

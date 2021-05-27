@@ -81,10 +81,8 @@ let private viewBody =
               menuItem "gallery" "Gallery"
               menuItem "contact" "Contact"
             ]
-            div [Class "menu-item menu-buttons"; Key.Src(__FILE__,__LINE__)] [
-              a [Class "menu-item twitter-button-container"; Target "_blank"; Rel "noopener"; Href Links.Twitter; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
-              viewLanguageSwitch props
-            ]
+            a [Class "menu-item twitter-button-container"; Target "_blank"; Rel "noopener"; Href Links.Twitter; Key.Src(__FILE__,__LINE__); DangerouslySetInnerHTML { __html = Assets.InlineSVG.TwitterButton2 }] []
+            viewLanguageSwitch props
           ]
         ]
       ]
