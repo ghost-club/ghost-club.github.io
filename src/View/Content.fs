@@ -47,10 +47,11 @@ let private viewAbout =
       | _ -> !@Texts.About
 
     Section.section [CustomClass "has-text-left"; Props [Style [PaddingTop "0"]; Key.Src(__FILE__,__LINE__)]] [
+      h1 [Class "hidden"] [str "About"]
       div [Class "is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
         Columns.columns [Columns.IsVCentered; Props [Key.Src(__FILE__,__LINE__)]] [
           Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
-            fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
+            fadeIn {| children = Heading.h1 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
             fadeIn {| children = p [Class "text"; Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
           ]
           Column.column [Props [Style [AlignSelf AlignSelfOptions.FlexEnd]; Key.Src(__FILE__,__LINE__)]] [
@@ -84,7 +85,7 @@ let private viewAbout =
           |}
         div [Style [PaddingTop "50%"]; Key.Src(__FILE__,__LINE__)] []
 
-        fadeIn {| children = Heading.h2 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
+        fadeIn {| children = Heading.h1 [CustomClass "content-about-title"] [str "About"]; key = __FILE__+":"+__LINE__ |}
         fadeIn {| children = p [Class "text"; Key.Src(__FILE__,__LINE__)] [str aboutText]; key = __FILE__+":"+__LINE__ |}
 
         fadeIn
@@ -132,9 +133,10 @@ let inline private viewObake customClass =
 let private viewHowToJoin =
   FunctionComponent.Of ((fun (_props: {| lang: Language |}) ->
     Section.section [CustomClass "has-text-left"; Props [Key.Src(__FILE__,__LINE__)]] [
+      h1 [Class "hidden"] [str "How to join"]
       Columns.columns [Columns.IsVCentered; Props [Key.Src(__FILE__,__LINE__)]] [
         Column.column [Props [Key.Src(__FILE__,__LINE__)]] [
-          Heading.h2 [Props [Style [Color "white"]]] [str "How to join"]
+          Heading.h1 [] [str "How to join"]
           Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
             p [Class "text"] [str !@Texts.HowToJoin]
           ]
@@ -158,36 +160,93 @@ let private viewHowToJoin =
     ]
   ), memoizeWith=memoEqualsButFunctions)
 
+open ReactIntersectionObserver
+
+let nop () = ()
+type EmptyProps = interface end
+
+let viewDJMix =
+  FunctionComponent.Of((fun (_: EmptyProps) ->
+    let shown = Hooks.useState false
+    let iframeRef = Hooks.useRef None
+
+    Hooks.useEffect((fun () ->
+      match iframeRef.current with
+      | None -> ()
+      | Some it ->
+        let it = box it :?> Browser.Types.HTMLIFrameElement
+        it.contentWindow?console?log <- nop
+        it.contentWindow?console?info <- nop
+        it.contentWindow?console?warn <- nop
+        it.contentWindow?console?error <- nop
+        ()
+    ), [| iframeRef; shown |])
+
+    Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
+      Heading.h1 [] [str "DJ Mix"]
+      div [
+        Key.Src(__FILE__,__LINE__)
+        Style [
+          Position PositionOptions.Absolute
+          Width "100%"
+          Height "180px"
+          PointerEvents "none"
+        ]
+      ] []
+      inViewPlain [
+        !^Key.Src(__FILE__,__LINE__)
+        RootMargin "100px"
+        TriggerOnce true
+        OnChange (fun inView _ -> shown.update inView)
+      ] <|
+        if shown.current then
+          iframe [
+            Title "GHOSTCLUB Mixcloud"
+            Src Links.MixCloudWidget
+            Style [Width "100%"; Height "180px"]
+            FrameBorder 0
+            RefValue iframeRef
+            HTMLAttr.Custom("loading", "lazy")] []
+        else
+          div [
+            Key "mixcloud-iframe-placeholder"
+            Style [
+              Width "100%"
+              Height "180px"
+            ]
+          ] []
+    ]
+  ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> "dj-mix"))
+
 let viewCredits =
   Section.section [CustomClass "credits"; Props [Id "credits";  Key "credits"]] [
-    h6 [Class "credits-head has-text-centered"] [str "Staff & Credits"]
+    h1 [Class "credits-head has-text-centered"] [str "Staff & Credits"]
     div [Class "credits-body is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
       for i, group in Credits.Entries |> List.indexed do
-        div [Class "credits-section"; Key (sprintf "credits-group-%d" i)] [
+        ul [Class "credits-section"; Key (sprintf "credits-group-%d" i)] [
           for entry in group do
             match Credits.pp entry with
-            | Some text -> p [Class "credits-item"] [str text]
-            | None -> p [Class "credits-item-dummy"] [str "end"]
+            | Some text -> li [Class "credits-item"] [str text]
+            | None -> li [Class "credits-item-dummy"] [str "end"]
         ]
     ]
     div [Class "credits-body is-hidden-tablet"; Key.Src(__FILE__,__LINE__)] [
-      div [Class "credits-section"; Key.Src(__FILE__,__LINE__)] [
+      ul [Class "credits-section"; Key.Src(__FILE__,__LINE__)] [
         for group in Credits.Entries do
           for entry in group do
             match Credits.pp entry with
-            | Some text -> p [Class "credits-item"] [str text]
+            | Some text -> li [Class "credits-item"] [str text]
             | None -> null
       ]
     ]
   ]
-
-open ReactIntersectionObserver
 
 let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> unit |}) =
   inViewPlain [
     !^Id("content")
     !^Class("content has-text-centered")
     !^Key("content")
+    As "main"
     OnChange (fun inView _ ->
       prop.dispatch (SetFlag (MenuIsVisible, inView)))
   ] <| ofList [
@@ -205,45 +264,29 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
       viewHowToJoin {| lang = prop.lang |}
 
       a [Class "anchor"; Id "dj-mix"; Href "dj-mix"; Key.Src(__FILE__,__LINE__)] []
-      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-          Heading.h2 [Props [Style [Color "white"]]] [str "DJ Mix"]
-        ]
-        iframe [
-          Title "GHOSTCLUB Mixcloud"
-          Src Links.MixCloudWidget
-          Style [Width "100%"; Height "180px"]
-          FrameBorder 0
-          HTMLAttr.Custom("loading", "lazy")] []
-      ]
+      viewDJMix !!{||}
 
       a [Class "anchor"; Id "gallery"; Href "gallery"; Key.Src(__FILE__,__LINE__)] []
       Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-        Block.block [Props [Key.Src(__FILE__,__LINE__)]] [
-          Heading.h2 [Props [Style [Color "white"]]] [str "Gallery"]
-        ]
+        Heading.h1 [] [str "Gallery"]
         match prop.api with
         //| Api.IResult.Ok all -> PhotoGallery.view {| lang = prop.lang; images = Some all.images; dispatch = prop.dispatch |}
         | _ -> PhotoGallery.view {| lang = prop.lang; images = None; dispatch = prop.dispatch |}
       ]
 
       a [Class "anchor"; Id "contact"; Href "contact"; Key.Src(__FILE__,__LINE__)] []
-      Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
-        div [Key.Src(__FILE__,__LINE__); Class "content-contact"] [
-          Block.block [CustomClass "content-contact-head"; Props [Key.Src(__FILE__,__LINE__)]] [
-            Heading.h2 [Props [Style [Color "white"]]] [str "Contact"]
-          ]
-          Block.block [CustomClass "content-contact-body"; Props [Key.Src(__FILE__,__LINE__)]] [
-            div [Style [Width "240px"; Height "70px"; Display DisplayOptions.InlineBlock]] [
-              button [
-                Class "shadowed"
-                Key.Src(__FILE__,__LINE__)
-                OnTouchStart ignore
-                OnClick (fun _e ->
-                  Browser.Dom.window.``open``(Links.Contact, "_blank", "noopener") |> ignore)] [
-                div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
-                  str "Contact"
-                ]
+      Section.section [CustomClass "content-contact"; Props [Key.Src(__FILE__,__LINE__)]] [
+        Heading.h1 [CustomClass "content-contact-head"] [str "Contact"]
+        Block.block [CustomClass "content-contact-body"; Props [Key.Src(__FILE__,__LINE__)]] [
+          div [Style [Width "240px"; Height "70px"; Display DisplayOptions.InlineBlock]] [
+            button [
+              Class "shadowed"
+              Key.Src(__FILE__,__LINE__)
+              OnTouchStart ignore
+              OnClick (fun _e ->
+                Browser.Dom.window.``open``(Links.Contact, "_blank", "noopener") |> ignore)] [
+              div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__); OnTouchStart ignore] [
+                str "Contact"
               ]
             ]
           ]

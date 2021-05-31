@@ -36,6 +36,7 @@ type [<AllowNullLiteral>] private InViewProps =
 type Prop =
   | [<CompiledName("root")>] RootElement of Browser.Types.Element
   | [<CompiledName("root")>] RootDocument of Browser.Types.Document
+  | RootMargin of string
   | Threshold of float
   | [<CompiledName("threshold")>] Thresholds of float[]
   /// Only trigger the inView callback once
