@@ -75,9 +75,7 @@ a.anchor {
 }
 
 .hidden {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
+  display: none;
 }
 
 .fade-in {
@@ -177,6 +175,7 @@ a.anchor {
 }
 
 .header-bottom-playbutton.hidden {
+  display: inherit;
   position: absolute;
   top: inherit;
   left: inherit;
