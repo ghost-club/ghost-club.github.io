@@ -20,6 +20,7 @@
 }
 
 .menu-container.hidden {
+  display: inherit;
   opacity: 0;
   pointer-events: none;
 }
