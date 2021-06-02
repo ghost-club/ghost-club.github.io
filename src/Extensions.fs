@@ -17,6 +17,11 @@ open System.Runtime.InteropServices
 open Fable.Core
 open Fable.Core.JsInterop
 
+type [<Erase>] Dummy<'t>(x: 't) = class member val Value = x end
+
+let inline (^??) x y =
+  if isNullOrUndefined x then y else x
+
 module Fulma =
   open Fable.React
   open Fulma
@@ -99,6 +104,27 @@ module Fable =
     open Fable.React.Props
 
     module Props =
+
+      type [<Erase>] Option =
+        static member inline Width (x: obj, [<Optional>]__: Dummy<obj>) = Dummy(x)
+        static member inline Width (x: obj, [<Optional>]__: IHTMLProp) = HTMLAttr.Width x :> IHTMLProp
+        static member inline Width (x: obj, [<Optional>]__: SVGAttr) = SVGAttr.Width x
+        static member inline Width (x: obj, [<Optional>]__: CSSProp) = CSSProp.Width x
+        static member inline Height (x: obj, [<Optional>]__: Dummy<obj>) = Dummy(x)
+        static member inline Height (x: obj, [<Optional>]__: IHTMLProp) = HTMLAttr.Height x :> IHTMLProp
+        static member inline Height (x: obj, [<Optional>]__: SVGAttr) = SVGAttr.Height x
+        static member inline Height (x: obj, [<Optional>]__: CSSProp) = CSSProp.Height x
+
+      let inline Width (x: obj) : ^Option =
+        let inline call_2 (x: ^X, _: ^Y, arg) = ((^X or ^Y): (static member Width: obj * ^X -> ^X) arg,x)
+        let inline call (x: 'X, y: 'Y, arg) = call_2 (x, y, arg)
+        call (Unchecked.defaultof< ^Option >, Unchecked.defaultof<Option>, x)
+
+      let inline Height (x: obj) : ^Option =
+        let inline call_2 (x: ^X, _: ^Y, arg) = ((^X or ^Y): (static member Height: obj * ^X -> ^X) arg,x)
+        let inline call (x: 'X, y: 'Y, arg) = call_2 (x, y, arg)
+        call (Unchecked.defaultof< ^Option >, Unchecked.defaultof<Option>, x)
+
       module Key =
         let inline Src (__source_file__: string, __line__: string) : Prop = Key (__source_file__ + ":" + __line__)
 

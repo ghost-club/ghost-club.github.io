@@ -13,15 +13,14 @@ open FadeIn
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
-let inline private pictureWebpOrPNG key webp webpAlt =
+let inline private pictureWebpOrPNG key (webp: Img) (webpAlt: Img) =
   let style = [Width "100%"; ObjectFit "contain"; UserSelect UserSelectOptions.None]
   fadeIn
     {|
       children =
         picture [Key key] [
-          source [Style style; SrcSet webp; Type "image/webp"]
-          source [Style style; SrcSet webpAlt; Type "image/png"]
-          img [Style style; Src webpAlt; Alt ""; HTMLAttr.Custom("loading", "lazy")]
+          source [Style style; SrcSet webp.srcSet; Width webp.width; Height webp.height; Type "image/webp"]
+          img [Style style; Src webpAlt.src; SrcSet webpAlt.srcSet; Width webpAlt.width; Height webpAlt.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
         ]
       key = key+"fade-container"
     |}
@@ -59,9 +58,8 @@ let private viewAbout =
               {|
                 children =
                   picture [Key.Src(__FILE__,__LINE__)] [
-                    source [Class "content-about-picture"; SrcSet Assets.WebP.About; Type "image/webp"]
-                    source [Class "content-about-picture"; SrcSet Assets.WebPAlt.About; Type "image/png"]
-                    img [Class "content-about-picture"; Src Assets.WebPAlt.About; Alt ""; HTMLAttr.Custom("loading", "lazy")]
+                    source [Class "content-about-picture"; SrcSet Assets.WebP.About.srcSet; Width Assets.WebP.About.width; Height Assets.WebP.About.height; Type "image/webp"]
+                    img [Class "content-about-picture"; Src Assets.WebPAlt.About.src; SrcSet Assets.WebPAlt.About.srcSet; Width Assets.WebPAlt.About.width; Height Assets.WebPAlt.About.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
                   ]
                 key = __FILE__+":"+__LINE__
               |}
@@ -77,9 +75,8 @@ let private viewAbout =
           {|
             children =
               picture [Key.Src(__FILE__,__LINE__); Style [Position PositionOptions.Absolute; Width "100%"]] [
-                source [Class "content-about-picture-mobile"; SrcSet Assets.WebP.About; Type "image/webp"]
-                source [Class "content-about-picture-mobile"; SrcSet Assets.WebPAlt.About; Type "image/png"]
-                img [Class "content-about-picture-mobile"; Src Assets.WebPAlt.About; Alt ""; HTMLAttr.Custom("loading", "lazy")]
+                source [Class "content-about-picture-mobile"; SrcSet Assets.WebP.About.src; Type "image/webp"]
+                img [Class "content-about-picture-mobile"; Src Assets.WebPAlt.About.src; SrcSet Assets.WebPAlt.About.srcSet; Alt ""; HTMLAttr.Custom("loading", "lazy")]
               ]
             key = __FILE__+":"+__LINE__
           |}
@@ -99,9 +96,8 @@ let private viewAbout =
                 Margin "20px 0px"]] [
                 let style = [Width "100%"; ObjectFit "contain"]
                 picture [Key.Src(__FILE__,__LINE__)] [
-                  source [Style style; SrcSet Assets.WebP.VideoThumbnail; Type "image/webp"]
-                  source [Style style; SrcSet Assets.WebPAlt.VideoThumbnail; Type "image/jpeg"]
-                  img [Style style; Src Assets.WebPAlt.VideoThumbnail; Alt ""; HTMLAttr.Custom("loading", "lazy")]
+                  source [Style style; SrcSet Assets.WebP.VideoThumbnail.srcSet; Width Assets.WebP.VideoThumbnail.width; Height Assets.WebP.VideoThumbnail.height; Type "image/webp"]
+                  img [Style style; Src Assets.WebPAlt.VideoThumbnail.src; SrcSet Assets.WebPAlt.VideoThumbnail.srcSet; Width Assets.WebPAlt.VideoThumbnail.width; Height Assets.WebPAlt.VideoThumbnail.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
                 ]
                 div [
                   Class "content-mobile-playbutton"
@@ -241,7 +237,7 @@ let viewCredits =
     ]
   ]
 
-let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> unit |}) =
+let view (prop: {| lang: Language; api: Api.IResult<Api.All>; canUseWebP: bool; dispatch: Msg -> unit |}) =
   inViewPlain [
     !^Id("content")
     !^Class("content has-text-centered")
@@ -251,9 +247,8 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
       prop.dispatch (SetFlag (MenuIsVisible, inView)))
   ] <| ofList [
     picture [Key.Src(__FILE__,__LINE__)] [
-      source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2; Type "image/webp"]
-      source [Class "content-building"; SrcSet Assets.WebPAlt.GCBuilding2; Type "image/jpg"]
-      img [Class "content-building"; Src Assets.WebPAlt.GCBuilding2; Alt ""; HTMLAttr.Custom("loading", "lazy")]
+      source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2.srcSet; Width Assets.WebP.GCBuilding2.width; Height Assets.WebP.GCBuilding2.height; Type "image/webp"]
+      img [Class "content-building"; Src Assets.WebPAlt.GCBuilding2.src; SrcSet Assets.WebPAlt.GCBuilding2.srcSet; Width Assets.WebPAlt.GCBuilding2.width; Height Assets.WebPAlt.GCBuilding2.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
     ]
 
     div [Class "content-foreground limited-width"; Key.Src(__FILE__,__LINE__)] [
@@ -270,8 +265,8 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; dispatch: Msg -> u
       Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
         Heading.h1 [] [str "Gallery"]
         match prop.api with
-        //| Api.IResult.Ok all -> PhotoGallery.view {| lang = prop.lang; images = Some all.images; dispatch = prop.dispatch |}
-        | _ -> PhotoGallery.view {| lang = prop.lang; images = None; dispatch = prop.dispatch |}
+        | Api.IResult.Ok all -> PhotoGallery.view {| images = Some all.images; canUseWebP = prop.canUseWebP; dispatch = prop.dispatch |}
+        | _ -> PhotoGallery.view {| images = None; canUseWebP = prop.canUseWebP; dispatch = prop.dispatch |}
       ]
 
       a [Class "anchor"; Id "contact"; Href "contact"; Key.Src(__FILE__,__LINE__)] []

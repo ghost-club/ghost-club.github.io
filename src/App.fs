@@ -106,6 +106,19 @@ let initApiTask () =
     )
   ]
 
+let checkWebSub (dispatch: Msg -> unit) =
+  let img = Image.Create()
+  img.src <- "data:image/webp;base64,UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA=="
+  img.onload <-
+    (fun _ ->
+      let result = img.width > 0.0 && img.height > 0.0
+      dispatch (SetFlag (CanUseWebP, result))
+      dispatch (Completed WebPCheckDone))
+  img.onerror <-
+    (fun _ ->
+      dispatch (SetFlag (CanUseWebP, false))
+      dispatch (Completed WebPCheckDone))
+
 
 let initCmd =
   Cmd.batch [
@@ -113,6 +126,7 @@ let initCmd =
     Cmd.OfPromise.result (initSmoothScrollPolyfillTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initI18nTask |> Promise.catch InitError)
     Cmd.OfPromise.result (initApiTask () |> Promise.catch InitError)
+    Cmd.ofSub checkWebSub
   ]
 
 let delayCmd ms msg : Cmd<Msg> =
@@ -161,6 +175,7 @@ let internal update msg model =
         if   model.lang = Unspecified
           || model.api |> Api.IResult.isLoading
           || model.completed |> Set.contains LogoShown |> not
+          || model.completed |> Set.contains WebPCheckDone |> not
         then model, Cmd.none
         else { model with state = ModelState.Loaded }, Cmd.ofMsg (TriggerAfter (1000, CheckAnchorAndJump))
       | _ -> model, Cmd.none
@@ -196,7 +211,7 @@ let private viewMain model dispatch =
   ofList [
     Transition.viewTransition {| dispatch = dispatch |}
     Menu.viewMenu {| lang = model.lang; flags = model.flags; dispatch = dispatch |}
-    Content.view {| lang = model.lang; api = model.api; dispatch = dispatch |}
+    Content.view {| lang = model.lang; api = model.api; canUseWebP = model.flags |> Set.contains CanUseWebP; dispatch = dispatch |}
     Footer.view
   ]
 

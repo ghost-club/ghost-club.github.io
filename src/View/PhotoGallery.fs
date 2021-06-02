@@ -33,7 +33,7 @@ let private nextArrow =
   ), withKey=(fun _ -> __SOURCE_FILE__ + ":" + __LINE__))
 
 let view =
-  FunctionComponent.Of((fun (prop: {| images: Api.IMediaInfo[] option; lang: Language; dispatch: (Msg -> unit) |}) ->
+  FunctionComponent.Of((fun (prop: {| images: Api.IMediaInfo[] option; canUseWebP: bool; dispatch: (Msg -> unit) |}) ->
     let state = Hooks.useState {| isOpen = false; index = 0 |}
     let sliderRef = Hooks.useRef null
     let lightboxRef = Hooks.useState null
@@ -51,7 +51,7 @@ let view =
           it.autoplay <- Some (not state.current.isOpen)
           it.prevArrow <- Some (prevArrow !!{||})
           it.nextArrow <- Some (nextArrow !!{||})
-          it.variableWidth <- Some true
+          // it.variableWidth <- Some true
           it.ref <- Some (U2.Case2 sliderRef)
           ()) [
         match prop.images with
@@ -68,13 +68,20 @@ let view =
               ]
         | Some imgs ->
           for i, mi in imgs |> Seq.indexed do
+            let src, srcSet =
+              match Api.IMediaInfo.getSrcSetWebP mi, not (isNullOrUndefined mi.origUrlWebP) with
+              | Some srcSet, true ->
+                mi.origUrlWebP, srcSet
+              | _ ->
+                mi.origUrl, Api.IMediaInfo.getSrcSet mi
             yield
               img [
-                Src (Api.IMediaInfo.getOrigUrl mi)
+                Src src
+                SrcSet srcSet
                 HTMLAttr.Custom ("loading", "lazy")
-                HTMLAttr.Width  mi.width
-                HTMLAttr.Height mi.height
                 Alt ""
+                Width mi.width
+                Height mi.height
                 OnDoubleClick (fun _e ->
                   sliderRef.current.slickGoTo(i)
                   state.update {| isOpen = true; index = i |})

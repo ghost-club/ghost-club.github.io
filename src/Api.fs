@@ -61,19 +61,22 @@ type IMediaInfo = {|
   height: int
   thumbnailUrl: string
   origUrl: string
+  srcSet: string
+  thumbnailUrlWebP: string
+  origUrlWebP: string
+  srcSetWebP: string
 |}
+
 
 module IMediaInfo =
   let inline getUrlWithSize (width: int) (height: int) (x: IMediaInfo) =
     sprintf "%s=w%d-h%d" x.baseUrl width height
-  let inline getThumbUrl (x: IMediaInfo) =
-    if isNullOrUndefined x.thumbnailUrl then x.baseUrl
-    else x.thumbnailUrl
-  let inline getOrigUrl (x: IMediaInfo) =
-    if isNullOrUndefined x.origUrl then
-      sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
-    else
-      x.origUrl
+  let inline getThumbUrl (x: IMediaInfo) = x.thumbnailUrl ^?? x.baseUrl
+  let inline getOrigUrl (x: IMediaInfo) = x.origUrl ^?? sprintf "%s=w%d-h%d" x.baseUrl x.width x.height
+  let inline getSrcSet (x: IMediaInfo) = x.srcSet ^?? x.origUrl
+  let inline getSrcSetWebP (x: IMediaInfo) =
+    if isNullOrUndefined x.srcSetWebP then None
+    else Some x.srcSetWebP
 
 // let getImages () : JS.Promise<IResult<IMediaInfo[]>> = getImpl "images"
 

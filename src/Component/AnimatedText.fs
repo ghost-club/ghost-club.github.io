@@ -29,8 +29,11 @@ let slot : SlotProps -> ReactElement =
         let rest =
           if totalLen = targetLen then props.period
           else
-            String.init (max 0 (totalLen - targetLen)) (fun _ ->
-              string (alphabets.[round (float alphabets.Length * Fable.Core.JS.Math.random())])
+            String.init (max 0 (totalLen - targetLen)) (fun i ->
+              match props.targetText.[i] with
+              | ('\n' | '\r') as c -> string c
+              | _ ->
+                string (alphabets.[round (float alphabets.Length * Fable.Core.JS.Math.random())])
             )
         span [] [ str (target + rest) ]
   ), memoizeWith=memoEqualsButFunctions)

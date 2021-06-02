@@ -69,11 +69,11 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
         Class "background-video"
         Key "background-video";
         RefValue videoRef;
-         Muted true; AutoPlay true; HTMLAttr.Custom ("playsInline", true); Loop true; Poster Assets.Movie.JPG
+        Muted true; AutoPlay true; HTMLAttr.Custom ("playsInline", true); Loop true; Poster Assets.Movie.JPG.src
         OnLoadedData (fun _ -> props.dispatch (Completed BackgroundVideoLoaded))] [
         source [Src Assets.Movie.WebM; Type "video/webm"]
         source [Src Assets.Movie.MP4;  Type "video/mp4"]
-        img    [Src Assets.Movie.JPG; HTMLAttr.Custom("decoding", "async"); Title "HTML5 not supported"; HTMLAttr.Custom("loading", "lazy")]
+        img    [Src Assets.Movie.JPG.src; Width Assets.Movie.JPG.width; Height Assets.Movie.JPG.height; HTMLAttr.Custom("decoding", "async"); Title "HTML5 not supported"; HTMLAttr.Custom("loading", "lazy")]
       ]
       div [Class "header-container"] [
         cssTransition [
@@ -101,8 +101,10 @@ let view : {| state: ModelState; completed: Set<Completed>; flags: Set<Flag>; di
               In logoLoaded.current] <|
             img [
               Class "header-logo fade-init-hidden"
-              Src Assets.SVG.Logo
+              Src Assets.SVG.Logo.src
               Alt "ghostclub logo"
+              HTMLAttr.Width Assets.SVG.Logo.width
+              HTMLAttr.Height Assets.SVG.Logo.height
               OnLoad (fun _ ->
                 logoLoaded.update true
                 props.dispatch (TriggerAfter(1000, Completed LogoShown)))

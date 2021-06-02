@@ -1,48 +1,63 @@
 module Properties
 
 open Fable.Core
+open Fable.Core.JsInterop
 
-let [<Literal>] DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
+let DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
 
-let [<Literal>] DataUrl = "https://xn--pckjp4dudxftf.xn--tckwe/data/index.json"
+let DataUrl = "https://xn--pckjp4dudxftf.xn--tckwe/data/index.json"
 
-let [<Literal>] GoogleAppUrl = "https://script.google.com/macros/s/AKfycbxkGeSRx3QMBSyCLIZCMlAjy_iqxz7e_1B3eyrhmDifjUyFUR5U53gRF_9oF78sLlgI/exec"
+let GoogleAppUrl = "https://script.google.com/macros/s/AKfycbxkGeSRx3QMBSyCLIZCMlAjy_iqxz7e_1B3eyrhmDifjUyFUR5U53gRF_9oF78sLlgI/exec"
+
+type Img = {|
+  src: string
+  srcSet: string
+  width: int
+  height: int
+|}
+
+let inline private img src width height : Img = {| src = src; srcSet = src; width = width; height = height |}
+let inline private imgSet src ext width height : Img =
+  let orig = src + ext
+  let srcSet =
+    ["-small", 480; "-medium", 960; "", width]
+    |> List.map (fun (suffix, width) -> src+suffix+ext + sprintf "  %dw" width)
+    |> String.concat ","
+  {| src = orig; srcSet = srcSet; width = width; height = height |}
 
 module Assets =
   module SVG =
-    let [<Literal>] Logo = "assets/image/logo.svg"
-    let [<Literal>] LogoSmall = "assets/image/logo_small.svg"
-    let [<Literal>] Obake = "assets/image/obake.svg"
-    let [<Literal>] WatchMovie = "assets/image/watch_movie.svg"
+    let Logo = img "assets/image/logo.svg" 262 589
+    let LogoSmall = img "assets/image/logo_small.svg" 179 46
 
   module WebPAlt =
-    let [<Literal>] GCPhotoMobile1 = "assets/image/gc_sp_1.png"
-    let [<Literal>] GCPhotoMobile2 = "assets/image/gc_sp_2.png"
-    let [<Literal>] GCPhotoMobile3 = "assets/image/gc_sp_3.png"
-    let [<Literal>] GCPhotoPC1 = "assets/image/gc_pc_1.png"
-    let [<Literal>] GCPhotoPC2 = "assets/image/gc_pc_2.png"
-    let [<Literal>] GCPhotoPC3 = "assets/image/gc_pc_3.png"
-    let [<Literal>] GCBuilding1 = "assets/image/gc_mansion_1.png"
-    let [<Literal>] GCBuilding2 = "assets/image/gc_mansion_2.jpg"
-    let [<Literal>] About = "assets/image/about.jpg"
-    let [<Literal>] VideoThumbnail = "assets/image/video_thumb.jpg"
+    let GCPhotoMobile1 = imgSet "assets/image/gc_sp_1" ".png" 750 1196
+    let GCPhotoMobile2 = imgSet "assets/image/gc_sp_2" ".png" 750 445
+    let GCPhotoMobile3 = imgSet "assets/image/gc_sp_3" ".png" 750 749
+    let GCPhotoPC1 = imgSet "assets/image/gc_pc_1" ".png" 1078 740
+    let GCPhotoPC2 = imgSet "assets/image/gc_pc_2" ".png" 1078 619
+    let GCPhotoPC3 = imgSet "assets/image/gc_pc_3" ".png" 1078 693
+    let GCBuilding1 = imgSet "assets/image/gc_mansion_1" ".png" 1272 1069
+    let GCBuilding2 = imgSet "assets/image/gc_mansion_2" ".jpg" 1272 650
+    let About = imgSet "assets/image/about" ".jpg" 1920 1080
+    let VideoThumbnail = imgSet "assets/image/video_thumb" ".jpg" 1280 714
 
   module WebP =
-    let [<Literal>] GCPhotoMobile1 = "assets/image/gc_sp_1.webp"
-    let [<Literal>] GCPhotoMobile2 = "assets/image/gc_sp_2.webp"
-    let [<Literal>] GCPhotoMobile3 = "assets/image/gc_sp_3.webp"
-    let [<Literal>] GCPhotoPC1 = "assets/image/gc_pc_1.webp"
-    let [<Literal>] GCPhotoPC2 = "assets/image/gc_pc_2.webp"
-    let [<Literal>] GCPhotoPC3 = "assets/image/gc_pc_3.webp"
-    let [<Literal>] GCBuilding1 = "assets/image/gc_mansion_1.webp"
-    let [<Literal>] GCBuilding2 = "assets/image/gc_mansion_2.webp"
-    let [<Literal>] About = "assets/image/about.webp"
-    let [<Literal>] VideoThumbnail = "assets/image/video_thumb.webp"
+    let GCPhotoMobile1 = imgSet "assets/image/gc_sp_1" ".webp" 750 1196
+    let GCPhotoMobile2 = imgSet "assets/image/gc_sp_2" ".webp" 750 445
+    let GCPhotoMobile3 = imgSet "assets/image/gc_sp_3" ".webp" 750 749
+    let GCPhotoPC1 = imgSet "assets/image/gc_pc_1" ".webp" 1078 740
+    let GCPhotoPC2 = imgSet "assets/image/gc_pc_2" ".webp" 1078 619
+    let GCPhotoPC3 = imgSet "assets/image/gc_pc_3" ".webp" 1078 693
+    let GCBuilding1 = imgSet "assets/image/gc_mansion_1" ".webp" 1969 1654
+    let GCBuilding2 = imgSet "assets/image/gc_mansion_2" ".webp" 1272 650
+    let About = imgSet "assets/image/about" ".webp" 1920 1080
+    let VideoThumbnail = imgSet "assets/image/video_thumb" ".webp" 1280 714
 
   module Movie =
-    let [<Literal>] MP4 = "assets/video/website_background_movie_1080.mp4"
-    let [<Literal>] WebM = "assets/video/website_background_movie_1080.webm"
-    let [<Literal>] JPG = "assets/video/website_background_movie_1080.jpg"
+    let MP4 = "assets/video/website_background_movie_1080.mp4"
+    let WebM = "assets/video/website_background_movie_1080.webm"
+    let JPG = imgSet "assets/video/website_background_movie" ".jpg" 1920 1080
 
   module InlineSVG =
     let LeftButton =
@@ -143,11 +158,11 @@ module Credits =
     | None -> None
 
 module Links =
-  let [<Literal>] VimeoMovie = "https://vimeo.com/554721926"
-  let [<Literal>] Twitter = "https://twitter.com/6h057clu8"
-  let [<Literal>] MixCloudWidget = "https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F"
-  let [<Literal>] Discord = "https://discord.gg/9KpCdUW"
-  let [<Literal>] Contact = "https://docs.google.com/forms/d/e/1FAIpQLSdKU2PixQJ1TMyWtZuukNiB39vVnstvA_vKV5PxULDKGMO4wg/viewform"
+  let VimeoMovie = "https://vimeo.com/554721926"
+  let Twitter = "https://twitter.com/6h057clu8"
+  let MixCloudWidget = "https://www.mixcloud.com/widget/iframe/?hide_cover=1&feed=%2F0bake%2Fplaylists%2Fghostclub%2F"
+  let Discord = "https://discord.gg/9KpCdUW"
+  let Contact = "https://docs.google.com/forms/d/e/1FAIpQLSdKU2PixQJ1TMyWtZuukNiB39vVnstvA_vKV5PxULDKGMO4wg/viewform"
 
 [<StringEnum; RequireQualifiedAccess>]
 type Texts =

@@ -70,7 +70,7 @@ let private viewBody =
       else str
 
     div [Class "menu limited-width"; Key.Src(__FILE__,__LINE__)] [
-      img [Class "menu-logo"; Key.Src(__FILE__,__LINE__); Src Assets.SVG.LogoSmall; Alt ""]
+      img [Class "menu-logo"; Key.Src(__FILE__,__LINE__); Src Assets.SVG.LogoSmall.src; Width Assets.SVG.LogoSmall.width; Height Assets.SVG.LogoSmall.height; Alt ""]
       div [Class "menu-desktop is-hidden-touch"; Key.Src(__FILE__,__LINE__)] [
         div [Class "shadowed"; Key.Src(__FILE__,__LINE__)] [
           div [Class "shadowed-inner"; Key.Src(__FILE__,__LINE__)] [

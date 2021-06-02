@@ -14,12 +14,14 @@ type Completed =
   | BackgroundVideoLoaded
   | LogoShown
   | FirstViewShown
+  | WebPCheckDone
 
 [<StringEnum>]
 type Flag =
   | MenuIsVisible
   | PlayButtonIsShown
   | TransitionCompleted
+  | CanUseWebP
 
 type Model = {
   state: ModelState
