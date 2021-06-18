@@ -21,6 +21,7 @@ let inline private imgSet src ext width height : Img =
   let orig = src + ext
   let srcSet =
     ["-small", 480; "-medium", 960; "", width]
+    |> List.filter (fun (_, w) -> w <= width)
     |> List.map (fun (suffix, width) -> src+suffix+ext + sprintf "  %dw" width)
     |> String.concat ","
   {| src = orig; srcSet = srcSet; width = width; height = height |}

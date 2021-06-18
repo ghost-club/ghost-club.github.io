@@ -13,17 +13,24 @@ open FadeIn
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
-let inline private pictureWebpOrPNG key (webp: Img) (webpAlt: Img) =
+let inline private pictureWebPOrPngChild class_ style (webp: Img) (webpAlt: Img) =
+  [
+    source [Class class_; Style style; SrcSet webp.srcSet; Width webp.width; Height webp.height; Sizes "100vw"; Type "image/webp"]
+    img [Class class_; Style style; Src webpAlt.src; SrcSet webpAlt.srcSet; Width webpAlt.width; Height webpAlt.height; Sizes "100vw"; Alt ""; HTMLAttr.Custom("loading", "lazy")]
+  ]
+
+
+let inline private pictureWebpOrPNGFadeIn key (webp: Img) (webpAlt: Img) =
   let style = [Width "100%"; ObjectFit "contain"; UserSelect UserSelectOptions.None]
   fadeIn
     {|
       children =
-        picture [Key key] [
-          source [Style style; SrcSet webp.srcSet; Width webp.width; Height webp.height; Type "image/webp"]
-          img [Style style; Src webpAlt.src; SrcSet webpAlt.srcSet; Width webpAlt.width; Height webpAlt.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
-        ]
+        picture [Key key] <| pictureWebPOrPngChild null style webp webpAlt
       key = key+"fade-container"
     |}
+
+let inline private pictureWebPOrPngWithClass key class_ (webp: Img) (webpAlt: Img) =
+  picture [Key key] <| pictureWebPOrPngChild class_ [] webp webpAlt
 
 let private viewAbout =
   FunctionComponent.Of ((fun (prop: {| lang: Language; api: Api.IResult<Api.All> |}) ->
@@ -57,27 +64,22 @@ let private viewAbout =
             fadeIn
               {|
                 children =
-                  picture [Key.Src(__FILE__,__LINE__)] [
-                    source [Class "content-about-picture"; SrcSet Assets.WebP.About.srcSet; Width Assets.WebP.About.width; Height Assets.WebP.About.height; Type "image/webp"]
-                    img [Class "content-about-picture"; Src Assets.WebPAlt.About.src; SrcSet Assets.WebPAlt.About.srcSet; Width Assets.WebPAlt.About.width; Height Assets.WebPAlt.About.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
-                  ]
+                  pictureWebPOrPngWithClass (__FILE__+":"+__LINE__) "content-about-picture" Assets.WebP.About Assets.WebPAlt.About
                 key = __FILE__+":"+__LINE__
               |}
           ]
         ]
-        pictureWebpOrPNG (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoPC1 Assets.WebPAlt.GCPhotoPC1
-        pictureWebpOrPNG (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoPC2 Assets.WebPAlt.GCPhotoPC2
-        pictureWebpOrPNG (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoPC3 Assets.WebPAlt.GCPhotoPC3
+        pictureWebpOrPNGFadeIn (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoPC1 Assets.WebPAlt.GCPhotoPC1
+        pictureWebpOrPNGFadeIn (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoPC2 Assets.WebPAlt.GCPhotoPC2
+        pictureWebpOrPNGFadeIn (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoPC3 Assets.WebPAlt.GCPhotoPC3
       ]
 
       div [Class "is-hidden-tablet"; Key.Src(__FILE__,__LINE__)] [
         fadeIn
           {|
             children =
-              picture [Key.Src(__FILE__,__LINE__); Style [Position PositionOptions.Absolute; Width "100%"]] [
-                source [Class "content-about-picture-mobile"; SrcSet Assets.WebP.About.src; Type "image/webp"]
-                img [Class "content-about-picture-mobile"; Src Assets.WebPAlt.About.src; SrcSet Assets.WebPAlt.About.srcSet; Alt ""; HTMLAttr.Custom("loading", "lazy")]
-              ]
+              picture [Key.Src(__FILE__,__LINE__); Style [Position PositionOptions.Absolute; Width "100%"]] <|
+                pictureWebPOrPngChild "content-about-picture-mobile" [] Assets.WebP.About Assets.WebPAlt.About
             key = __FILE__+":"+__LINE__
           |}
         div [Style [PaddingTop "50%"]; Key.Src(__FILE__,__LINE__)] []
@@ -95,10 +97,8 @@ let private viewAbout =
                 JustifyContent "center"
                 Margin "20px 0px"]] [
                 let style = [Width "100%"; ObjectFit "contain"]
-                picture [Key.Src(__FILE__,__LINE__)] [
-                  source [Style style; SrcSet Assets.WebP.VideoThumbnail.srcSet; Width Assets.WebP.VideoThumbnail.width; Height Assets.WebP.VideoThumbnail.height; Type "image/webp"]
-                  img [Style style; Src Assets.WebPAlt.VideoThumbnail.src; SrcSet Assets.WebPAlt.VideoThumbnail.srcSet; Width Assets.WebPAlt.VideoThumbnail.width; Height Assets.WebPAlt.VideoThumbnail.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
-                ]
+                picture [Key.Src(__FILE__,__LINE__)] <|
+                  pictureWebPOrPngChild null style Assets.WebP.VideoThumbnail Assets.WebPAlt.VideoThumbnail
                 div [
                   Class "content-mobile-playbutton"
                   DangerouslySetInnerHTML { __html = Assets.InlineSVG.PlayMovieMini }
@@ -112,9 +112,9 @@ let private viewAbout =
           {| isOpen = videoModalShown.current
              key = __LINE__ + ":" + __FILE__
              onClose = (fun () -> videoModalShown.update false) |}
-        pictureWebpOrPNG (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoMobile1 Assets.WebPAlt.GCPhotoMobile1
-        pictureWebpOrPNG (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoMobile2 Assets.WebPAlt.GCPhotoMobile2
-        pictureWebpOrPNG (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoMobile3 Assets.WebPAlt.GCPhotoMobile3
+        pictureWebpOrPNGFadeIn (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoMobile1 Assets.WebPAlt.GCPhotoMobile1
+        pictureWebpOrPNGFadeIn (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoMobile2 Assets.WebPAlt.GCPhotoMobile2
+        pictureWebpOrPNGFadeIn (__FILE__+":"+__LINE__) Assets.WebP.GCPhotoMobile3 Assets.WebPAlt.GCPhotoMobile3
       ]
     ]
   ), memoizeWith=memoEqualsButFunctions)
@@ -158,50 +158,48 @@ let private viewHowToJoin =
 
 open ReactIntersectionObserver
 
-let nop () = ()
 type EmptyProps = interface end
 
-let viewDJMix =
+let private viewDJMix =
   FunctionComponent.Of((fun (_: EmptyProps) ->
+    let visible = Hooks.useState false
     let shown = Hooks.useState false
     let iframeRef = Hooks.useRef None
-
-    Hooks.useEffect((fun () ->
-      match iframeRef.current with
-      | None -> ()
-      | Some it ->
-        let it = box it :?> Browser.Types.HTMLIFrameElement
-        it.contentWindow?console?log <- nop
-        it.contentWindow?console?info <- nop
-        it.contentWindow?console?warn <- nop
-        it.contentWindow?console?error <- nop
-        ()
-    ), [| iframeRef; shown |])
 
     Section.section [Props [Key.Src(__FILE__,__LINE__)]] [
       Heading.h1 [] [str "DJ Mix"]
       div [
         Key.Src(__FILE__,__LINE__)
         Style [
-          Position PositionOptions.Absolute
-          Width "100%"
-          Height "180px"
-          PointerEvents "none"
-        ]
-      ] []
+          Position PositionOptions.Relative
+          Display (if shown.current then DisplayOptions.None else DisplayOptions.Inherit)
+        ]] [
+        div [
+          Key.Src(__FILE__,__LINE__)
+          Style [
+            Position PositionOptions.Absolute
+            Width "100%"
+            Height "180px"
+            BackgroundColor "#25292c"
+            PointerEvents "none"
+          ]
+        ] []
+      ]
       inViewPlain [
         !^Key.Src(__FILE__,__LINE__)
         RootMargin "100px"
         TriggerOnce true
-        OnChange (fun inView _ -> shown.update inView)
+        OnChange (fun inView _ -> visible.update inView)
+        !^Style([Position PositionOptions.Relative; ZIndex 1])
       ] <|
-        if shown.current then
+        if visible.current then
           iframe [
             Title "GHOSTCLUB Mixcloud"
             Src Links.MixCloudWidget
             Style [Width "100%"; Height "180px"]
             FrameBorder 0
             RefValue iframeRef
+            OnLoad (fun _ -> shown.update true)
             HTMLAttr.Custom("loading", "lazy")] []
         else
           div [
@@ -214,7 +212,7 @@ let viewDJMix =
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> "dj-mix"))
 
-let viewCredits =
+let private viewCredits =
   Section.section [CustomClass "credits"; Props [Id "credits";  Key "credits"]] [
     h1 [Class "credits-head has-text-centered"] [str "Staff & Credits"]
     div [Class "credits-body is-hidden-mobile"; Key.Src(__FILE__,__LINE__)] [
@@ -246,10 +244,7 @@ let view (prop: {| lang: Language; api: Api.IResult<Api.All>; canUseWebP: bool; 
     OnChange (fun inView _ ->
       prop.dispatch (SetFlag (MenuIsVisible, inView)))
   ] <| ofList [
-    picture [Key.Src(__FILE__,__LINE__)] [
-      source [Class "content-building"; SrcSet Assets.WebP.GCBuilding2.srcSet; Width Assets.WebP.GCBuilding2.width; Height Assets.WebP.GCBuilding2.height; Type "image/webp"]
-      img [Class "content-building"; Src Assets.WebPAlt.GCBuilding2.src; SrcSet Assets.WebPAlt.GCBuilding2.srcSet; Width Assets.WebPAlt.GCBuilding2.width; Height Assets.WebPAlt.GCBuilding2.height; Alt ""; HTMLAttr.Custom("loading", "lazy")]
-    ]
+    pictureWebPOrPngWithClass (__FILE__+__LINE__) "content-building" Assets.WebP.GCBuilding2 Assets.WebPAlt.GCBuilding2
 
     div [Class "content-foreground limited-width"; Key.Src(__FILE__,__LINE__)] [
       a [Class "anchor"; Id "about"; Href "#about"; Key.Src(__FILE__,__LINE__)] []

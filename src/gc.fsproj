@@ -31,6 +31,7 @@
     <Compile Include="View/Transition.fs" />
     <Compile Include="View/Content.fs" />
     <Compile Include="View/Footer.fs" />
+    <Compile Include="LazyLoadedViews.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>

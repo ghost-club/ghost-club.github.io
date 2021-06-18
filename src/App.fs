@@ -2,7 +2,6 @@ module App
 
 open Elmish
 open Fable.React
-open Fable.React.Props
 open Fulma
 open Fable.Core
 open Fable.Core.JsInterop
@@ -193,38 +192,19 @@ let internal update msg model =
   | SetFlag (flag, true)  -> { model with flags = Set.add flag model.flags }, Cmd.none
   | SetFlag (flag, false) -> { model with flags = Set.remove flag model.flags }, Cmd.none
 
-let private viewError model (exns: exn list) dispatch =
-  Hero.hero [ Props [Key.Src(__FILE__, __LINE__)]; Hero.IsFullHeight ] [
-    Hero.body [ Props [Key.Src(__FILE__,__LINE__)] ] [
-      p [Key.Src(__FILE__,__LINE__)] [str "Failed to initialize the web application."]
-      p [Key.Src(__FILE__,__LINE__)] [str "Errors:"]
-      ofList [
-        for i, e in List.indexed exns do
-          code [Key (sprintf "error-%d" i)] [
-            str (e.ToString())
-          ]
-      ]
-    ]
-  ]
-
-let private viewMain model dispatch =
-  ofList [
-    Transition.viewTransition {| dispatch = dispatch |}
-    Menu.viewMenu {| lang = model.lang; flags = model.flags; dispatch = dispatch |}
-    Content.view {| lang = model.lang; api = model.api; canUseWebP = model.flags |> Set.contains CanUseWebP; dispatch = dispatch |}
-    Footer.view
-  ]
+let loaded =
+  FunctionComponent.Lazy(LazyLoadedViews.view, fallback = div [] [])
 
 let private view model dispatch =
   ofList [
     Header.view {| state = model.state; completed = model.completed; flags = model.flags; dispatch = dispatch |}
     match model.state with
-    | ModelState.Loaded -> viewMain model dispatch
+    | ModelState.Loaded -> loaded {| dispatch = dispatch; lang = model.lang; flags = model.flags; api = model.api |}
     | _ -> null
   ]
 
-open Elmish.Debug
 open Elmish.HMR
+open Elmish.Debug
 
 Program.mkProgram init update view
 |> Program.withReactSynchronous "root"

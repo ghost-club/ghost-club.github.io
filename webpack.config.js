@@ -57,6 +57,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, CONFIG.outputDir),
         filename: isProduction ? '[name].[fullhash].js' : '[name].js',
+        chunkFilename: isProduction ? '[name].[fullhash].js' : '[name].js',
         devtoolModuleFilenameTemplate: info =>
             path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
     },
@@ -68,13 +69,15 @@ module.exports = {
         minimize: isProduction,
         minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
         splitChunks: {
+            chunks: "all"
+            /*
             cacheGroups: {
                 commons: {
                     test: /node_modules/,
                     name: "vendors",
                     chunks: "all"
                 }
-            }
+            }*/
         },
     },
     // Besides the HtmlPlugin, we use the following plugins:
@@ -86,14 +89,7 @@ module.exports = {
     plugins: isProduction ?
         commonPlugins.concat([
             new MiniCssExtractPlugin({
-                filename: 'style.css',
-                insert: function (linkTag) {
-                    const preloadLinkTag = document.createElement('link')
-                    preloadLinkTag.rel = 'preload'
-                    preloadLinkTag.as = 'style'
-                    preloadLinkTag.href = linkTag.href
-                    document.head.appendChild(preloadLinkTag)
-                }
+                filename: 'style.[fullhash].css'
             }),
             new CopyWebpackPlugin({
                 patterns: [

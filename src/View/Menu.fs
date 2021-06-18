@@ -121,7 +121,7 @@ let private viewBody =
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__))
 
-let viewMenu (prop: {| lang: Language; flags: Set<Flag>; dispatch: Msg -> unit |}) =
+let view (prop: {| lang: Language; flags: Set<Flag>; dispatch: Msg -> unit |}) =
   let className, enabled =
     let baseClass = "menu-container"
     if   prop.flags |> Set.contains MenuIsVisible

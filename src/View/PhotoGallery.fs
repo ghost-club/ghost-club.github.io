@@ -82,6 +82,7 @@ let view =
                 Alt ""
                 Width mi.width
                 Height mi.height
+                Sizes "100vw"
                 OnDoubleClick (fun _e ->
                   sliderRef.current.slickGoTo(i)
                   state.update {| isOpen = true; index = i |})

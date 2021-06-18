@@ -11,7 +11,7 @@ open Model
 
 let [<Literal>] __FILE__ = __SOURCE_FILE__
 
-let viewTransition (props: {| dispatch: Msg -> unit |}) =
+let view (props: {| dispatch: Msg -> unit |}) =
   FunctionComponent.Of((fun (props: {| dispatch: Msg -> unit |}) ->
     let transitionInProgress = Hooks.useState false
     let scrollAmount = Hooks.useState 0.0
@@ -42,8 +42,8 @@ let viewTransition (props: {| dispatch: Msg -> unit |}) =
           transitionInProgress.update inView
           props.dispatch (SetFlag (PlayButtonIsShown, not inView)))] <|
           picture [Key.Src(__FILE__,__LINE__)] [
-            source [SrcSet Assets.WebP.GCBuilding1.srcSet; Width Assets.WebP.GCBuilding1.width; Height Assets.WebP.GCBuilding1.height; Type "image/webp"; Class "transition-building"]
-            img [Src Assets.WebPAlt.GCBuilding1.src; SrcSet Assets.WebPAlt.GCBuilding1.srcSet; Width Assets.WebPAlt.GCBuilding1.width; Height Assets.WebPAlt.GCBuilding1.height; Alt ""; Class "transition-building"; HTMLAttr.Custom("loading", "lazy")]
+            source [SrcSet Assets.WebP.GCBuilding1.srcSet; Width Assets.WebP.GCBuilding1.width; Height Assets.WebP.GCBuilding1.height; Sizes "100vw"; Type "image/webp"; Class "transition-building"]
+            img [Src Assets.WebPAlt.GCBuilding1.src; SrcSet Assets.WebPAlt.GCBuilding1.srcSet; Width Assets.WebPAlt.GCBuilding1.width; Height Assets.WebPAlt.GCBuilding1.height; Sizes "100vw"; Alt ""; Class "transition-building"; HTMLAttr.Custom("loading", "lazy")]
           ]
     ]
   ), memoizeWith=memoEqualsButFunctions, withKey=(fun _ -> __FILE__ + ":" + __LINE__)) props
