@@ -7,7 +7,7 @@ let DomainNameInPunyCode = "xn--pckjp4dudxftf.xn--tckwe"
 
 let DataUrl = "https://xn--pckjp4dudxftf.xn--tckwe/data/index.json"
 
-let GoogleAppUrl = "https://script.google.com/macros/s/AKfycbxkGeSRx3QMBSyCLIZCMlAjy_iqxz7e_1B3eyrhmDifjUyFUR5U53gRF_9oF78sLlgI/exec"
+let GoogleAppUrl = "https://script.google.com/macros/s/AKfycbxexm2XgQur4GfAnH9FRcqdwLGlmZdnHBqbIfsZhLuiToCL0mwH0SH0p1DB4wVG64iT/exec"
 
 type Img = {|
   src: string
