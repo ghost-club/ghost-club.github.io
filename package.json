@@ -27,7 +27,7 @@
     "intersection-observer": "^0.12.0",
     "mini-css-extract-plugin": "^1.6.0",
     "minireset.css": "^0.0.7",
-    "node-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-font-loader": "^1.1.0",
