@@ -140,7 +140,7 @@ module Credits =
     [ [ Some ("Director", ["0b4k3"; "Rintaro"])
         Some ("Environment Artist", ["rakurai"])
         Some ("GI Architect", ["phi16"])
-        Some ("VJ Architect", ["fotfla"])
+        Some ("VJ Architect", ["fotfla"; "wata_pj"])
         Some ("Generalist", ["Reflex"])
         Some ("Wiring Artist", ["tanitta"])
         Some ("Graphics Designer", ["Daiya Tanabe"; "k0nest"]) ]
