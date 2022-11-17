@@ -43,7 +43,7 @@ jobs:
         run: dotnet fake build
         
       - name: Push artifact to gh-pages
-        if: success()
+        if: success() && github.event_name == 'push'
         uses: crazy-max/ghaction-github-pages@v2.4.1
         with:
           build_dir: output
