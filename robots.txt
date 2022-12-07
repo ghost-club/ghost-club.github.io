@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Sitemap: https://xn--pckjp4dudxftf.xn--tckwe/sitemap.xml
+
+# Optimization for Google Ads Bot
+User-Agent: AdsBot-Google-Mobile
+User-Agent: AdsBot-Google
+Disallow: /assets/*
+Disallow: /data/*
+
+User-agent: Twitterbot
+Disallow:
